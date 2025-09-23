@@ -8,11 +8,55 @@ A modern web application built with React 19, Vite 7, and Tailwind CSS 4. This s
 
 ## 🛠️ Tech Stack
 
+### Core Technologies
 - **React 19.1.1** - Modern UI framework with latest features
 - **TypeScript 5.8.3** - Type safety and enhanced developer experience
 - **Vite 7.1.7** - Fast build tool and development server
 - **Tailwind CSS 4.1.13** - Utility-first CSS framework
 - **ESLint 9.36.0** - Code linting and quality assurance
+
+### UI & Design System
+- **shadcn/ui** - Modern component library with beautiful default styling
+- **Radix UI** - Headless, accessible UI primitives
+- **Lucide React** - Beautiful & consistent icon library
+- **Class Variance Authority** - Building type-safe component APIs
+- **Tailwind Merge** - Utility for merging Tailwind CSS classes
+
+### Forms & Validation
+- **React Hook Form** - Performant, flexible forms with easy validation
+- **@hookform/resolvers** - Validation resolvers for React Hook Form
+- **Zod** - TypeScript-first schema declaration and validation
+
+### Routing & Navigation
+- **React Router DOM** - Declarative routing for React applications
+
+### Data Visualization
+- **Recharts** - Composable charting library built on React components
+
+### Code Quality & Formatting
+- **Prettier** - Opinionated code formatter with Tailwind CSS class sorting
+- **ESLint** - Code linting and quality assurance
+
+## ✨ Features
+
+### 🎨 Design System
+- **Dark/Light Mode Toggle** - Seamless theme switching with system preference detection
+- **shadcn/ui Components** - Beautiful, accessible, and customizable components
+- **CSS Variables** - Dynamic theming with HSL color space for better color manipulation
+- **Brand Colors & Chart Palette** - Consistent color system across the application
+- **Responsive Design** - Mobile-first approach with container system
+
+### 🛠️ Developer Experience
+- **Absolute Imports** - Clean import paths using `@/` alias
+- **TypeScript** - Full type safety across the application
+- **Path Mapping** - Organized project structure with clear import paths
+- **Component Architecture** - Modular, reusable components with proper separation of concerns
+
+### 🎯 Theme Management
+- **React Context** - Centralized theme state management
+- **Custom Hooks** - `useTheme()` hook for easy theme access
+- **AppProvider** - Aggregated provider pattern for clean component tree
+- **Local Storage** - Theme preference persistence across sessions
 
 ## 📋 Prerequisites
 
@@ -63,6 +107,7 @@ This will:
 | `npm run dev` | Start development server | Local development |
 | `npm run build` | Build for production | Creates optimized `dist/` folder |
 | `npm run lint` | Run ESLint code analysis | Code quality checks |
+| `npm run format` | Format code with Prettier | Auto-format and sort Tailwind classes |
 | `npm run preview` | Preview production build | Test built application locally |
 
 ### Local Development Workflow
@@ -95,22 +140,92 @@ This will:
 ## 📁 Project Structure
 
 ```
-├── src/                    # Source code
-│   ├── App.tsx            # Main application component
-│   ├── App.css            # Component-specific styles
-│   ├── main.tsx           # React application entry point
-│   ├── index.css          # Global styles & Tailwind imports
-│   └── assets/            # Static assets
-├── public/                # Public static files
-├── dist/                  # Production build output
+├── src/                        # Source code
+│   ├── components/            # React components
+│   │   ├── ui/               # shadcn/ui components
+│   │   │   └── button.tsx    # Button component with variants
+│   │   ├── navigation.tsx    # Main navigation bar
+│   │   └── theme-toggle.tsx  # Dark/light mode toggle
+│   ├── hooks/                # Custom React hooks
+│   │   └── use-theme.tsx     # Theme management hook
+│   ├── lib/                  # Utility libraries
+│   │   └── utils.ts          # Common utility functions (cn, etc.)
+│   ├── providers/            # React context providers
+│   │   └── app-provider.tsx  # Main application provider
+│   ├── App.tsx              # Main application component
+│   ├── App.css              # Component-specific styles
+│   ├── main.tsx             # React application entry point
+│   ├── index.css            # Global styles, Tailwind imports & CSS variables
+│   └── assets/              # Static assets
+├── public/                   # Public static files
+├── dist/                     # Production build output
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml     # GitHub Actions deployment
-├── index.html             # HTML template
-├── vite.config.ts         # Vite configuration
-├── tailwind.config.js     # Tailwind CSS configuration
-└── package.json           # Dependencies and scripts
+│       └── deploy.yml        # GitHub Actions deployment
+├── components.json           # shadcn/ui configuration
+├── .prettierrc              # Prettier configuration
+├── index.html               # HTML template
+├── vite.config.ts           # Vite configuration with path aliases
+├── tailwind.config.js       # Tailwind CSS configuration with design tokens
+├── tsconfig.json            # TypeScript configuration with path mapping
+└── package.json             # Dependencies and scripts
 ```
+
+### Key Architecture Decisions
+
+- **Absolute Imports**: Using `@/` alias for clean import paths
+- **Component Organization**: UI components separated by type (ui/, navigation/, etc.)
+- **Provider Pattern**: Centralized state management with AppProvider
+- **Design Tokens**: CSS variables for consistent theming
+- **Type Safety**: Full TypeScript coverage with proper type definitions
+
+## 🎨 Theme System
+
+### Dark/Light Mode Toggle
+
+The application includes a comprehensive theme system with support for:
+
+- **Light Mode**: Clean, bright interface with high contrast
+- **Dark Mode**: Dark background with light text for reduced eye strain  
+- **System Mode**: Automatically follows user's OS preference
+
+### Usage
+
+The theme toggle button in the navigation cycles through:
+1. **Light** → **Dark** → **System** → **Light** (repeat)
+
+### Theme Persistence
+
+Theme preferences are automatically saved to localStorage and restored on page reload.
+
+### CSS Variables
+
+The theme system uses CSS custom properties for dynamic color switching:
+
+```css
+/* Light mode colors */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  /* ... additional color tokens */
+}
+
+/* Dark mode colors */
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  /* ... additional color tokens */
+}
+```
+
+### Chart Color Palette
+
+Dedicated color variables for data visualization:
+- `--chart-1` through `--chart-5`: Consistent colors for charts and graphs
+- Optimized for both light and dark themes
+- Accessible color contrast ratios
 
 ## 🚀 Deployment
 
