@@ -65,7 +65,7 @@ export function BuyOrRentForm({ onSubmit, className }: BuyOrRentFormProps) {
             step="1000"
             min="1"
             prefix="$"
-            placeholder="500000"
+            placeholder="500,000"
             description="Total purchase price of the home"
           />
           <FormField
