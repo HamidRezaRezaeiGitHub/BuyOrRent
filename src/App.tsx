@@ -1,41 +1,30 @@
 import './App.css'
 import { Navigation } from '@/components/navigation'
+import { BuyOrRentForm } from '@/components/buy-or-rent-form'
+import type { BuyOrRentInputs } from '@/types/inputs'
 
 function App() {
+  const handleFormSubmit = (data: BuyOrRentInputs) => {
+    console.log('Form submitted with data:', data)
+    // Here you would typically calculate the buy vs rent analysis
+    // For now, we'll just log the data
+  }
+
   return (
     <div className="bg-background min-h-screen">
       <Navigation />
-      <main className="container mx-auto py-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <h1 className="text-foreground mb-4 text-4xl font-bold">
-            Welcome to BuyOrRent
-          </h1>
-          <p className="text-muted-foreground mb-8 text-lg">
-            A modern React application with shadcn/ui, dark mode support, and
-            beautiful design
-          </p>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <div className="bg-card text-card-foreground rounded-lg border p-6 shadow-sm">
-              <h3 className="mb-2 text-lg font-semibold">🏠 Buy Properties</h3>
-              <p className="text-muted-foreground text-sm">
-                Find your dream home with our comprehensive property listings
-              </p>
-            </div>
-            <div className="bg-card text-card-foreground rounded-lg border p-6 shadow-sm">
-              <h3 className="mb-2 text-lg font-semibold">🏢 Rent Spaces</h3>
-              <p className="text-muted-foreground text-sm">
-                Discover rental properties that fit your lifestyle and budget
-              </p>
-            </div>
-            <div className="bg-card text-card-foreground rounded-lg border p-6 shadow-sm">
-              <h3 className="mb-2 text-lg font-semibold">
-                📊 Market Analytics
-              </h3>
-              <p className="text-muted-foreground text-sm">
-                Get insights with our advanced charting and analytics tools
-              </p>
-            </div>
+      <main className="container mx-auto py-8 px-4">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center mb-8">
+            <h1 className="text-foreground mb-4 text-4xl font-bold">
+              Buy or Rent Calculator
+            </h1>
+            <p className="text-muted-foreground mb-8 text-lg">
+              Enter your financial details to see whether buying or renting makes more sense for you
+            </p>
           </div>
+          
+          <BuyOrRentForm onSubmit={handleFormSubmit} />
         </div>
       </main>
     </div>
