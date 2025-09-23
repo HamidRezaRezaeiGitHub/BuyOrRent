@@ -5,10 +5,10 @@ import { ChevronDown, ChevronRight } from 'lucide-react'
 import { buyOrRentSchema, type BuyOrRentFormData } from '@/schemas/buyOrRentSchema'
 import type { BuyOrRentInputs } from '@/types/inputs'
 import { InputPersistenceService } from '@/services/inputPersistence'
-import { FormField } from '@/components/ui/form-field'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
+import { CustomFormField } from '@/components/ui/custom-form-field'
 import { Form } from '@/components/ui/form'
 
 interface BuyOrRentInputsSectionProps {
@@ -74,7 +74,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
                   {/* Property Information */}
                   <div className="space-y-4">
                     <h4 className="font-medium text-muted-foreground">Property Details</h4>
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="homePrice"
                       label="Home Price"
@@ -85,7 +85,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
                       placeholder="500,000"
                       description="Total purchase price of the home"
                     />
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="downPayment"
                       label="Down Payment"
@@ -101,7 +101,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
                   {/* Mortgage Information */}
                   <div className="space-y-4">
                     <h4 className="font-medium text-muted-foreground">Mortgage Details</h4>
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="mortgageRate"
                       label="Mortgage Interest Rate"
@@ -113,7 +113,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
                       placeholder="6.5"
                       description="Annual interest rate for the mortgage"
                     />
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="loanTerm"
                       label="Loan Term"
@@ -152,7 +152,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-4">
                     <h4 className="font-medium text-muted-foreground">Rental Details</h4>
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="monthlyRent"
                       label="Monthly Rent"
@@ -163,7 +163,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
                       placeholder="2500"
                       description="Current monthly rent you're paying or would pay"
                     />
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="rentGrowthRate"
                       label="Annual Rent Growth Rate"
@@ -179,7 +179,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
 
                   <div className="space-y-4">
                     <h4 className="font-medium text-muted-foreground">Investment Alternative</h4>
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="sp500GrowthRate"
                       label="S&P 500 Growth Rate"
@@ -218,7 +218,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-4">
                     <h4 className="font-medium text-muted-foreground">Ownership Costs</h4>
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="propertyTax"
                       label="Annual Property Tax"
@@ -229,7 +229,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
                       placeholder="6000"
                       description="Annual property tax amount"
                     />
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="homeInsurance"
                       label="Annual Home Insurance"
@@ -240,7 +240,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
                       placeholder="1200"
                       description="Annual home insurance premium"
                     />
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="hoa"
                       label="Monthly HOA Fees"
@@ -251,7 +251,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
                       placeholder="0"
                       description="Monthly homeowners association fees"
                     />
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="maintenance"
                       label="Annual Maintenance"
@@ -267,7 +267,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
 
                   <div className="space-y-4">
                     <h4 className="font-medium text-muted-foreground">Analysis Settings</h4>
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="taxRate"
                       label="Income Tax Rate"
@@ -279,7 +279,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
                       placeholder="25"
                       description="Your marginal income tax rate"
                     />
-                    <FormField
+                    <CustomFormField
                       control={control}
                       name="yearsToAnalyze"
                       label="Analysis Period"
