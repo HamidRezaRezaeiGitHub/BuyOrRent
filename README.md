@@ -129,7 +129,7 @@ The application uses GitHub Actions for automated deployment to GitHub Pages:
 2. **Install:** Dependencies via `npm install`
 3. **Build:** Production build via `npm run build`
 4. **SPA Support:** Creates `404.html` for client-side routing
-5. **Deploy:** Uploads `dist/` folder to GitHub Pages
+5. **Deploy:** Uploads `dist/` folder to GitHub Pages via GitHub Actions artifact deployment
 
 **Build Time:** ~1-2 minutes total
 
@@ -139,9 +139,8 @@ To set up GitHub Pages for this repository:
 
 1. **Repository Settings:**
    - Go to your repository → Settings → Pages
-   - **Source:** Deploy from a branch
-   - **Branch:** `gh-pages` (created automatically by the workflow)
-   - **Folder:** `/ (root)`
+   - **Source:** GitHub Actions
+   - The workflow automatically deploys to GitHub Pages using the modern artifact-based method
 
 2. **Required Permissions:**
    - The workflow has proper permissions configured:
