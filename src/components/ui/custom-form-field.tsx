@@ -65,7 +65,9 @@ export function CustomFormField<T extends FieldValues>({
                   suffix && 'pr-8'
                 )}
                 onChange={(e) => {
-                  const value = type === 'number' ? parseFloat(e.target.value) || 0 : e.target.value
+                  const value = type === 'number'
+                    ? (e.target.value === '' ? '' : parseFloat(e.target.value))
+                    : e.target.value
                   field.onChange(value)
                 }}
               />
