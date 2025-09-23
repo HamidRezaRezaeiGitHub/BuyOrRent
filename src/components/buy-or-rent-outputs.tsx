@@ -232,6 +232,7 @@ function calculateBuyVsRent(inputs: BuyOrRentInputs): CalculationResults {
   let cumulativeRental = 0
   let currentRent = monthlyRent
   let investmentValue = downPayment // If renting, downpayment is invested in S&P 500
+  let remainingLoanBalance = loanAmount // Track remaining loan balance for proper amortization
 
   for (let year = 1; year <= yearsToAnalyze; year++) {
     // Annual ownership costs
@@ -245,12 +246,26 @@ function calculateBuyVsRent(inputs: BuyOrRentInputs): CalculationResults {
     cumulativeOwnership += ownershipCost
     cumulativeRental += rentalCost
     
-    // Calculate net worth
+    // Calculate net worth using proper amortization
     // For buying: home equity - remaining debt
-    const paidPrincipal = (monthlyPayment * 12 * year) - (loanAmount * (mortgageRate / 100) * year) // Simplified
+    let yearlyPrincipalPaid = 0
+    let tempBalance = remainingLoanBalance
+    
+    // Calculate principal paid in this year using proper amortization
+    for (let month = 1; month <= 12; month++) {
+      if (tempBalance > 0) {
+        const monthlyInterest = tempBalance * monthlyRate
+        const monthlyPrincipal = monthlyPayment - monthlyInterest
+        yearlyPrincipalPaid += monthlyPrincipal
+        tempBalance = Math.max(0, tempBalance - monthlyPrincipal)
+      }
+    }
+    
+    // Update remaining balance
+    remainingLoanBalance = tempBalance
+    
     const homeEquity = Math.max(0, homePrice + (homePrice * 0.02 * year)) // Assume 2% annual appreciation
-    const remainingDebt = Math.max(0, loanAmount - paidPrincipal)
-    const netWorthBuy = homeEquity - remainingDebt
+    const netWorthBuy = homeEquity - remainingLoanBalance
     
     // For renting: investment growth
     investmentValue = investmentValue * (1 + sp500GrowthRate / 100) + (ownershipCost - rentalCost)
