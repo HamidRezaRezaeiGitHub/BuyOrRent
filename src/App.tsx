@@ -1,19 +1,26 @@
 import './App.css'
 import { Navigation } from '@/components/navigation'
-import { BuyOrRentForm } from '@/components/buy-or-rent-form'
+import { AppShell } from '@/components/app-shell'
+import { Footer } from '@/components/footer'
+import { Separator } from '@/components/ui/separator'
 import type { BuyOrRentInputs } from '@/types/inputs'
 
 function App() {
-  const handleFormSubmit = (data: BuyOrRentInputs) => {
-    console.log('Form submitted with data:', data)
-    // Here you would typically calculate the buy vs rent analysis
-    // For now, we'll just log the data
+  const handleInputsChange = (data: BuyOrRentInputs) => {
+    console.log('Inputs changed:', data)
+    // Here you can perform any global state updates if needed
   }
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="bg-background min-h-screen flex flex-col">
+      {/* Navigation stays at the top always */}
       <Navigation />
-      <main className="container mx-auto py-8 px-4">
+      
+      {/* Separator below navbar */}
+      <Separator />
+      
+      {/* Main content with AppShell */}
+      <main className="container mx-auto py-8 px-4 flex-1">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-8">
             <h1 className="text-foreground mb-4 text-4xl font-bold">
@@ -24,9 +31,16 @@ function App() {
             </p>
           </div>
           
-          <BuyOrRentForm onSubmit={handleFormSubmit} />
+          {/* AppShell with collapsible sections */}
+          <AppShell onInputsChange={handleInputsChange} />
         </div>
       </main>
+      
+      {/* Separator above footer */}
+      <Separator />
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

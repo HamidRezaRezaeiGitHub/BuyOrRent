@@ -1,30 +1,39 @@
 import { Moon, Sun } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Switch } from '@/components/ui/switch'
 import { useTheme } from '@/hooks/use-theme'
+import { useEffect, useState } from 'react'
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
+  const [isDark, setIsDark] = useState(false)
 
-  const toggleTheme = () => {
-    if (theme === 'light') {
-      setTheme('dark')
-    } else if (theme === 'dark') {
-      setTheme('system')
+  useEffect(() => {
+    // Determine if we should show dark mode
+    if (theme === 'dark') {
+      setIsDark(true)
+    } else if (theme === 'light') {
+      setIsDark(false)
     } else {
-      setTheme('light')
+      // system theme - check system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      setIsDark(prefersDark)
     }
+  }, [theme])
+
+  const handleToggle = (checked: boolean) => {
+    setTheme(checked ? 'dark' : 'light')
   }
 
   return (
-    <Button
-      variant="outline"
-      size="icon"
-      onClick={toggleTheme}
-      title={`Current theme: ${theme}`}
-    >
-      <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
+    <div className="flex items-center space-x-2">
+      <Sun className="h-4 w-4" />
+      <Switch
+        checked={isDark}
+        onCheckedChange={handleToggle}
+        className="relative"
+        aria-label="Toggle theme"
+      />
+      <Moon className="h-4 w-4" />
+    </div>
   )
 }
