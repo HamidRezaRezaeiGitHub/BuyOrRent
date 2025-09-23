@@ -18,7 +18,7 @@ export function BuyOrRentInputsSection({ onSubmit }: BuyOrRentInputsSectionProps
     mode: 'onChange'
   })
 
-  const { handleSubmit, reset, watch, formState: { isSubmitting } } = form
+  const { handleSubmit, reset, watch, control, formState: { isSubmitting } } = form
 
   // Watch all form values for auto-save
   const watchedValues = watch()
