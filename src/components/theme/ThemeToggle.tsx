@@ -221,8 +221,9 @@ export const SegmentedThemeToggle: React.FC<BaseThemeToggleProps> = ({
 /**
  * Compact icon-only theme toggle (for mobile/minimal UI)
  */
-export const CompactThemeToggle: React.FC<BaseThemeToggleProps> = ({ 
-  className = '' 
+export const CompactThemeToggle: React.FC<BaseThemeToggleProps & { showLabel?: boolean }> = ({ 
+  className = '',
+  showLabel = false
 }) => {
   const { actualTheme, toggleTheme } = useTheme();
 
@@ -235,6 +236,9 @@ export const CompactThemeToggle: React.FC<BaseThemeToggleProps> = ({
       <span className="text-sm">
         {actualTheme === 'light' ? '🌙' : '☀️'}
       </span>
+      {showLabel && (
+        <span className="ml-2 text-xs">{actualTheme === 'light' ? 'Dark' : 'Light'}</span>
+      )}
     </button>
   );
 };
