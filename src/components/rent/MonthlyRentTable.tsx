@@ -24,6 +24,7 @@ export interface YearData {
     year: number;
     months: number[];
     yearTotal: number;
+    cumulativeTotal: number;
 }
 
 /**
@@ -76,6 +77,7 @@ export const MonthlyRentTable: FC<MonthlyRentTableProps> = ({
                 year: currentYear + i,
                 months,
                 yearTotal,
+                cumulativeTotal: totalPaid,
             });
         }
 
@@ -112,12 +114,18 @@ export const MonthlyRentTable: FC<MonthlyRentTableProps> = ({
                             </TableHead>
                         ))}
                         <TableHead className="text-right font-semibold">Total</TableHead>
+                        <TableHead className="text-right font-semibold">Cumulative</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {Array.from({ length: analysisYears }, (_, i) => {
                         const yearRent = calculateMonthlyRentForYear(monthlyRent, i, annualRentIncrease);
                         const yearTotal = yearRent * 12;
+                        // Calculate cumulative total up to this year
+                        const cumulativeTotal = Array.from({ length: i + 1 }, (_, j) => {
+                            const rent = calculateMonthlyRentForYear(monthlyRent, j, annualRentIncrease);
+                            return rent * 12;
+                        }).reduce((sum, total) => sum + total, 0);
 
                         return (
                             <TableRow key={i}>
@@ -129,6 +137,9 @@ export const MonthlyRentTable: FC<MonthlyRentTableProps> = ({
                                 ))}
                                 <TableCell className="text-right font-medium">
                                     {formatCurrency(yearTotal)}
+                                </TableCell>
+                                <TableCell className="text-right font-medium">
+                                    {formatCurrency(cumulativeTotal)}
                                 </TableCell>
                             </TableRow>
                         );
