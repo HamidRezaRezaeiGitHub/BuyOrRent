@@ -177,9 +177,7 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
                         </TooltipTrigger>
                         <TooltipContent side="right" className="max-w-xs">
                             <p className="text-xs">
-                                The total monthly rent amount, including parking and utilities, 
-                                that you would pay to the landlord (and/or other entities) per month 
-                                if you choose to rent a place (not buy).
+                                {`The total monthly rent amount, including parking and utilities, that you would pay to the landlord (and/or other entities) per month if you choose to rent a place (not buy).`}
                             </p>
                         </TooltipContent>
                     </Tooltip>
