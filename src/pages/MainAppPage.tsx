@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 import { FlexibleNavbar } from '../components/navbar'
+import { YearsField } from '../components/common/Years'
 import { MonthlyRentField } from '../components/rent/MonthlyRent'
 import { CompactThemeToggle } from '../components/theme'
 import { Button } from '../components/ui/button'
@@ -12,6 +13,7 @@ export const MainAppPage: React.FC = () => {
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
     const [monthlyRent, setMonthlyRent] = useState<number | ''>('')
+    const [analysisYears, setAnalysisYears] = useState<number>(30)
 
     return (
         <div className="min-h-screen bg-background">
@@ -61,6 +63,16 @@ export const MainAppPage: React.FC = () => {
                                 </Button>
                             </CollapsibleTrigger>
                             <CollapsibleContent>
+                                {/* Common field for both rent and buy - Analysis Period */}
+                                <div className="mb-4">
+                                    <YearsField
+                                        value={analysisYears}
+                                        onChange={setAnalysisYears}
+                                        enableValidation={true}
+                                        validationMode="optional"
+                                    />
+                                </div>
+                                
                                 <Tabs defaultValue="rent" className="w-full">
                                     <TabsList className="grid w-full grid-cols-2 mb-4">
                                         <TabsTrigger value="rent">Rental Information</TabsTrigger>
