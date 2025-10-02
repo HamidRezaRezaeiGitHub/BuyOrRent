@@ -1,14 +1,17 @@
 import { ChevronDown, ChevronUp } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { FlexibleNavbar } from '../components/navbar'
 import { YearsField } from '../components/common/Years'
 import { MonthlyRentField } from '../components/rent/MonthlyRent'
 import { RentIncreaseField } from '../components/rent/RentIncrease'
+import { MonthlyRentTable, MonthlyRentData } from '../components/rent/MonthlyRentTable'
+import { MonthlyRentGraph } from '../components/rent/MonthlyRentGraph'
 import { CompactThemeToggle } from '../components/theme'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../components/ui/collapsible'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../components/ui/carousel'
 
 export const MainAppPage: React.FC = () => {
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
@@ -16,6 +19,12 @@ export const MainAppPage: React.FC = () => {
     const [monthlyRent, setMonthlyRent] = useState<number | ''>('')
     const [rentIncrease, setRentIncrease] = useState<number | ''>(2.5)
     const [analysisYears, setAnalysisYears] = useState<number>(30)
+    const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
+
+    // Callback to receive calculated rent data from MonthlyRentTable
+    const handleRentDataCalculated = useCallback((data: MonthlyRentData) => {
+        setRentData(data)
+    }, [])
 
     return (
         <div className="min-h-screen bg-background">
@@ -165,12 +174,46 @@ export const MainAppPage: React.FC = () => {
                                     {/* If you rent Tab */}
                                     <TabsContent value="rent" className="mt-0">
                                         <div className="grid gap-3 sm:gap-4">
-                                            <div className="h-20 sm:h-24 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                                <span className="text-xs sm:text-sm text-muted-foreground text-center">Tables Card<br />with Carousel</span>
-                                            </div>
-                                            <div className="h-20 sm:h-24 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                                <span className="text-xs sm:text-sm text-muted-foreground text-center">Graphs Card<br />with Carousel</span>
-                                            </div>
+                                            {/* Tables Card with Carousel */}
+                                            <Card>
+                                                <CardHeader>
+                                                    <CardTitle className="text-lg">Tables</CardTitle>
+                                                </CardHeader>
+                                                <CardContent>
+                                                    <Carousel className="w-full max-w-full">
+                                                        <CarouselContent>
+                                                            <CarouselItem>
+                                                                <MonthlyRentTable
+                                                                    monthlyRent={typeof monthlyRent === 'number' ? monthlyRent : 0}
+                                                                    analysisYears={analysisYears}
+                                                                    annualRentIncrease={typeof rentIncrease === 'number' ? rentIncrease : 0}
+                                                                    onDataCalculated={handleRentDataCalculated}
+                                                                />
+                                                            </CarouselItem>
+                                                        </CarouselContent>
+                                                        <CarouselPrevious />
+                                                        <CarouselNext />
+                                                    </Carousel>
+                                                </CardContent>
+                                            </Card>
+
+                                            {/* Graphs Card with Carousel */}
+                                            <Card>
+                                                <CardHeader>
+                                                    <CardTitle className="text-lg">Graphs</CardTitle>
+                                                </CardHeader>
+                                                <CardContent>
+                                                    <Carousel className="w-full max-w-full">
+                                                        <CarouselContent>
+                                                            <CarouselItem>
+                                                                <MonthlyRentGraph data={rentData} />
+                                                            </CarouselItem>
+                                                        </CarouselContent>
+                                                        <CarouselPrevious />
+                                                        <CarouselNext />
+                                                    </Carousel>
+                                                </CardContent>
+                                            </Card>
                                         </div>
                                     </TabsContent>
 
