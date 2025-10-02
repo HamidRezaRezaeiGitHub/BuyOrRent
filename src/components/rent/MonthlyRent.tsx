@@ -125,7 +125,7 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
 
         // Parse and update the actual numeric value
         // Special handling for empty value
-        if (newValue === '' || newValue.trim() === '') {
+        if (newValue.trim() === '') {
             onChange('');
         } else {
             const numericValue = parseCurrency(newValue);
