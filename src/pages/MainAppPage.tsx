@@ -5,6 +5,7 @@ import { CompactThemeToggle } from '../components/theme'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../components/ui/collapsible'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 
 export const MainAppPage: React.FC = () => {
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
@@ -20,91 +21,138 @@ export const MainAppPage: React.FC = () => {
                 ThemeToggleComponent={CompactThemeToggle}
             />
 
-            {/* Mobile-optimized main content */}
-            <main className="w-full max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8">
+            {/* Mobile-optimized main content with multiple cards */}
+            <main className="w-full max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8 space-y-6">
+
+                {/* Welcome Header */}
+                <div className="text-center py-6 sm:py-8">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Welcome to BuyOrRent</h1>
+                    <p className="text-sm sm:text-base text-muted-foreground mt-2">
+                        Analyze properties and make informed decisions
+                    </p>
+                </div>
+
+                {/* Property & Financial Information Card with Tabs */}
                 <Card className="w-full">
-                    <CardHeader className="text-center px-4 py-6 sm:px-6 sm:py-8">
-                        <CardTitle className="text-2xl sm:text-3xl lg:text-4xl">Welcome to BuyOrRent</CardTitle>
-                        <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                            Analyze properties and make informed decisions
+                    <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
+                        <CardTitle className="text-xl sm:text-2xl">Property & Financial Information</CardTitle>
+                        <p className="text-sm sm:text-base text-muted-foreground">
+                            (Placeholder)
                         </p>
                     </CardHeader>
-                    <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
-                        {/* Upper Section - Input Fields (default open) */}
+                    <CardContent className="px-4 sm:px-6 pb-6">
                         <Collapsible open={inputSectionOpen} onOpenChange={setInputSectionOpen}>
                             <CollapsibleTrigger asChild>
                                 <Button
                                     type="button"
                                     variant="ghost"
-                                    className="w-full justify-between p-4 sm:p-6 h-auto"
+                                    className="w-full justify-between mb-4"
                                 >
-                                    <span className="text-base sm:text-lg font-semibold">Property Input Fields</span>
+                                    <span className="text-sm sm:text-base font-medium">
+                                        {inputSectionOpen ? 'Hide' : 'Show'}
+                                    </span>
                                     {inputSectionOpen ? (
-                                        <ChevronUp className="h-4 w-4 sm:h-5 sm:w-5" />
+                                        <ChevronUp className="h-4 w-4" />
                                     ) : (
-                                        <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5" />
+                                        <ChevronDown className="h-4 w-4" />
                                     )}
                                 </Button>
                             </CollapsibleTrigger>
-                            <CollapsibleContent className="mt-2 sm:mt-4">
-                                <div className="p-4 sm:p-6 border rounded-lg bg-muted/50">
-                                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                                        Enter property details, financial information, and preferences to analyze your buy vs rent decision.
-                                    </p>
-                                    {/* Placeholder for future input fields */}
-                                    <div className="mt-4 grid gap-3 sm:gap-4">
-                                        <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                            <span className="text-xs sm:text-sm text-muted-foreground">Property Price Input</span>
+                            <CollapsibleContent>
+                                <Tabs defaultValue="rent" className="w-full">
+                                    <TabsList className="grid w-full grid-cols-2 mb-4">
+                                        <TabsTrigger value="rent">Rental Information</TabsTrigger>
+                                        <TabsTrigger value="buy">Purchase Information</TabsTrigger>
+                                    </TabsList>
+
+                                    {/* Rental Information Tab */}
+                                    <TabsContent value="rent" className="mt-0">
+                                        <div className="grid gap-3 sm:gap-4">
+                                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Monthly Rent Amount</span>
+                                            </div>
+                                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Security Deposit</span>
+                                            </div>
+                                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Utilities & Additional Costs</span>
+                                            </div>
+                                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Lease Duration</span>
+                                            </div>
                                         </div>
-                                        <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                            <span className="text-xs sm:text-sm text-muted-foreground">Monthly Rent Input</span>
+                                    </TabsContent>
+
+                                    {/* Buy House/Condo Tab */}
+                                    <TabsContent value="buy" className="mt-0">
+                                        <div className="grid gap-3 sm:gap-4">
+                                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Property Purchase Price</span>
+                                            </div>
+                                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Down Payment Amount</span>
+                                            </div>
+                                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Mortgage Interest Rate</span>
+                                            </div>
+                                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Property Taxes & HOA</span>
+                                            </div>
+                                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                                <span className="text-xs sm:text-sm text-muted-foreground">Maintenance & Insurance</span>
+                                            </div>
                                         </div>
-                                        <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                            <span className="text-xs sm:text-sm text-muted-foreground">Additional Costs Input</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                    </TabsContent>
+                                </Tabs>
                             </CollapsibleContent>
                         </Collapsible>
+                    </CardContent>
+                </Card>
 
-                        {/* Lower Section - Results/Reports/Graphs (default closed) */}
+                {/* Decision Analysis & Insights Card */}
+                <Card className="w-full">
+                    <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
+                        <CardTitle className="text-xl sm:text-2xl">Decision Analysis & Insights</CardTitle>
+                        <p className="text-sm sm:text-base text-muted-foreground">
+                            Personalized recommendations, cost comparisons, and financial projections:
+                        </p>
+                    </CardHeader>
+                    <CardContent className="px-4 sm:px-6 pb-6">
+                        {/* Analysis Results */}
                         <Collapsible open={resultsSectionOpen} onOpenChange={setResultsSectionOpen}>
                             <CollapsibleTrigger asChild>
                                 <Button
                                     type="button"
                                     variant="ghost"
-                                    className="w-full justify-between p-4 sm:p-6 h-auto"
+                                    className="w-full justify-between mb-4"
                                 >
-                                    <span className="text-base sm:text-lg font-semibold">Financial Analysis & Reports</span>
+                                    <span className="text-sm sm:text-base font-medium">
+                                        {resultsSectionOpen ? 'Hide' : 'Show'}
+                                    </span>
                                     {resultsSectionOpen ? (
-                                        <ChevronUp className="h-4 w-4 sm:h-5 sm:w-5" />
+                                        <ChevronUp className="h-4 w-4" />
                                     ) : (
-                                        <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5" />
+                                        <ChevronDown className="h-4 w-4" />
                                     )}
                                 </Button>
                             </CollapsibleTrigger>
-                            <CollapsibleContent className="mt-2 sm:mt-4">
-                                <div className="p-4 sm:p-6 border rounded-lg bg-muted/50">
-                                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4">
-                                        View comprehensive analysis results, financial projections, and interactive charts comparing buy vs rent scenarios.
-                                    </p>
-                                    {/* Placeholder for future analysis results */}
-                                    <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
-                                        <div className="h-20 sm:h-24 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                            <span className="text-xs sm:text-sm text-muted-foreground text-center">Cost Comparison<br />Chart</span>
-                                        </div>
-                                        <div className="h-20 sm:h-24 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                            <span className="text-xs sm:text-sm text-muted-foreground text-center">ROI Analysis<br />Graph</span>
-                                        </div>
-                                        <div className="h-20 sm:h-24 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center sm:col-span-2">
-                                            <span className="text-xs sm:text-sm text-muted-foreground text-center">Recommendation Summary</span>
-                                        </div>
+                            <CollapsibleContent>
+                                <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
+                                    <div className="h-20 sm:h-24 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                        <span className="text-xs sm:text-sm text-muted-foreground text-center">Cost Comparison<br />Chart</span>
+                                    </div>
+                                    <div className="h-20 sm:h-24 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                        <span className="text-xs sm:text-sm text-muted-foreground text-center">ROI Analysis<br />Graph</span>
+                                    </div>
+                                    <div className="h-20 sm:h-24 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center sm:col-span-2">
+                                        <span className="text-xs sm:text-sm text-muted-foreground text-center">Recommendation Summary</span>
                                     </div>
                                 </div>
                             </CollapsibleContent>
                         </Collapsible>
                     </CardContent>
                 </Card>
+
             </main>
         </div>
     )
