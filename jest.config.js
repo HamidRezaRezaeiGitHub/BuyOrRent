@@ -9,6 +9,13 @@ export default {
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
       useESM: true,
+      tsconfig: {
+        jsx: 'react-jsx',
+        esModuleInterop: true,
+      },
+      diagnostics: {
+        ignoreCodes: [2339], // Ignore missing property errors (for jest-dom matchers)
+      },
     }],
   },
   extensionsToTreatAsEsm: ['.ts', '.tsx'],

@@ -233,3 +233,41 @@ dist/
 ├── index.html              # Main HTML entry point
 └── vite.svg               # Static assets
 ```
+
+## Component Development Patterns
+
+### Field Components with Validation
+The application follows a consistent pattern for form field components with built-in validation and formatting:
+
+1. **Base Structure**: All field components extend `BaseFieldProps` interface
+2. **Smart Validation Integration**: Use `useSmartFieldValidation` hook for consistent validation behavior
+3. **Shadcn UI Components**: Leverage `Input`, `Label`, `Tooltip` and other shadcn components
+4. **Lucide React Icons**: Use appropriate icons (e.g., `DollarSign` for currency, `Info` for tooltips)
+5. **Mobile-First Design**: Short labels with detailed tooltip content for comprehensive information
+
+### Example: MonthlyRent Component
+Located in `src/components/rent/MonthlyRent.tsx`:
+- **Currency Formatting**: Canadian dollar formatting with `Intl.NumberFormat`
+- **Dual Value Management**: Separate display value (formatted string) and actual value (number)
+- **Focus/Blur Behavior**: Unformatted during editing, formatted when blurred
+- **Validation Rules**: Required, positive number, max value checks
+- **Tooltip**: Descriptive information accessible via info icon
+
+### Testing Pattern
+All field components should have comprehensive test coverage:
+- Basic rendering and props
+- User interaction (change, focus, blur)
+- Validation behavior (required, optional, error display)
+- Formatting (if applicable)
+- Integration tests combining multiple features
+
+**Test Configuration**:
+- Jest with ts-jest preset
+- React Testing Library
+- Type checking diagnostic code 2339 ignored for jest-dom matchers
+- Tests run with: `npm test -- <ComponentName>.test`
+
+### Dependencies for Field Components
+```bash
+npm install @radix-ui/react-tooltip  # For tooltip functionality
+```
