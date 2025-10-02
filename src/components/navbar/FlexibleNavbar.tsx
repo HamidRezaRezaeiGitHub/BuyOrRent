@@ -137,10 +137,10 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
       "sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
       className
     )}>
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 h-14 sm:h-16 flex items-center justify-between">
         
         {/* Left side - Logo and Brand */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-3 sm:gap-6 lg:gap-8 min-w-0">
           {showLogo && (
             <Logo 
               size={logoSize}
@@ -153,12 +153,12 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
           
           {/* Desktop Navigation */}
           {navItems.length > 0 && (
-            <nav className="hidden md:flex items-center gap-6">
+            <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
               {navItems.map((item, index) => (
                 <button
                   key={index}
                   onClick={() => handleNavItemClick(item)}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
                 >
                   {item.label}
                 </button>
@@ -168,11 +168,11 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
         </div>
 
         {/* Right side - Theme Toggle and Auth */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-shrink-0">
           
-          {/* Theme Toggle */}
+          {/* Theme Toggle - Always visible on mobile for your use case */}
           {showThemeToggle && (
-            <div className="hidden sm:block">
+            <div className="flex-shrink-0">
               {renderThemeToggle(false)}
             </div>
           )}
@@ -184,10 +184,11 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
               user={user}
               onClick={onAvatarClick}
               size="md"
+              className="flex-shrink-0"
             />
           ) : showAuthButtons ? (
             // Not Authenticated: Show Login/SignUp buttons
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-2 lg:gap-3">
               <LoginButton 
                 onClick={onLoginClick}
                 variant="ghost"
@@ -210,14 +211,14 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden"
+              className="lg:hidden p-2 h-8 w-8 sm:h-9 sm:w-9"
               onClick={toggleMobileMenu}
               aria-label="Toggle mobile menu"
             >
               {isMobileMenuOpen ? (
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4 sm:h-5 sm:w-5" />
               ) : (
-                <Menu className="h-5 w-5" />
+                <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
               )}
             </Button>
           )}
@@ -226,29 +227,22 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
 
       {/* Mobile Menu */}
       {enableMobileMenu && isMobileMenuOpen && (
-        <div className="md:hidden border-t border-border/20 bg-background/95 backdrop-blur">
-          <div className="container mx-auto px-4 py-4 space-y-4">
+        <div className="lg:hidden border-t border-border/20 bg-background/95 backdrop-blur">
+          <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4 space-y-3 sm:space-y-4">
             
             {/* Mobile Navigation */}
             {navItems.length > 0 && (
-              <nav className="space-y-2">
+              <nav className="space-y-1">
                 {navItems.map((item, index) => (
                   <button
                     key={index}
                     onClick={() => handleNavItemClick(item)}
-                    className="block w-full text-left text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
+                    className="block w-full text-left text-sm sm:text-base font-medium text-muted-foreground hover:text-foreground transition-colors py-2.5 sm:py-3 px-2 rounded-md hover:bg-muted/50"
                   >
                     {item.label}
                   </button>
                 ))}
               </nav>
-            )}
-            
-            {/* Mobile Theme Toggle */}
-            {showThemeToggle && (
-              <div className="py-2">
-                {renderThemeToggle(true)}
-              </div>
             )}
             
             {/* Mobile Auth Buttons */}
@@ -260,7 +254,7 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
                     setIsMobileMenuOpen(false);
                   }}
                   variant="ghost"
-                  className="justify-start w-full"
+                  className="justify-start w-full h-12 text-base"
                 >
                   {loginButtonText}
                 </LoginButton>
@@ -270,7 +264,7 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
                     setIsMobileMenuOpen(false);
                   }}
                   variant="default"
-                  className="justify-start w-full"
+                  className="justify-start w-full h-12 text-base"
                 >
                   {signUpButtonText}
                 </SignUpButton>

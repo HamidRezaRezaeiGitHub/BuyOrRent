@@ -11,15 +11,19 @@ interface RouterProviderProps {
  * Uses BrowserRouter for clean URLs without hash fragments.
  * This provider should be at the top level of your provider hierarchy.
  * 
+ * The basename is set to match the Vite base configuration (/BuyOrRent/)
+ * so that React Router routes work correctly with the deployment base path.
+ * 
  * Benefits:
- * - Clean URLs (e.g., /dashboard instead of /#/dashboard)
+ * - Clean URLs (e.g., /BuyOrRent/dashboard instead of /#/dashboard)
  * - Better SEO support
  * - History API integration
  * - Proper back/forward button behavior
+ * - Works correctly with Vite base path configuration
  */
 export const RouterProvider: React.FC<RouterProviderProps> = ({ children }) => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/BuyOrRent">
       {children}
     </BrowserRouter>
   );
