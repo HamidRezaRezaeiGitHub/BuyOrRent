@@ -61,9 +61,6 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
     const [displayValue, setDisplayValue] = useState<string>(() => {
         return value === '' ? '' : formatCurrency(value);
     });
-    
-    // Track if the input is focused
-    const [isFocused, setIsFocused] = useState(false);
 
     // Memoized validation rules configuration
     const validationRules = useMemo(() => {
@@ -137,7 +134,6 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
     };
 
     const handleFocus = () => {
-        setIsFocused(true);
         handlers.handleFocus();
         
         // When focused, show unformatted value for easier editing
@@ -147,7 +143,6 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
     };
 
     const handleBlur = () => {
-        setIsFocused(false);
         handlers.handleBlur();
         
         // When blurred, format the value for display

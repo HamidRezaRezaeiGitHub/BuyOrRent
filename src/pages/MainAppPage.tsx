@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useState } from 'react'
 import { FlexibleNavbar } from '../components/navbar'
+import { MonthlyRentField } from '../components/rent/MonthlyRent'
 import { CompactThemeToggle } from '../components/theme'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
@@ -10,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 export const MainAppPage: React.FC = () => {
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
+    const [monthlyRent, setMonthlyRent] = useState<number | ''>('')
 
     return (
         <div className="min-h-screen bg-background">
@@ -68,9 +70,12 @@ export const MainAppPage: React.FC = () => {
                                     {/* Rental Information Tab */}
                                     <TabsContent value="rent" className="mt-0">
                                         <div className="grid gap-3 sm:gap-4">
-                                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                                <span className="text-xs sm:text-sm text-muted-foreground">Monthly Rent Amount</span>
-                                            </div>
+                                            <MonthlyRentField
+                                                value={monthlyRent}
+                                                onChange={setMonthlyRent}
+                                                enableValidation={true}
+                                                validationMode="optional"
+                                            />
                                             <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
                                                 <span className="text-xs sm:text-sm text-muted-foreground">Security Deposit</span>
                                             </div>
