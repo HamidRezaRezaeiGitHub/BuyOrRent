@@ -62,6 +62,9 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
         return value === '' ? '' : formatCurrency(value);
     });
 
+    // Track tooltip open state for mobile-friendly click interaction
+    const [tooltipOpen, setTooltipOpen] = useState(false);
+
     // Memoized validation rules configuration
     const validationRules = useMemo(() => {
         if (!enableValidation) return [];
@@ -169,9 +172,14 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
                     {isRequired && <span className="text-red-500 ml-1">*</span>}
                 </Label>
                 <TooltipProvider>
-                    <Tooltip>
+                    <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
                         <TooltipTrigger asChild>
-                            <button type="button" className="ml-1" aria-label="More information about monthly rent">
+                            <button 
+                                type="button" 
+                                className="ml-1" 
+                                aria-label="More information about monthly rent"
+                                onClick={() => setTooltipOpen(!tooltipOpen)}
+                            >
                                 <Info className="h-3 w-3 text-muted-foreground" />
                             </button>
                         </TooltipTrigger>
