@@ -7,6 +7,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { formatCurrency } from '@/services/formatting';
 
 export interface MonthlyRentTableProps {
     monthlyRent: number;
@@ -37,18 +38,6 @@ const calculateMonthlyRentForYear = (
 ): number => {
     if (yearIndex === 0) return baseRent;
     return baseRent * Math.pow(1 + annualIncreasePercent / 100, yearIndex);
-};
-
-/**
- * Format a number as Canadian dollar currency
- */
-const formatCurrency = (value: number): string => {
-    return new Intl.NumberFormat('en-CA', {
-        style: 'currency',
-        currency: 'CAD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }).format(value);
 };
 
 export const MonthlyRentTable: FC<MonthlyRentTableProps> = ({
