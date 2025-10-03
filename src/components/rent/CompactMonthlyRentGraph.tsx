@@ -1,7 +1,8 @@
 import { FC } from 'react';
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Line, LineChart, XAxis, YAxis } from 'recharts';
 import { MonthlyRentData } from './MonthlyRentTable';
 import { formatCurrency, formatShortCurrency } from '@/services/formatting';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 
 export interface CompactMonthlyRentGraphProps {
     data: MonthlyRentData | null;
@@ -22,45 +23,49 @@ export const CompactMonthlyRentGraph: FC<CompactMonthlyRentGraphProps> = ({ data
         cumulative: yearData.cumulativeTotal,
     }));
 
+    // Chart configuration for theme-aware colors
+    const chartConfig = {
+        cumulative: {
+            label: 'Cumulative Rent',
+            color: 'hsl(var(--chart-1))',
+        },
+    };
+
     return (
         <div className="w-full h-[250px] p-2">
             <h3 className="text-sm font-semibold mb-2 text-center">
                 Cumulative Rent
             </h3>
-            <ResponsiveContainer width="100%" height="100%">
+            <ChartContainer config={chartConfig} className="h-full w-full">
                 <LineChart
                     data={chartData}
                     margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
                 >
                     <XAxis
                         dataKey="year"
-                        className="text-xs"
                         tick={{ fontSize: 10 }}
                     />
                     <YAxis
                         tickFormatter={formatShortCurrency}
-                        className="text-xs"
                         tick={{ fontSize: 10 }}
                     />
-                    <Tooltip
-                        formatter={(value: number) => [formatCurrency(value), 'Total Paid']}
-                        labelFormatter={(label) => `Year ${label}`}
-                        contentStyle={{
-                            backgroundColor: 'hsl(var(--background))',
-                            border: '1px solid hsl(var(--border))',
-                            borderRadius: '6px',
-                            fontSize: '12px',
-                        }}
+                    <ChartTooltip
+                        content={
+                            <ChartTooltipContent 
+                                labelFormatter={(label: any) => `Year ${label}`}
+                                formatter={(value: any) => [formatCurrency(value as number), 'Total Paid']}
+                            />
+                        }
                     />
                     <Line
                         type="monotone"
                         dataKey="cumulative"
-                        stroke="hsl(var(--primary))"
+                        stroke="var(--color-cumulative)"
                         strokeWidth={2}
                         dot={false}
                     />
                 </LineChart>
-            </ResponsiveContainer>
+            </ChartContainer>
         </div>
     );
 };
