@@ -1,17 +1,20 @@
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, Maximize2 } from 'lucide-react'
 import { useState, useCallback } from 'react'
 import { FlexibleNavbar } from '../components/navbar'
 import { YearsField } from '../components/common/Years'
 import { MonthlyRentField } from '../components/rent/MonthlyRent'
 import { RentIncreaseField } from '../components/rent/RentIncrease'
 import { MonthlyRentTable, MonthlyRentData } from '../components/rent/MonthlyRentTable'
+import { CompactMonthlyRentTable } from '../components/rent/CompactMonthlyRentTable'
 import { MonthlyRentGraph } from '../components/rent/MonthlyRentGraph'
+import { CompactMonthlyRentGraph } from '../components/rent/CompactMonthlyRentGraph'
 import { CompactThemeToggle } from '../components/theme'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../components/ui/collapsible'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../components/ui/carousel'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog'
 
 export const MainAppPage: React.FC = () => {
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
@@ -20,6 +23,8 @@ export const MainAppPage: React.FC = () => {
     const [rentIncrease, setRentIncrease] = useState<number | ''>(2.5)
     const [analysisYears, setAnalysisYears] = useState<number>(30)
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
+    const [tableDialogOpen, setTableDialogOpen] = useState(false)
+    const [graphDialogOpen, setGraphDialogOpen] = useState(false)
 
     // Callback to receive calculated rent data from MonthlyRentTable
     const handleRentDataCalculated = useCallback((data: MonthlyRentData) => {
@@ -93,7 +98,7 @@ export const MainAppPage: React.FC = () => {
                                     {/* Rental Information Tab */}
                                     <TabsContent value="rent" className="mt-0">
                                         <div className="grid gap-3 sm:gap-4">
-                                            <div className="grid grid-cols-1 gap-3 sm:gap-4">
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                                 <MonthlyRentField
                                                     value={monthlyRent}
                                                     onChange={setMonthlyRent}
@@ -176,19 +181,42 @@ export const MainAppPage: React.FC = () => {
                                         <div className="grid gap-3 sm:gap-4">
                                             {/* Tables Card with Carousel */}
                                             <Card>
-                                                <CardHeader>
+                                                <CardHeader className="relative">
                                                     <CardTitle className="text-lg">Tables</CardTitle>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="absolute top-4 right-4 h-8 w-8"
+                                                        onClick={() => setTableDialogOpen(true)}
+                                                        aria-label="Expand table"
+                                                    >
+                                                        <Maximize2 className="h-4 w-4" />
+                                                    </Button>
                                                 </CardHeader>
                                                 <CardContent>
                                                     <Carousel className="w-full max-w-full">
                                                         <CarouselContent>
                                                             <CarouselItem>
-                                                                <MonthlyRentTable
-                                                                    monthlyRent={typeof monthlyRent === 'number' ? monthlyRent : 0}
-                                                                    analysisYears={analysisYears}
-                                                                    annualRentIncrease={typeof rentIncrease === 'number' ? rentIncrease : 0}
-                                                                    onDataCalculated={handleRentDataCalculated}
-                                                                />
+                                                                <div className="overflow-hidden">
+                                                                    <CompactMonthlyRentTable
+                                                                        data={rentData}
+                                                                        maxRows={5}
+                                                                    />
+                                                                    {/* Hidden full table for data calculation */}
+                                                                    <div className="hidden">
+                                                                        <MonthlyRentTable
+                                                                            monthlyRent={typeof monthlyRent === 'number' ? monthlyRent : 0}
+                                                                            analysisYears={analysisYears}
+                                                                            annualRentIncrease={typeof rentIncrease === 'number' ? rentIncrease : 0}
+                                                                            onDataCalculated={handleRentDataCalculated}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            </CarouselItem>
+                                                            <CarouselItem>
+                                                                <div className="h-20 sm:h-24 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                                                    <span className="text-xs sm:text-sm text-muted-foreground text-center">Additional Table View<br />Coming Soon</span>
+                                                                </div>
                                                             </CarouselItem>
                                                         </CarouselContent>
                                                         <CarouselPrevious />
@@ -199,14 +227,30 @@ export const MainAppPage: React.FC = () => {
 
                                             {/* Graphs Card with Carousel */}
                                             <Card>
-                                                <CardHeader>
+                                                <CardHeader className="relative">
                                                     <CardTitle className="text-lg">Graphs</CardTitle>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="absolute top-4 right-4 h-8 w-8"
+                                                        onClick={() => setGraphDialogOpen(true)}
+                                                        aria-label="Expand graph"
+                                                    >
+                                                        <Maximize2 className="h-4 w-4" />
+                                                    </Button>
                                                 </CardHeader>
                                                 <CardContent>
                                                     <Carousel className="w-full max-w-full">
                                                         <CarouselContent>
                                                             <CarouselItem>
-                                                                <MonthlyRentGraph data={rentData} />
+                                                                <div className="overflow-hidden">
+                                                                    <CompactMonthlyRentGraph data={rentData} />
+                                                                </div>
+                                                            </CarouselItem>
+                                                            <CarouselItem>
+                                                                <div className="h-20 sm:h-24 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                                                    <span className="text-xs sm:text-sm text-muted-foreground text-center">Additional Graph View<br />Coming Soon</span>
+                                                                </div>
                                                             </CarouselItem>
                                                         </CarouselContent>
                                                         <CarouselPrevious />
@@ -241,6 +285,34 @@ export const MainAppPage: React.FC = () => {
                 </Card>
 
             </main>
+
+            {/* Dialog for Full Table View */}
+            <Dialog open={tableDialogOpen} onOpenChange={setTableDialogOpen}>
+                <DialogContent className="max-w-7xl max-h-[90vh] overflow-auto">
+                    <DialogHeader>
+                        <DialogTitle>Monthly Rent Table - Full View</DialogTitle>
+                    </DialogHeader>
+                    <div className="overflow-x-auto">
+                        <MonthlyRentTable
+                            monthlyRent={typeof monthlyRent === 'number' ? monthlyRent : 0}
+                            analysisYears={analysisYears}
+                            annualRentIncrease={typeof rentIncrease === 'number' ? rentIncrease : 0}
+                        />
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Dialog for Full Graph View */}
+            <Dialog open={graphDialogOpen} onOpenChange={setGraphDialogOpen}>
+                <DialogContent className="max-w-7xl max-h-[90vh] overflow-auto">
+                    <DialogHeader>
+                        <DialogTitle>Monthly Rent Graph - Full View</DialogTitle>
+                    </DialogHeader>
+                    <div className="overflow-x-auto">
+                        <MonthlyRentGraph data={rentData} />
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

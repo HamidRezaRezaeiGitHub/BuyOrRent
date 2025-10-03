@@ -135,7 +135,8 @@ describe('MonthlyRentTable', () => {
         );
 
         // Year total should be 1000 * 12 = 12,000
-        expect(screen.getByText('$12,000')).toBeInTheDocument();
+        // This appears in both Total and Cumulative columns
+        expect(screen.getAllByText('$12,000').length).toBeGreaterThan(0);
     });
 
     test('MonthlyRentTable_shouldHandleZeroIncrease', () => {
@@ -297,7 +298,8 @@ describe('MonthlyRentTable', () => {
         );
 
         expect(screen.getAllByText('$10,000').length).toBeGreaterThan(0);
-        expect(screen.getByText('$120,000')).toBeInTheDocument();
+        // Cumulative total is also $120,000, so use getAllByText
+        expect(screen.getAllByText('$120,000').length).toBeGreaterThan(0);
     });
 
     // Edge cases

@@ -28,16 +28,19 @@ describe('MonthlyRentGraph', () => {
                 year: 2024,
                 months: Array(12).fill(1000),
                 yearTotal: 12000,
+                cumulativeTotal: 12000,
             },
             {
                 year: 2025,
                 months: Array(12).fill(1025),
                 yearTotal: 12300,
+                cumulativeTotal: 24300,
             },
             {
                 year: 2026,
                 months: Array(12).fill(1051),
                 yearTotal: 12612,
+                cumulativeTotal: 36912,
             },
         ],
         totalPaid: 36912,
@@ -126,6 +129,7 @@ describe('MonthlyRentGraph', () => {
                     year: 2024,
                     months: Array(12).fill(1500),
                     yearTotal: 18000,
+                    cumulativeTotal: 18000,
                 },
             ],
             totalPaid: 18000,
@@ -139,11 +143,16 @@ describe('MonthlyRentGraph', () => {
 
     test('MonthlyRentGraph_shouldHandleMultipleYearsData', () => {
         const multiYearData: MonthlyRentData = {
-            years: Array.from({ length: 10 }, (_, i) => ({
-                year: 2024 + i,
-                months: Array(12).fill(1000 + i * 50),
-                yearTotal: (1000 + i * 50) * 12,
-            })),
+            years: Array.from({ length: 10 }, (_, i) => {
+                const yearTotal = (1000 + i * 50) * 12;
+                const cumulativeTotal = Array.from({ length: i + 1 }, (_, j) => (1000 + j * 50) * 12).reduce((sum, v) => sum + v, 0);
+                return {
+                    year: 2024 + i,
+                    months: Array(12).fill(1000 + i * 50),
+                    yearTotal,
+                    cumulativeTotal,
+                };
+            }),
             totalPaid: 135000,
         };
 
@@ -159,6 +168,7 @@ describe('MonthlyRentGraph', () => {
                 year: 2024 + i,
                 months: Array(12).fill(2000),
                 yearTotal: 24000,
+                cumulativeTotal: 24000 * (i + 1),
             })),
             totalPaid: 720000,
         };
@@ -175,6 +185,7 @@ describe('MonthlyRentGraph', () => {
                     year: 2024,
                     months: Array(12).fill(100),
                     yearTotal: 1200,
+                    cumulativeTotal: 1200,
                 },
             ],
             totalPaid: 1200,
@@ -193,6 +204,7 @@ describe('MonthlyRentGraph', () => {
                     year: 2024,
                     months: Array(12).fill(5000),
                     yearTotal: 60000,
+                    cumulativeTotal: 60000,
                 },
             ],
             totalPaid: 60000,
@@ -210,6 +222,7 @@ describe('MonthlyRentGraph', () => {
                     year: 2024,
                     months: Array(12).fill(1234.56),
                     yearTotal: 14814.72,
+                    cumulativeTotal: 14814.72,
                 },
             ],
             totalPaid: 14814.72,
@@ -229,6 +242,7 @@ describe('MonthlyRentGraph', () => {
                     year: 2024,
                     months: Array(12).fill(0),
                     yearTotal: 0,
+                    cumulativeTotal: 0,
                 },
             ],
             totalPaid: 0,
@@ -250,6 +264,7 @@ describe('MonthlyRentGraph', () => {
                     year: 2024,
                     months: Array(12).fill(2000),
                     yearTotal: 24000,
+                    cumulativeTotal: 24000,
                 },
             ],
             totalPaid: 24000,
