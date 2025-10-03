@@ -1,35 +1,11 @@
 import { FC } from 'react';
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { MonthlyRentData } from './MonthlyRentTable';
+import { formatCurrency, formatShortCurrency } from '@/services/formatting';
 
 export interface CompactMonthlyRentGraphProps {
     data: MonthlyRentData | null;
 }
-
-/**
- * Format a number as Canadian dollar currency
- */
-const formatCurrency = (value: number): string => {
-    return new Intl.NumberFormat('en-CA', {
-        style: 'currency',
-        currency: 'CAD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }).format(value);
-};
-
-/**
- * Format large numbers in short form (e.g., 1.5K, 2.3M)
- */
-const formatShortCurrency = (value: number): string => {
-    if (value >= 1000000) {
-        return `$${(value / 1000000).toFixed(1)}M`;
-    }
-    if (value >= 1000) {
-        return `$${(value / 1000).toFixed(0)}K`;
-    }
-    return formatCurrency(value);
-};
 
 export const CompactMonthlyRentGraph: FC<CompactMonthlyRentGraphProps> = ({ data }) => {
     if (!data || data.years.length === 0) {

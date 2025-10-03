@@ -8,6 +8,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { MonthlyRentData } from './MonthlyRentTable';
+import { formatCurrency } from '@/services/formatting';
 
 export interface CompactMonthlyRentTableProps {
     data: MonthlyRentData | null;
@@ -19,18 +20,6 @@ interface CompactRow {
     total: number;
     cumulativeTotal: number;
 }
-
-/**
- * Format a number as Canadian dollar currency
- */
-const formatCurrency = (value: number): string => {
-    return new Intl.NumberFormat('en-CA', {
-        style: 'currency',
-        currency: 'CAD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-    }).format(value);
-};
 
 /**
  * Compress year data into a maximum number of rows
