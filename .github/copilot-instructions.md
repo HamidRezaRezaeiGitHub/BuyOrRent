@@ -271,3 +271,31 @@ All field components should have comprehensive test coverage:
 ```bash
 npm install @radix-ui/react-tooltip  # For tooltip functionality
 ```
+
+## Circumstance-Specific Development
+
+The application supports multiple circumstances (scenarios) that users can choose from, with each circumstance having its own unique UI and logic.
+
+### Circumstance Structure
+- **Location**: `src/components/circumstances/`
+- **Naming Convention**: `Circumstance<Number>.tsx` (e.g., `Circumstance1.tsx`, `Circumstance2.tsx`)
+- **Purpose**: Each circumstance file contains a complete page implementation for a specific user scenario
+
+### Working with Circumstances
+
+When a task mentions a circumstance by name or number (e.g., "Circumstance 1", "Circumstance1", or just "1"), apply changes to the corresponding file:
+- **Circumstance 1** → `src/components/circumstances/Circumstance1.tsx`
+- **Circumstance 2** → `src/components/circumstances/Circumstance2.tsx`
+- And so on...
+
+### Current Circumstances
+- **Circumstance1**: The default scenario containing the full BuyOrRent analysis page with rental and purchase information, tables, and graphs
+
+### Creating New Circumstances
+1. Create a new file: `src/components/circumstances/Circumstance<N>.tsx`
+2. Export the component in `src/components/circumstances/index.ts`
+3. Import and use in `MainAppPage.tsx` or router as needed
+4. Follow the same structure and patterns as existing circumstances
+
+### Integration Point
+The `MainAppPage` component (in `src/pages/MainAppPage.tsx`) serves as the entry point that imports and renders the appropriate circumstance component based on user selection or routing logic.
