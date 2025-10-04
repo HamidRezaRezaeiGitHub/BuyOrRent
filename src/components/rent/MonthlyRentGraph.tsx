@@ -1,8 +1,8 @@
-import { FC } from 'react';
-import { Line, LineChart, XAxis, YAxis, CartesianGrid } from 'recharts';
-import { MonthlyRentData } from './MonthlyRentTable';
-import { formatCurrency, formatShortCurrency } from '@/services/formatting';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { formatCurrency, formatShortCurrency } from '@/services/formatting';
+import { FC } from 'react';
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
+import { MonthlyRentData } from './MonthlyRentTable';
 
 export interface MonthlyRentGraphProps {
     data: MonthlyRentData | null;
@@ -59,7 +59,7 @@ export const MonthlyRentGraph: FC<MonthlyRentGraphProps> = ({ data }) => {
                     />
                     <ChartTooltip
                         content={
-                            <ChartTooltipContent 
+                            <ChartTooltipContent
                                 labelFormatter={(label: any) => `Year ${label}`}
                                 formatter={(value: any) => [formatCurrency(value as number), 'Total Paid']}
                             />

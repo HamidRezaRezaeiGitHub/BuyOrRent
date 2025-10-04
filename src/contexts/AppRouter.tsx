@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ThemeShowcase } from '../components/theme/ThemeShowcase';
-import { AddressFormPage, MainAppPage } from '../pages';
+import { MainAppPage } from '../pages';
 
 export const AppRouter: React.FC = () => {
     return (
@@ -11,7 +11,6 @@ export const AppRouter: React.FC = () => {
 
             {/* Temporary component showcase routes */}
             <Route path="/temp/theme" element={<ThemeShowcase />} />
-            <Route path="/temp/address" element={<AddressFormPage />} />
 
             {/* Catch-all route - redirect any undefined path to home */}
             <Route path="*" element={<Navigate to="/" replace />} />

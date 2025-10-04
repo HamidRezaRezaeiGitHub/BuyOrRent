@@ -85,29 +85,31 @@ export const CompactMonthlyRentTable: FC<CompactMonthlyRentTableProps> = ({
     const compactRows = compressYearData(data.years, maxRows);
 
     return (
-        <div className="w-full overflow-x-auto">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="font-semibold">Year(s)</TableHead>
-                        <TableHead className="text-right font-semibold">Total</TableHead>
-                        <TableHead className="text-right font-semibold">Cumulative</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {compactRows.map((row, index) => (
-                        <TableRow key={index}>
-                            <TableCell className="font-medium">{row.yearRange}</TableCell>
-                            <TableCell className="text-right font-medium">
-                                {formatCurrency(row.total)}
-                            </TableCell>
-                            <TableCell className="text-right font-medium">
-                                {formatCurrency(row.cumulativeTotal)}
-                            </TableCell>
+        <div className="w-full max-w-full overflow-hidden">
+            <div className="overflow-x-auto">
+                <Table className="w-full table-fixed">
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="font-semibold w-[25%] px-1 sm:px-2">Year(s)</TableHead>
+                            <TableHead className="text-right font-semibold w-[37.5%] px-1 sm:px-2">Total</TableHead>
+                            <TableHead className="text-right font-semibold w-[37.5%] px-1 sm:px-2">Cumulative</TableHead>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                    </TableHeader>
+                    <TableBody>
+                        {compactRows.map((row, index) => (
+                            <TableRow key={index}>
+                                <TableCell className="font-medium text-xs sm:text-sm px-1 sm:px-2 truncate">{row.yearRange}</TableCell>
+                                <TableCell className="text-right font-medium text-xs sm:text-sm px-1 sm:px-2 truncate">
+                                    {formatCurrency(row.total)}
+                                </TableCell>
+                                <TableCell className="text-right font-medium text-xs sm:text-sm px-1 sm:px-2 truncate">
+                                    {formatCurrency(row.cumulativeTotal)}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
         </div>
     );
 };
