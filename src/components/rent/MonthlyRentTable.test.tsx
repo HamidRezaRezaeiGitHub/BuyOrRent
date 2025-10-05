@@ -1,10 +1,14 @@
 import { render, screen } from '@testing-library/react';
-import { MonthlyRentTable, MonthlyRentData } from './MonthlyRentTable';
+import { MonthlyRentTable } from './MonthlyRentTable';
+import { MonthlyRentData } from '@/services/MonthlyRentCalculator';
 
 describe('MonthlyRentTable', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
+
+    // Component rendering tests
+    // Calculation logic tests have been moved to MonthlyRentCalculator.test.ts
 
     // Basic rendering tests
     test('MonthlyRentTable_shouldShowMessage_whenMonthlyRentIsZero', () => {

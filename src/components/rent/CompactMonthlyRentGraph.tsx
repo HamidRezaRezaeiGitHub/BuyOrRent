@@ -2,7 +2,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/
 import { formatCurrency, formatShortCurrency } from '@/services/formatting';
 import { FC } from 'react';
 import { Line, LineChart, XAxis, YAxis } from 'recharts';
-import { MonthlyRentData } from './MonthlyRentTable';
+import { MonthlyRentData } from '@/services/MonthlyRentCalculator';
 
 export interface CompactMonthlyRentGraphProps {
     data: MonthlyRentData | null;

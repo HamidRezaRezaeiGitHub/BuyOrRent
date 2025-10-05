@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp, Maximize2 } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { YearsField } from '../common/Years'
 import { InvestmentAnnualReturnField } from '../invest/InvestmentAnnualReturn'
 import { FlexibleNavbar } from '../navbar'
@@ -7,7 +7,7 @@ import { CompactMonthlyRentGraph } from '../rent/CompactMonthlyRentGraph'
 import { CompactMonthlyRentTable } from '../rent/CompactMonthlyRentTable'
 import { MonthlyRentField } from '../rent/MonthlyRent'
 import { MonthlyRentGraph } from '../rent/MonthlyRentGraph'
-import { MonthlyRentData, MonthlyRentTable } from '../rent/MonthlyRentTable'
+import { MonthlyRentTable } from '../rent/MonthlyRentTable'
 import { RentIncreaseField } from '../rent/RentIncrease'
 import { CompactThemeToggle } from '../theme'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
+import { calculateMonthlyRentData, MonthlyRentData } from '@/services/MonthlyRentCalculator'
 
 export const Circumstance1: React.FC = () => {
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
@@ -28,18 +29,22 @@ export const Circumstance1: React.FC = () => {
     const [tableDialogOpen, setTableDialogOpen] = useState(false)
     const [graphDialogOpen, setGraphDialogOpen] = useState(false)
 
-    // Callback to receive calculated rent data from MonthlyRentTable
-    const handleRentDataCalculated = useCallback((data: MonthlyRentData) => {
-        setRentData(data)
-    }, [])
+    // Calculate rent data whenever inputs change
+    useEffect(() => {
+        const data = calculateMonthlyRentData(
+            typeof monthlyRent === 'number' ? monthlyRent : 0,
+            analysisYears,
+            typeof rentIncrease === 'number' ? rentIncrease : 0
+        );
+        setRentData(data);
+    }, [monthlyRent, analysisYears, rentIncrease]);
 
-    // Monthly Rent Table Component (shared between hidden calculation and dialog)
+    // Monthly Rent Table Component (for dialog display only)
     const monthlyRentTableComponent = (
         <MonthlyRentTable
             monthlyRent={typeof monthlyRent === 'number' ? monthlyRent : 0}
             analysisYears={analysisYears}
             annualRentIncrease={typeof rentIncrease === 'number' ? rentIncrease : 0}
-            onDataCalculated={handleRentDataCalculated}
         />
     )
 
@@ -201,10 +206,6 @@ export const Circumstance1: React.FC = () => {
                                         data={rentData}
                                         maxRows={5}
                                     />
-                                    {/* Hidden full table for data calculation */}
-                                    <div className="hidden">
-                                        {monthlyRentTableComponent}
-                                    </div>
                                 </div>
                             </CarouselItem>
                             <CarouselItem className="pl-1 sm:pl-2 basis-full">
