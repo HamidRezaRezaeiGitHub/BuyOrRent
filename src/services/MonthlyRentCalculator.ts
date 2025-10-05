@@ -92,6 +92,25 @@ export const compressYearData = (
     maxRows: number
 ): CompactRow[] => {
     if (years.length === 0) return [];
+    
+    // Guard against invalid maxRows values
+    if (maxRows <= 0) {
+        // Return all data in a single aggregated row
+        const startYear = years[0].year;
+        const endYear = years[years.length - 1].year;
+        const yearRange = startYear === endYear 
+            ? startYear.toString() 
+            : `${startYear}-${endYear}`;
+        const total = years.reduce((sum, y) => sum + y.yearTotal, 0);
+        const cumulativeTotal = years[years.length - 1].cumulativeTotal;
+        
+        return [{
+            yearRange,
+            total,
+            cumulativeTotal,
+        }];
+    }
+    
     if (years.length <= maxRows) {
         // No compression needed, show each year individually
         return years.map((yearData) => ({

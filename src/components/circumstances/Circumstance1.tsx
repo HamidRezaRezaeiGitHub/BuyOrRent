@@ -41,11 +41,7 @@ export const Circumstance1: React.FC = () => {
 
     // Monthly Rent Table Component (for dialog display only)
     const monthlyRentTableComponent = (
-        <MonthlyRentTable
-            monthlyRent={typeof monthlyRent === 'number' ? monthlyRent : 0}
-            analysisYears={analysisYears}
-            annualRentIncrease={typeof rentIncrease === 'number' ? rentIncrease : 0}
-        />
+        <MonthlyRentTable data={rentData} />
     )
 
     // Navigation Component

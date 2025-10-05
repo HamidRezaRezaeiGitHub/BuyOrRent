@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MonthlyRentTable } from './MonthlyRentTable';
-import { MonthlyRentData } from '@/services/MonthlyRentCalculator';
+import { MonthlyRentData, calculateMonthlyRentData } from '@/services/MonthlyRentCalculator';
 
 describe('MonthlyRentTable', () => {
     beforeEach(() => {
@@ -11,38 +11,25 @@ describe('MonthlyRentTable', () => {
     // Calculation logic tests have been moved to MonthlyRentCalculator.test.ts
 
     // Basic rendering tests
-    test('MonthlyRentTable_shouldShowMessage_whenMonthlyRentIsZero', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={0}
-                analysisYears={5}
-                annualRentIncrease={2.5}
-            />
-        );
+    test('MonthlyRentTable_shouldShowMessage_whenDataIsNull', () => {
+        render(<MonthlyRentTable data={null} />);
 
         expect(screen.getByText(/please enter monthly rent/i)).toBeInTheDocument();
     });
 
-    test('MonthlyRentTable_shouldShowMessage_whenAnalysisYearsIsZero', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={1500}
-                analysisYears={0}
-                annualRentIncrease={2.5}
-            />
-        );
+    test('MonthlyRentTable_shouldShowMessage_whenDataIsEmpty', () => {
+        const emptyData: MonthlyRentData = {
+            years: [],
+            totalPaid: 0,
+        };
+        render(<MonthlyRentTable data={emptyData} />);
 
         expect(screen.getByText(/please enter monthly rent/i)).toBeInTheDocument();
     });
 
-    test('MonthlyRentTable_shouldRenderTable_whenValidInputsProvided', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={1500}
-                analysisYears={3}
-                annualRentIncrease={2.5}
-            />
-        );
+    test('MonthlyRentTable_shouldRenderTable_whenValidDataProvided', () => {
+        const data = calculateMonthlyRentData(1500, 3, 2.5);
+        render(<MonthlyRentTable data={data} />);
 
         // Check for table headers
         expect(screen.getByText('Year')).toBeInTheDocument();
@@ -52,13 +39,8 @@ describe('MonthlyRentTable', () => {
     });
 
     test('MonthlyRentTable_shouldRenderCorrectNumberOfRows', () => {
-        const { container } = render(
-            <MonthlyRentTable
-                monthlyRent={1500}
-                analysisYears={5}
-                annualRentIncrease={2.5}
-            />
-        );
+        const data = calculateMonthlyRentData(1500, 5, 2.5);
+        const { container } = render(<MonthlyRentTable data={data} />);
 
         // Should have 5 data rows (one for each year) + 1 header row
         const rows = container.querySelectorAll('tbody tr');
@@ -67,26 +49,15 @@ describe('MonthlyRentTable', () => {
 
     test('MonthlyRentTable_shouldDisplayCurrentYearAsFirstYear', () => {
         const currentYear = new Date().getFullYear();
-
-        render(
-            <MonthlyRentTable
-                monthlyRent={1500}
-                analysisYears={3}
-                annualRentIncrease={2.5}
-            />
-        );
+        const data = calculateMonthlyRentData(1500, 3, 2.5);
+        render(<MonthlyRentTable data={data} />);
 
         expect(screen.getByText(currentYear.toString())).toBeInTheDocument();
     });
 
     test('MonthlyRentTable_shouldDisplayAllMonthHeaders', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={1500}
-                analysisYears={2}
-                annualRentIncrease={2.5}
-            />
-        );
+        const data = calculateMonthlyRentData(1500, 2, 2.5);
+        render(<MonthlyRentTable data={data} />);
 
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         
@@ -97,13 +68,8 @@ describe('MonthlyRentTable', () => {
 
     // Calculation tests
     test('MonthlyRentTable_shouldShowCorrectRent_forFirstYear', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={1500}
-                analysisYears={2}
-                annualRentIncrease={2.5}
-            />
-        );
+        const data = calculateMonthlyRentData(1500, 2, 2.5);
+        render(<MonthlyRentTable data={data} />);
 
         // First year rent should be $1,500
         const firstYearCells = screen.getAllByText('$1,500');
@@ -112,13 +78,8 @@ describe('MonthlyRentTable', () => {
     });
 
     test('MonthlyRentTable_shouldCalculateIncreasedRent_forSecondYear', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={1000}
-                analysisYears={2}
-                annualRentIncrease={10}
-            />
-        );
+        const data = calculateMonthlyRentData(1000, 2, 10);
+        render(<MonthlyRentTable data={data} />);
 
         // First year: $1,000
         const firstYearCells = screen.getAllByText('$1,000');
@@ -130,13 +91,8 @@ describe('MonthlyRentTable', () => {
     });
 
     test('MonthlyRentTable_shouldCalculateYearTotal_correctly', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={1000}
-                analysisYears={1}
-                annualRentIncrease={0}
-            />
-        );
+        const data = calculateMonthlyRentData(1000, 1, 0);
+        render(<MonthlyRentTable data={data} />);
 
         // Year total should be 1000 * 12 = 12,000
         // This appears in both Total and Cumulative columns
@@ -144,13 +100,8 @@ describe('MonthlyRentTable', () => {
     });
 
     test('MonthlyRentTable_shouldHandleZeroIncrease', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={1500}
-                analysisYears={3}
-                annualRentIncrease={0}
-            />
-        );
+        const data = calculateMonthlyRentData(1500, 3, 0);
+        render(<MonthlyRentTable data={data} />);
 
         // All years should show the same rent
         const rentCells = screen.getAllByText('$1,500');
@@ -159,13 +110,8 @@ describe('MonthlyRentTable', () => {
     });
 
     test('MonthlyRentTable_shouldHandleDecimalIncrease', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={1000}
-                analysisYears={2}
-                annualRentIncrease={2.5}
-            />
-        );
+        const data = calculateMonthlyRentData(1000, 2, 2.5);
+        render(<MonthlyRentTable data={data} />);
 
         // First year: $1,000
         expect(screen.getAllByText('$1,000').length).toBeGreaterThanOrEqual(12);
@@ -174,132 +120,18 @@ describe('MonthlyRentTable', () => {
         expect(screen.getAllByText('$1,025').length).toBeGreaterThanOrEqual(12);
     });
 
-    // Callback tests
-    test('MonthlyRentTable_shouldCallCallback_whenDataCalculated', () => {
-        const mockCallback = jest.fn();
-
-        render(
-            <MonthlyRentTable
-                monthlyRent={1000}
-                analysisYears={2}
-                annualRentIncrease={10}
-                onDataCalculated={mockCallback}
-            />
-        );
-
-        expect(mockCallback).toHaveBeenCalled();
-    });
-
-    test('MonthlyRentTable_shouldProvideCorrectData_toCallback', () => {
-        const mockCallback = jest.fn();
-
-        render(
-            <MonthlyRentTable
-                monthlyRent={1000}
-                analysisYears={2}
-                annualRentIncrease={10}
-                onDataCalculated={mockCallback}
-            />
-        );
-
-        expect(mockCallback).toHaveBeenCalledWith(
-            expect.objectContaining({
-                years: expect.arrayContaining([
-                    expect.objectContaining({
-                        year: expect.any(Number),
-                        months: expect.any(Array),
-                        yearTotal: expect.any(Number),
-                    }),
-                ]),
-                totalPaid: expect.any(Number),
-            })
-        );
-    });
-
-    test('MonthlyRentTable_shouldCalculateCorrectTotalPaid_inCallback', () => {
-        let capturedData: MonthlyRentData | undefined;
-        const mockCallback = jest.fn((data: MonthlyRentData) => {
-            capturedData = data;
-        });
-
-        render(
-            <MonthlyRentTable
-                monthlyRent={1000}
-                analysisYears={2}
-                annualRentIncrease={0}
-                onDataCalculated={mockCallback}
-            />
-        );
-
-        expect(capturedData).toBeDefined();
-        // Total for 2 years: 1000 * 12 * 2 = 24,000
-        expect(capturedData?.totalPaid).toBe(24000);
-    });
-
-    test('MonthlyRentTable_shouldUpdateCallback_whenPropsChange', () => {
-        const mockCallback = jest.fn();
-
-        const { rerender } = render(
-            <MonthlyRentTable
-                monthlyRent={1000}
-                analysisYears={2}
-                annualRentIncrease={0}
-                onDataCalculated={mockCallback}
-            />
-        );
-
-        expect(mockCallback).toHaveBeenCalledTimes(1);
-
-        // Change monthly rent
-        rerender(
-            <MonthlyRentTable
-                monthlyRent={1500}
-                analysisYears={2}
-                annualRentIncrease={0}
-                onDataCalculated={mockCallback}
-            />
-        );
-
-        expect(mockCallback).toHaveBeenCalledTimes(2);
-    });
-
-    test('MonthlyRentTable_shouldNotCallCallback_whenRentIsZero', () => {
-        const mockCallback = jest.fn();
-
-        render(
-            <MonthlyRentTable
-                monthlyRent={0}
-                analysisYears={2}
-                annualRentIncrease={2.5}
-                onDataCalculated={mockCallback}
-            />
-        );
-
-        expect(mockCallback).not.toHaveBeenCalled();
-    });
-
     // Format tests
     test('MonthlyRentTable_shouldFormatCurrency_withoutDecimals', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={1234.56}
-                analysisYears={1}
-                annualRentIncrease={0}
-            />
-        );
+        const data = calculateMonthlyRentData(1234.56, 1, 0);
+        render(<MonthlyRentTable data={data} />);
 
         // Should round to nearest dollar
         expect(screen.getAllByText('$1,235').length).toBeGreaterThan(0);
     });
 
     test('MonthlyRentTable_shouldFormatLargeNumbers_withCommas', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={10000}
-                analysisYears={1}
-                annualRentIncrease={0}
-            />
-        );
+        const data = calculateMonthlyRentData(10000, 1, 0);
+        render(<MonthlyRentTable data={data} />);
 
         expect(screen.getAllByText('$10,000').length).toBeGreaterThan(0);
         // Cumulative total is also $120,000, so use getAllByText
@@ -308,38 +140,23 @@ describe('MonthlyRentTable', () => {
 
     // Edge cases
     test('MonthlyRentTable_shouldHandleSmallRentValues', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={1}
-                analysisYears={1}
-                annualRentIncrease={0}
-            />
-        );
+        const data = calculateMonthlyRentData(1, 1, 0);
+        render(<MonthlyRentTable data={data} />);
 
         expect(screen.getAllByText('$1').length).toBeGreaterThan(0);
     });
 
     test('MonthlyRentTable_shouldHandleLargeAnalysisYears', () => {
-        const { container } = render(
-            <MonthlyRentTable
-                monthlyRent={1000}
-                analysisYears={30}
-                annualRentIncrease={2.5}
-            />
-        );
+        const data = calculateMonthlyRentData(1000, 30, 2.5);
+        const { container } = render(<MonthlyRentTable data={data} />);
 
         const rows = container.querySelectorAll('tbody tr');
         expect(rows).toHaveLength(30);
     });
 
     test('MonthlyRentTable_shouldHandleHighRentIncrease', () => {
-        render(
-            <MonthlyRentTable
-                monthlyRent={1000}
-                analysisYears={2}
-                annualRentIncrease={50}
-            />
-        );
+        const data = calculateMonthlyRentData(1000, 2, 50);
+        render(<MonthlyRentTable data={data} />);
 
         // First year: $1,000
         expect(screen.getAllByText('$1,000').length).toBeGreaterThanOrEqual(12);

@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import {
     Table,
     TableBody,
@@ -8,44 +8,18 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { formatCurrency } from '@/services/formatting';
-import { calculateMonthlyRentData, MonthlyRentData, YearData } from '@/services/MonthlyRentCalculator';
+import { MonthlyRentData, YearData } from '@/services/MonthlyRentCalculator';
 
 export interface MonthlyRentTableProps {
-    monthlyRent: number;
-    analysisYears: number;
-    annualRentIncrease: number;
-    onDataCalculated?: (data: MonthlyRentData) => void;
+    data: MonthlyRentData | null;
 }
 
 // Re-export types for backward compatibility
 export type { MonthlyRentData, YearData };
 
 
-export const MonthlyRentTable: FC<MonthlyRentTableProps> = ({
-    monthlyRent,
-    analysisYears,
-    annualRentIncrease,
-    onDataCalculated,
-}) => {
-    useEffect(() => {
-        const data = calculateMonthlyRentData(monthlyRent, analysisYears, annualRentIncrease);
-        
-        if (data && onDataCalculated) {
-            onDataCalculated(data);
-        }
-    }, [monthlyRent, analysisYears, annualRentIncrease, onDataCalculated]);
-
-    if (monthlyRent <= 0 || analysisYears <= 0) {
-        return (
-            <div className="flex items-center justify-center p-8 text-muted-foreground">
-                <p className="text-sm">Please enter monthly rent and analysis period to see the table.</p>
-            </div>
-        );
-    }
-
-    const data = calculateMonthlyRentData(monthlyRent, analysisYears, annualRentIncrease);
-    
-    if (!data) {
+export const MonthlyRentTable: FC<MonthlyRentTableProps> = ({ data }) => {
+    if (!data || data.years.length === 0) {
         return (
             <div className="flex items-center justify-center p-8 text-muted-foreground">
                 <p className="text-sm">Please enter monthly rent and analysis period to see the table.</p>

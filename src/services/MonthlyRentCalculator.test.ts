@@ -184,6 +184,33 @@ describe('MonthlyRentCalculator Service', () => {
             expect(result).toEqual([]);
         });
 
+        test('compressYearData_shouldReturnSingleAggregatedRow_whenMaxRowsIsZero', () => {
+            const data = createMockData(10);
+            const result = compressYearData(data.years, 0);
+            
+            expect(result).toHaveLength(1);
+            expect(result[0].yearRange).toBe('2024-2033');
+            
+            // Total should be sum of all years
+            const expectedTotal = data.years.reduce((sum, y) => sum + y.yearTotal, 0);
+            expect(result[0].total).toBe(expectedTotal);
+            
+            // Cumulative should be the last year's cumulative
+            expect(result[0].cumulativeTotal).toBe(data.years[data.years.length - 1].cumulativeTotal);
+        });
+
+        test('compressYearData_shouldReturnSingleAggregatedRow_whenMaxRowsIsNegative', () => {
+            const data = createMockData(5);
+            const result = compressYearData(data.years, -1);
+            
+            expect(result).toHaveLength(1);
+            expect(result[0].yearRange).toBe('2024-2028');
+            
+            // Total should be sum of all years
+            const expectedTotal = data.years.reduce((sum, y) => sum + y.yearTotal, 0);
+            expect(result[0].total).toBe(expectedTotal);
+        });
+
         test('compressYearData_shouldNotCompress_whenYearsLessThanMaxRows', () => {
             const data = createMockData(3);
             const result = compressYearData(data.years, 5);
