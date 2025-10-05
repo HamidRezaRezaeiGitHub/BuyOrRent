@@ -1,10 +1,7 @@
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ValidationResult } from '@/services/validation';
-import { useSmartFieldValidation } from '@/services/validation/useSmartFieldValidation';
-import { DollarSign, Info } from 'lucide-react';
-import { ChangeEvent, FC, useMemo, useState } from 'react';
+import { DollarSign } from 'lucide-react';
+import { FC, useMemo } from 'react';
+import { FlexibleInputField, FieldValue } from '../common/FlexibleInputField';
 
 export interface MonthlyRentFieldProps {
     id?: string;
@@ -18,18 +15,6 @@ export interface MonthlyRentFieldProps {
     validationMode?: 'required' | 'optional';
     onValidationChange?: (validationResult: ValidationResult) => void;
 }
-
-/**
- * Format a number as Canadian dollar currency
- * @param value - The numeric value to format
- * @returns Formatted currency string (e.g., "1,234.56")
- */
-const formatCurrency = (value: number): string => {
-    return new Intl.NumberFormat('en-CA', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(value);
-};
 
 /**
  * Parse a formatted currency string to a number
@@ -57,14 +42,6 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
     validationMode = 'optional',
     onValidationChange
 }) => {
-    // Track the displayed formatted value
-    const [displayValue, setDisplayValue] = useState<string>(() => {
-        return value === '' ? '' : formatCurrency(value);
-    });
-
-    // Track tooltip open state for mobile-friendly click interaction
-    const [tooltipOpen, setTooltipOpen] = useState(false);
-
     // Memoized validation rules configuration
     const validationRules = useMemo(() => {
         if (!enableValidation) return [];
@@ -100,122 +77,32 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
         ];
     }, [enableValidation, validationMode]);
 
-    // Memoized config for the hook to prevent infinite re-renders
-    const hookConfig = useMemo(() => ({
-        fieldName: 'monthlyRent',
-        fieldType: 'text' as const,
-        required: validationMode === 'required',
-        validationRules
-    }), [validationMode, validationRules]);
-
-    // Use the smart field validation hook
-    const { state, handlers } = useSmartFieldValidation({
-        value: displayValue,
-        config: hookConfig,
-        enableValidation,
-        onValidationChange
-    });
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const oldValue = displayValue;
-        const newValue = e.target.value;
-
-        // Use the hook's change handler for autofill detection
-        handlers.handleChange(newValue, oldValue);
-
-        // Update the display value
-        setDisplayValue(newValue);
-
-        // Parse and update the actual numeric value
-        // Special handling for empty value
-        if (newValue.trim() === '') {
-            onChange('');
-        } else {
-            const numericValue = parseCurrency(newValue);
-            onChange(numericValue);
-        }
-    };
-
-    const handleFocus = () => {
-        handlers.handleFocus();
-        
-        // When focused, show unformatted value for easier editing
-        if (value !== '') {
-            setDisplayValue(value.toString());
-        }
-    };
-
-    const handleBlur = () => {
-        handlers.handleBlur();
-        
-        // When blurred, format the value for display
-        if (value !== '') {
-            setDisplayValue(formatCurrency(value));
-        } else {
-            setDisplayValue('');
-        }
-    };
-
-    // Determine which errors to display
-    const displayErrors = enableValidation ? state.displayErrors : errors;
-    const hasErrors = displayErrors.length > 0;
-
-    // Determine if field is required for label display
-    const isRequired = enableValidation && validationMode === 'required';
-
     return (
-        <div className={`space-y-2 ${className}`}>
-            <div className="flex items-center gap-1">
-                <DollarSign className="h-3 w-3 text-muted-foreground" />
-                <Label htmlFor={id} className="text-xs">
-                    Monthly Rent
-                    {isRequired && <span className="text-red-500 ml-1">*</span>}
-                </Label>
-                <TooltipProvider>
-                    <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
-                        <TooltipTrigger asChild>
-                            <button 
-                                type="button" 
-                                className="ml-1" 
-                                aria-label="More information about monthly rent"
-                                onClick={() => setTooltipOpen(!tooltipOpen)}
-                            >
-                                <Info className="h-3 w-3 text-muted-foreground" />
-                            </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="right" className="max-w-xs">
-                            <p className="text-xs">
-                                {`The total monthly rent amount, including parking and utilities, that you would pay to the landlord (and/or other entities) per month if you choose to rent a place (not buy).`}
-                            </p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
-            </div>
-            <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <span className="text-sm text-muted-foreground">$</span>
-                </div>
-                <Input
-                    id={id}
-                    type="text"
-                    inputMode="decimal"
-                    placeholder={placeholder}
-                    value={displayValue}
-                    onFocus={handleFocus}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={`pl-7 ${hasErrors ? 'border-red-500 focus:border-red-500' : ''}`}
-                    disabled={disabled}
-                />
-            </div>
-            {hasErrors && (
-                <div className="space-y-1">
-                    {displayErrors.map((error, index) => (
-                        <p key={index} className="text-xs text-red-500">{error}</p>
-                    ))}
-                </div>
-            )}
-        </div>
+        <FlexibleInputField
+            id={id}
+            value={value as FieldValue}
+            onChange={onChange}
+            disabled={disabled}
+            className={className}
+            errors={errors}
+            placeholder={placeholder}
+            category="normal"
+            type="text"
+            inputMode="decimal"
+            numberType="currency"
+            label="Monthly Rent"
+            labelIcon={DollarSign}
+            tooltipContent={
+                <p>
+                    {`The total monthly rent amount, including parking and utilities, that you would pay to the landlord (and/or other entities) per month if you choose to rent a place (not buy).`}
+                </p>
+            }
+            enableValidation={enableValidation}
+            validationMode={validationMode}
+            validationRules={validationRules}
+            onValidationChange={onValidationChange}
+            parseValue={parseCurrency}
+        />
     );
 };
 
