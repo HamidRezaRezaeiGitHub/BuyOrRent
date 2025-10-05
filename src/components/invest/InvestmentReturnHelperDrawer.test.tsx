@@ -1,6 +1,6 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { InvestmentReturnHelperDrawer } from './InvestmentReturnHelperDrawer';
 import '@testing-library/jest-dom';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { InvestmentReturnHelperDrawer } from './InvestmentReturnHelperDrawer';
 
 describe('InvestmentReturnHelperDrawer', () => {
     const mockOnOpenChange = jest.fn();
@@ -51,6 +51,23 @@ describe('InvestmentReturnHelperDrawer', () => {
             expect(screen.getByText('US Market Index ETFs (e.g., S&P 500)')).toBeInTheDocument();
         });
 
+        it('renders other section with custom input and slider', () => {
+            render(
+                <InvestmentReturnHelperDrawer
+                    open={true}
+                    onOpenChange={mockOnOpenChange}
+                    onSelectReturn={mockOnSelectReturn}
+                />
+            );
+
+            expect(screen.getByText('Other')).toBeInTheDocument();
+            expect(screen.getByText('Custom Return Rate')).toBeInTheDocument();
+            expect(screen.getByRole('textbox')).toBeInTheDocument();
+            expect(screen.getByRole('slider')).toBeInTheDocument();
+            expect(screen.getByText('Apply Custom Rate')).toBeInTheDocument();
+            expect(screen.getByText('US Market Index ETFs (e.g., S&P 500)')).toBeInTheDocument();
+        });
+
         it('renders risk levels for all options', () => {
             render(
                 <InvestmentReturnHelperDrawer
@@ -90,7 +107,7 @@ describe('InvestmentReturnHelperDrawer', () => {
 
             const highInterestButton = screen.getByText('High Interest Savings Account').closest('button');
             expect(highInterestButton).toBeInTheDocument();
-            
+
             fireEvent.click(highInterestButton!);
 
             await waitFor(() => {
@@ -110,7 +127,7 @@ describe('InvestmentReturnHelperDrawer', () => {
 
             const globalMarketButton = screen.getByText('Global Market Index ETFs (e.g., VEQT)').closest('button');
             expect(globalMarketButton).toBeInTheDocument();
-            
+
             fireEvent.click(globalMarketButton!);
 
             await waitFor(() => {
@@ -130,7 +147,7 @@ describe('InvestmentReturnHelperDrawer', () => {
 
             const usMarketButton = screen.getByText('US Market Index ETFs (e.g., S&P 500)').closest('button');
             expect(usMarketButton).toBeInTheDocument();
-            
+
             fireEvent.click(usMarketButton!);
 
             await waitFor(() => {
@@ -218,6 +235,196 @@ describe('InvestmentReturnHelperDrawer', () => {
             expect(dialog).toHaveTextContent('3');
             expect(dialog).toHaveTextContent('7');
             expect(dialog).toHaveTextContent('15');
+        });
+    });
+
+    describe('Custom input section', () => {
+        it('renders custom input with default value', () => {
+            render(
+                <InvestmentReturnHelperDrawer
+                    open={true}
+                    onOpenChange={mockOnOpenChange}
+                    onSelectReturn={mockOnSelectReturn}
+                />
+            );
+
+            const customInput = screen.getByRole('textbox');
+            expect(customInput).toHaveValue('10.00');
+            expect(customInput).toHaveAttribute('placeholder', '10.00');
+
+            const slider = screen.getByRole('slider');
+            expect(slider).toHaveValue(10);
+
+            expect(screen.getByText('10.00%')).toBeInTheDocument();
+        });
+
+        it('handles custom input change', async () => {
+            render(
+                <InvestmentReturnHelperDrawer
+                    open={true}
+                    onOpenChange={mockOnOpenChange}
+                    onSelectReturn={mockOnSelectReturn}
+                />
+            );
+
+            const customInput = screen.getByRole('textbox');
+            fireEvent.change(customInput, { target: { value: '12.5' } });
+
+            // Value should be updated in the display
+            await waitFor(() => {
+                expect(screen.getByText('12.50%')).toBeInTheDocument();
+            });
+        });
+
+        it('handles custom slider change', async () => {
+            render(
+                <InvestmentReturnHelperDrawer
+                    open={true}
+                    onOpenChange={mockOnOpenChange}
+                    onSelectReturn={mockOnSelectReturn}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+            // Simulate slider value change using mouse events
+            fireEvent.mouseDown(slider);
+            fireEvent.mouseUp(slider);
+
+            // Value should be updated in the display
+            await waitFor(() => {
+                expect(screen.getByText('15.00%')).toBeInTheDocument();
+            });
+        });
+
+        it('handles focus and blur behavior for formatting', async () => {
+            render(
+                <InvestmentReturnHelperDrawer
+                    open={true}
+                    onOpenChange={mockOnOpenChange}
+                    onSelectReturn={mockOnSelectReturn}
+                />
+            );
+
+            const customInput = screen.getByRole('textbox');
+
+            // Focus should unformat the value
+            fireEvent.focus(customInput);
+            await waitFor(() => {
+                expect(customInput).toHaveValue('10');
+            });
+
+            // Blur should reformat the value
+            fireEvent.blur(customInput);
+            await waitFor(() => {
+                expect(customInput).toHaveValue('10.00');
+            });
+        });
+
+        it('applies custom rate when button is clicked', async () => {
+            render(
+                <InvestmentReturnHelperDrawer
+                    open={true}
+                    onOpenChange={mockOnOpenChange}
+                    onSelectReturn={mockOnSelectReturn}
+                />
+            );
+
+            const customInput = screen.getByRole('textbox');
+            fireEvent.change(customInput, { target: { value: '8.5' } });
+
+            const applyButton = screen.getByRole('button', { name: 'Apply Custom Rate' });
+            fireEvent.click(applyButton);
+
+            await waitFor(() => {
+                expect(mockOnSelectReturn).toHaveBeenCalledWith(8.5);
+                expect(mockOnOpenChange).toHaveBeenCalledWith(false);
+            });
+        });
+
+        it('disables apply button when input is empty', async () => {
+            render(
+                <InvestmentReturnHelperDrawer
+                    open={true}
+                    onOpenChange={mockOnOpenChange}
+                    onSelectReturn={mockOnSelectReturn}
+                />
+            );
+
+            const customInput = screen.getByRole('textbox');
+            fireEvent.change(customInput, { target: { value: '' } });
+
+            const applyButton = screen.getByRole('button', { name: 'Apply Custom Rate' });
+
+            await waitFor(() => {
+                expect(applyButton).toBeDisabled();
+            });
+        });
+
+        it('handles invalid input gracefully', async () => {
+            render(
+                <InvestmentReturnHelperDrawer
+                    open={true}
+                    onOpenChange={mockOnOpenChange}
+                    onSelectReturn={mockOnSelectReturn}
+                />
+            );
+
+            const customInput = screen.getByRole('textbox');
+            fireEvent.change(customInput, { target: { value: 'abc' } });
+
+            // Should display default value when invalid input is provided
+            await waitFor(() => {
+                expect(screen.getByText('10.00%')).toBeInTheDocument();
+            });
+        });
+
+        it('strips non-numeric characters from input', async () => {
+            render(
+                <InvestmentReturnHelperDrawer
+                    open={true}
+                    onOpenChange={mockOnOpenChange}
+                    onSelectReturn={mockOnSelectReturn}
+                />
+            );
+
+            const customInput = screen.getByRole('textbox');
+            fireEvent.change(customInput, { target: { value: 'abc12.5def' } });
+
+            // Should parse and display only the numeric value
+            await waitFor(() => {
+                expect(screen.getByText('12.50%')).toBeInTheDocument();
+            });
+        });
+
+        it('has consistent input width matching other components', () => {
+            render(
+                <InvestmentReturnHelperDrawer
+                    open={true}
+                    onOpenChange={mockOnOpenChange}
+                    onSelectReturn={mockOnSelectReturn}
+                />
+            );
+
+            const customInput = screen.getByRole('textbox');
+            expect(customInput).toHaveClass('w-32');
+        });
+
+        it('has proper accessibility attributes', () => {
+            render(
+                <InvestmentReturnHelperDrawer
+                    open={true}
+                    onOpenChange={mockOnOpenChange}
+                    onSelectReturn={mockOnSelectReturn}
+                />
+            );
+
+            const customInput = screen.getByRole('textbox');
+            expect(customInput).toHaveAttribute('id', 'otherReturnRate');
+            expect(customInput).toHaveAttribute('inputMode', 'decimal');
+
+            const slider = screen.getByRole('slider');
+            // Slider id is handled by Radix UI internally, just verify it exists
+            expect(slider).toBeInTheDocument();
         });
     });
 });

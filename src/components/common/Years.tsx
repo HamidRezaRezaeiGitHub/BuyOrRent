@@ -2,10 +2,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ValidationResult } from '@/services/validation';
-import { useSmartFieldValidation } from '@/services/validation/useSmartFieldValidation';
+import { formatToInteger } from '@/services/formatting/FormattingService';
 import { Calendar, Info } from 'lucide-react';
-import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export interface YearsFieldProps {
     id?: string;
@@ -13,10 +12,6 @@ export interface YearsFieldProps {
     onChange: (value: number) => void;
     disabled?: boolean;
     className?: string;
-    errors?: string[];
-    enableValidation?: boolean;
-    validationMode?: 'required' | 'optional';
-    onValidationChange?: (validationResult: ValidationResult) => void;
     displayMode?: 'slider' | 'input' | 'combined'; // Default: 'slider'
     defaultValue?: number; // Default: 25
     minValue?: number; // Default: 1
@@ -29,166 +24,119 @@ export const YearsField: FC<YearsFieldProps> = ({
     onChange,
     disabled = false,
     className = '',
-    errors = [],
-    enableValidation = false,
-    validationMode = 'optional',
-    onValidationChange,
     displayMode = 'combined',
     defaultValue = 25,
     minValue = 1,
     maxValue = 50
 }) => {
-
-    // Track tooltip open state for mobile-friendly click interaction
     const [tooltipOpen, setTooltipOpen] = useState(false);
-
-    // Track focus state for input formatting
     const [isFocused, setIsFocused] = useState(false);
+    const [inputValue, setInputValue] = useState<string>('');
 
-    // Track display value for input field (formatted vs unformatted)
-    const [displayValue, setDisplayValue] = useState<string>(() => {
-        // Initialize with formatted value since input starts unfocused
-        return Math.round(value).toString();
-    });
+    // Reusable function to clamp and round values within valid range
+    const clampValue = useCallback((inputValue: number): number => {
+        return Math.max(minValue, Math.min(maxValue, Math.round(inputValue)));
+    }, [minValue, maxValue]);
 
-    // Internal formatted value state (not exposed to parent)
-    const [formattedValue, setFormattedValue] = useState<string>(() => {
-        return Math.round(value).toString();
-    });
-
-    // Formatting function for integer values
-    const formatValue = useMemo(() => {
-        return (val: number): string => {
-            // Ensure integer formatting (no floating point)
-            return Math.round(val).toString();
-        };
-    }, []);
-
-    useEffect(() => {
-        if (isFocused) {
-            setDisplayValue(value.toString());
-        } else {
-            const numericValue = parseInt(value.toString(), 10);
-            const formattedVal = formatValue(numericValue);
-            setFormattedValue(formattedVal);
+    // Validate and clamp the initial value with comprehensive error handling
+    const validatedValue = useMemo(() => {
+        // Handle invalid inputs: NaN, Infinity, null, undefined, etc.
+        if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
+            return clampValue(defaultValue);
         }
-    }, [value, isFocused, formatValue]);
 
+        return clampValue(value);
+    }, [value, defaultValue, clampValue]);
+
+    // Compute display value based on focus state
+    const displayValue = useMemo(() => {
+        if (isFocused) {
+            return inputValue;
+        }
+        return formatToInteger(validatedValue);
+    }, [isFocused, inputValue, validatedValue]);
+
+    // Sync inputValue when value changes externally (but not when focused)
     useEffect(() => {
         if (!isFocused) {
-            setDisplayValue(formattedValue);
+            setInputValue(validatedValue.toString());
         }
-    }, [formattedValue]);
+    }, [validatedValue, isFocused]);
 
-    // Memoized validation rules configuration
-    const validationRules = useMemo(() => {
-        if (!enableValidation) return [];
+    // Track if we've already notified parent to prevent infinite loops
+    const lastNotifiedValue = useRef<number>(value);
 
-        return [
-            ...(validationMode === 'required' ? [{
-                name: 'required',
-                message: 'Analysis period is required',
-                validator: (val: string) => {
-                    const numVal = parseInt(val, 10);
-                    return !isNaN(numVal) && numVal >= minValue && numVal <= maxValue;
-                }
-            }] : []),
-            {
-                name: 'range',
-                message: `Analysis period must be between ${minValue} and ${maxValue} years`,
-                validator: (val: string) => {
-                    if (val === '') return validationMode === 'optional';
-                    const numVal = parseInt(val, 10);
-                    return !isNaN(numVal) && numVal >= minValue && numVal <= maxValue;
-                }
-            }
-        ];
-    }, [enableValidation, validationMode, minValue, maxValue]);
-
-    // Determine field name for validation
-    const fieldName = useMemo(() => id || 'analysisYears', [id]);
-
-    // Memoized config for the validation hook
-    const hookConfig = useMemo(() => ({
-        fieldName,
-        fieldType: 'text' as const,
-        required: validationMode === 'required',
-        validationRules
-    }), [fieldName, validationMode, validationRules]);
-
-    // Use the smart field validation hook
-    const { state, handlers } = useSmartFieldValidation({
-        value: value.toString(),
-        config: hookConfig,
-        enableValidation,
-        onValidationChange
-    });
+    // Notify parent if validated value differs from prop value (only once per change)
+    useEffect(() => {
+        if (validatedValue !== value && lastNotifiedValue.current !== validatedValue) {
+            lastNotifiedValue.current = validatedValue;
+            onChange(validatedValue);
+        }
+    }, [validatedValue, value, onChange]);
 
     // Handle slider change
     const handleSliderChange = (values: number[]) => {
-        const newValue = Math.round(values[0]);
-
-        // Use the hook's change handler
-        handlers.handleChange(newValue.toString(), value.toString());
-
-        onChange(newValue);
+        const rawValue = values[0];
+        if (typeof rawValue === 'number' && !isNaN(rawValue) && isFinite(rawValue)) {
+            const clampedValue = clampValue(rawValue);
+            onChange(clampedValue);
+        }
     };
 
-    const handleSliderBlur = () => {
-        handlers.handleBlur();
-    };
-
-    // Handle input change
+    // Handle input change with comprehensive error handling
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const oldValue = displayValue;
         const newValue = e.target.value;
+        setInputValue(newValue);
 
-        // Use the hook's change handler for validation
-        handlers.handleChange(newValue, oldValue);
-
-        // Update display value immediately (unformatted while typing)
-        setDisplayValue(newValue);
-
-        // The input field is changing when in focus, so we don't call onChange here.
-        // onChange will be called on blur after validation and formatting.
+        // Provide immediate feedback for valid numeric values
+        try {
+            const numericValue = parseInt(newValue, 10);
+            if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= minValue && numericValue <= maxValue) {
+                const clampedValue = clampValue(numericValue);
+                onChange(clampedValue);
+            }
+        } catch (error) {
+            // Silently handle parsing errors - validation will happen on blur
+            console.debug('Input parsing error:', error);
+        }
     };
 
     const handleInputFocus = () => {
-        setIsFocused(true); // This will trigger useEffect to set the actual unformatted value to display
-        handlers.handleFocus();
+        setInputValue(validatedValue.toString());
+        setIsFocused(true);
     };
 
     const handleInputBlur = () => {
-        const lastInputValue = displayValue;
-        const numericValue = parseInt(lastInputValue, 10);
         let finalValue: number;
 
-        if (lastInputValue.trim() === '' || isNaN(numericValue)) {
-            finalValue = defaultValue;
-        } else {
-            // Clamp value between min and max
-            finalValue = Math.max(minValue, Math.min(maxValue, numericValue));
+        try {
+            const trimmedValue = inputValue.trim();
+            const numericValue = parseFloat(trimmedValue); // Use parseFloat to handle decimals
+
+            if (trimmedValue === '' || isNaN(numericValue) || !isFinite(numericValue)) {
+                finalValue = clampValue(defaultValue);
+            } else {
+                // Clamp value between min and max, ensure it's an integer
+                finalValue = clampValue(numericValue);
+            }
+        } catch (error) {
+            console.debug('Input blur parsing error:', error);
+            finalValue = clampValue(defaultValue);
         }
-        onChange(finalValue); // This will trigger the useEffect to update displayValue
 
+        // Only call onChange if the value actually changed
+        if (finalValue !== validatedValue) {
+            onChange(finalValue);
+        }
         setIsFocused(false);
-        handlers.handleBlur();
     };
-
-    // Determine which errors to display
-    const displayErrors = enableValidation ? state.displayErrors : errors;
-    const hasErrors = displayErrors.length > 0;
-
-    // Determine if field is required for label display
-    const isRequired = enableValidation && validationMode === 'required';
 
     // Label component with icon and tooltip
     const labelComponent = (
         <div className="flex items-center gap-1">
-            <Calendar className="h-3 w-3 text-muted-foreground" />
+            <Calendar className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
             <Label htmlFor={id} className="text-xs">
                 Analysis Period
-                {isRequired && <span className="text-red-500 ml-1">*</span>}
             </Label>
             <TooltipProvider>
                 <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
@@ -197,12 +145,14 @@ export const YearsField: FC<YearsFieldProps> = ({
                             type="button"
                             className="ml-1"
                             aria-label="More information about Analysis Period"
+                            aria-describedby={`${id}-tooltip`}
+                            aria-expanded={tooltipOpen}
                             onClick={() => setTooltipOpen(!tooltipOpen)}
                         >
-                            <Info className="h-3 w-3 text-muted-foreground" />
+                            <Info className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
                         </button>
                     </TooltipTrigger>
-                    <TooltipContent side="right" className="max-w-xs">
+                    <TooltipContent side="right" className="max-w-xs" id={`${id}-tooltip`}>
                         <div className="text-xs">
                             <p>
                                 The number of years over which you want to analyze and compare the rent vs. buy decision. This helps project long-term costs and benefits.
@@ -214,15 +164,6 @@ export const YearsField: FC<YearsFieldProps> = ({
         </div>
     );
 
-    // Error display component
-    const errorDisplay = hasErrors && (
-        <div className="space-y-1">
-            {displayErrors.map((error, index) => (
-                <p key={index} className="text-xs text-red-500">{error}</p>
-            ))}
-        </div>
-    );
-
     // Slider component
     const sliderComponent = (
         <Slider
@@ -230,11 +171,15 @@ export const YearsField: FC<YearsFieldProps> = ({
             min={minValue}
             max={maxValue}
             step={1}
-            value={[value]}
+            value={[validatedValue]}
             onValueChange={handleSliderChange}
-            onBlur={handleSliderBlur}
             disabled={disabled}
-            className={`${displayMode === 'combined‚' ? 'flex-1' : 'w-full'} ${hasErrors ? 'opacity-50' : ''}`}
+            className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
+            aria-label={`Analysis period: ${validatedValue} years`}
+            aria-valuemin={minValue}
+            aria-valuemax={maxValue}
+            aria-valuenow={validatedValue}
+            aria-valuetext={`${validatedValue} years`}
         />
     );
 
@@ -253,9 +198,15 @@ export const YearsField: FC<YearsFieldProps> = ({
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 disabled={disabled}
-                className={`${displayMode === 'combined' ? 'w-32' : 'w-full'} ${hasErrors ? 'border-red-500 focus:border-red-500' : ''}`}
+                className={`${displayMode === 'combined' ? 'w-32 pr-12' : 'w-full pr-12'}`}
+                aria-label={`Analysis period in years, current value: ${validatedValue}`}
+                aria-describedby={`${id}-suffix ${id}-tooltip`}
             />
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+            <div
+                id={`${id}-suffix`}
+                className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                aria-hidden="true"
+            >
                 <span className="text-sm text-muted-foreground">yrs</span>
             </div>
         </div>
@@ -263,9 +214,11 @@ export const YearsField: FC<YearsFieldProps> = ({
 
     // Value display (for slider and combined modes)
     const valueDisplay = (
-        <div className="min-w-[3rem] text-center">
-            <span className="text-sm font-medium">{value}</span>
-            <span className="text-xs text-muted-foreground ml-1">years</span>
+        <div className="min-w-[3rem] text-center" aria-live="polite">
+            <span className="text-sm font-medium" aria-label={`Current value: ${validatedValue} years`}>
+                {validatedValue}
+            </span>
+            <span className="text-xs text-muted-foreground ml-1" aria-hidden="true">years</span>
         </div>
     );
 
@@ -315,7 +268,6 @@ export const YearsField: FC<YearsFieldProps> = ({
         <div className={`space-y-2 ${className}`}>
             {labelComponent}
             {renderField()}
-            {errorDisplay}
         </div>
     );
 };

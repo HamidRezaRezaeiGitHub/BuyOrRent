@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { RentIncreaseField } from './RentIncrease';
 
 describe('RentIncreaseField', () => {
@@ -6,784 +7,883 @@ describe('RentIncreaseField', () => {
         jest.clearAllMocks();
     });
 
-    // Basic rendering tests
-    test('RentIncreaseField_shouldRenderWithDefaultProps', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        const label = screen.getByText('Annual Rent Increase');
-
-        expect(input).toBeInTheDocument();
-        expect(label).toBeInTheDocument();
-        expect(input).toHaveAttribute('placeholder', '2.50');
-        expect(input).toHaveValue('');
-    });
-
-    test('RentIncreaseField_shouldRenderWithNumericValue', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value={2.5}
-                onChange={mockOnChange}
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        expect(input).toHaveValue('2.5');
-    });
-
-    test('RentIncreaseField_shouldDisplayPercentIcon', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-            />
-        );
-
-        // Check for the % suffix in the input
-        const percentSuffix = screen.getByText('%');
-        expect(percentSuffix).toBeInTheDocument();
-    });
-
-    test('RentIncreaseField_shouldDisplayInfoIcon', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-            />
-        );
-
-        const infoButton = screen.getByRole('button', { name: /more information/i });
-        expect(infoButton).toBeInTheDocument();
-    });
-
-    // Change handling tests
-    test('RentIncreaseField_shouldCallOnChange_whenValueChanges', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        fireEvent.change(input, { target: { value: '2.5' } });
-        fireEvent.blur(input);
-
-        expect(mockOnChange).toHaveBeenCalledWith(2.5);
-    });
-
-    test('RentIncreaseField_shouldHandleDecimalInput', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        fireEvent.change(input, { target: { value: '3.75' } });
-        fireEvent.blur(input);
-
-        expect(mockOnChange).toHaveBeenCalledWith(3.75);
-    });
-
-    test('RentIncreaseField_shouldHandleIntegerInput', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        fireEvent.change(input, { target: { value: '5' } });
-        fireEvent.blur(input);
-
-        expect(mockOnChange).toHaveBeenCalledWith(5);
-    });
-
-    // Formatting tests
-    test('RentIncreaseField_shouldFormatValueOnBlur', () => {
-        const mockOnChange = jest.fn();
-
-        const { rerender } = render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-
-        // Enter unformatted value
-        fireEvent.focus(input);
-        fireEvent.change(input, { target: { value: '2.5' } });
-
-        // Update with the new value
-        rerender(
-            <RentIncreaseField
-                value={2.5}
-                onChange={mockOnChange}
-            />
-        );
-
-        // Blur to trigger formatting
-        fireEvent.blur(input);
-
-        // Should be formatted with appropriate decimal places
-        expect(input).toHaveValue('2.5');
-    });
-
-    test('RentIncreaseField_shouldShowUnformattedValueOnFocus', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value={2.5}
-                onChange={mockOnChange}
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-
-        // Initially should show formatted value
-        expect(input).toHaveValue('2.5');
-
-        // Focus should show unformatted value
-        fireEvent.focus(input);
-        expect(input).toHaveValue('2.5');
-    });
-
-    test('RentIncreaseField_shouldHandleEmptyValue', () => {
-        const mockOnChange = jest.fn();
-
-        const { rerender } = render(
-            <RentIncreaseField
-                value={2.5}
-                onChange={mockOnChange}
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        fireEvent.focus(input);
-        fireEvent.change(input, { target: { value: '' } });
-        fireEvent.blur(input);
-
-        expect(mockOnChange).toHaveBeenCalledWith('');
-
-        rerender(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-            />
-        );
-
-        fireEvent.blur(input);
-        expect(input).toHaveValue('');
-    });
-
-    // Validation tests
-    test('RentIncreaseField_shouldNotShowValidationErrors_whenValidationDisabled', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                enableValidation={false}
-                validationMode="required"
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        fireEvent.blur(input);
-
-        expect(screen.queryByText(/required/i)).not.toBeInTheDocument();
-    });
-
-    test('RentIncreaseField_shouldShowRequiredError_whenValidationEnabledAndFieldEmpty', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="required"
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        fireEvent.focus(input);
-        fireEvent.blur(input);
-
-        expect(screen.getByText('Annual rent increase is required')).toBeInTheDocument();
-    });
-
-    test('RentIncreaseField_shouldShowNonNegativeError_whenNegativeValue', () => {
-        const mockOnChange = jest.fn();
-
-        const { rerender } = render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        fireEvent.focus(input);
-        fireEvent.change(input, { target: { value: '-5' } });
-
-        rerender(
-            <RentIncreaseField
-                value={-5}
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        fireEvent.blur(input);
-
-        expect(screen.getByText('Annual rent increase must be a non-negative number')).toBeInTheDocument();
-    });
-
-    test('RentIncreaseField_shouldShowMaxValueError_whenValueTooLarge', () => {
-        const mockOnChange = jest.fn();
-
-        const { rerender } = render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        fireEvent.focus(input);
-        fireEvent.change(input, { target: { value: '150' } });
-
-        rerender(
-            <RentIncreaseField
-                value={150}
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        fireEvent.blur(input);
-
-        expect(screen.getByText('Annual rent increase must not exceed 20%')).toBeInTheDocument();
-    });
-
-    test('RentIncreaseField_shouldPassValidation_whenValidValueProvided', () => {
-        const mockOnChange = jest.fn();
-
-        const { rerender } = render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        fireEvent.focus(input);
-        fireEvent.change(input, { target: { value: '2.5' } });
-
-        rerender(
-            <RentIncreaseField
-                value={2.5}
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        fireEvent.blur(input);
-
-        expect(screen.queryByText(/must/i)).not.toBeInTheDocument();
-    });
-
-    test('RentIncreaseField_shouldHandleEmptyValueInOptionalMode', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        fireEvent.focus(input);
-        fireEvent.blur(input);
-
-        expect(screen.queryByText(/required/i)).not.toBeInTheDocument();
-    });
-
-    // External errors tests
-    test('RentIncreaseField_shouldDisplayExternalErrors_whenErrorsProvided', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                errors={['External error message']}
-            />
-        );
-
-        expect(screen.getByText('External error message')).toBeInTheDocument();
-    });
-
-    test('RentIncreaseField_shouldPrioritizeValidationErrors_overExternalErrors', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="required"
-                errors={['External error message']}
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        fireEvent.focus(input);
-        fireEvent.blur(input);
-
-        expect(screen.getByText('Annual rent increase is required')).toBeInTheDocument();
-        expect(screen.queryByText('External error message')).not.toBeInTheDocument();
-    });
-
-    // Disabled state test
-    test('RentIncreaseField_shouldBeDisabled_whenDisabledPropTrue', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                disabled={true}
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        expect(input).toBeDisabled();
-    });
-
-    // Custom placeholder test
-    test('RentIncreaseField_shouldUseCustomPlaceholder_whenPlaceholderProvided', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                placeholder="5.00"
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        expect(input).toHaveAttribute('placeholder', '5.00');
-    });
-
-    // Required asterisk tests
-    test('RentIncreaseField_shouldShowRequiredAsterisk_whenValidationEnabledAndRequired', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="required"
-            />
-        );
-
-        const label = screen.getByText('Annual Rent Increase');
-        expect(label.parentElement?.textContent).toContain('*');
-    });
-
-    test('RentIncreaseField_shouldNotShowRequiredAsterisk_whenValidationEnabledButOptional', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        const label = screen.getByText('Annual Rent Increase');
-        expect(label.parentElement?.textContent).not.toContain('*');
-    });
-
-    // Integration tests
-    test('RentIncreaseField_shouldFormatAndValidate_whenValidValueEntered', () => {
-        const mockOnChange = jest.fn();
-
-        const { rerender } = render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-
-        fireEvent.focus(input);
-        fireEvent.change(input, { target: { value: '3.5' } });
-
-        rerender(
-            <RentIncreaseField
-                value={3.5}
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        fireEvent.blur(input);
-
-        expect(input).toHaveValue('3.5');
-        expect(screen.queryByText(/must/i)).not.toBeInTheDocument();
-    });
-
-    test('RentIncreaseField_shouldClearFormatting_whenValueCleared', () => {
-        const mockOnChange = jest.fn();
-
-        const { rerender } = render(
-            <RentIncreaseField
-                value={2.5}
-                onChange={mockOnChange}
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-        expect(input).toHaveValue('2.5');
-
-        fireEvent.focus(input);
-        fireEvent.change(input, { target: { value: '' } });
-
-        rerender(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-            />
-        );
-
-        fireEvent.blur(input);
-
-        expect(input).toHaveValue('');
-    });
-
-    test('RentIncreaseField_shouldHandleMultipleEdits_withFormatting', () => {
-        const mockOnChange = jest.fn();
-
-        const { rerender } = render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-
-        // First edit
-        fireEvent.focus(input);
-        fireEvent.change(input, { target: { value: '2' } });
-        rerender(<RentIncreaseField value={2} onChange={mockOnChange} />);
-        fireEvent.blur(input);
-        expect(input).toHaveValue('2');
-
-        // Second edit
-        fireEvent.focus(input);
-        expect(input).toHaveValue('2');
-        fireEvent.change(input, { target: { value: '5.5' } });
-        rerender(<RentIncreaseField value={5.5} onChange={mockOnChange} />);
-        fireEvent.blur(input);
-        expect(input).toHaveValue('5.5');
-    });
-
-    test('RentIncreaseField_shouldValidateOnChange_afterFirstBlur', () => {
-        const mockOnChange = jest.fn();
-
-        const { rerender } = render(
-            <RentIncreaseField
-                value=""
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="required"
-            />
-        );
-
-        const input = screen.getByRole('textbox');
-
-        // First blur without value
-        fireEvent.focus(input);
-        fireEvent.blur(input);
-        expect(screen.getByText('Annual rent increase is required')).toBeInTheDocument();
-
-        // Now type a value - validation should update on change
-        fireEvent.focus(input);
-        fireEvent.change(input, { target: { value: '2.5' } });
-        rerender(
-            <RentIncreaseField
-                value={2.5}
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="required"
-            />
-        );
-
-        expect(screen.queryByText('Annual rent increase is required')).not.toBeInTheDocument();
-    });
-
-    // Display Mode Tests
-    describe('Display Modes', () => {
-        test('RentIncreaseField_shouldRenderSliderMode', () => {
+    // Basic Rendering Tests
+    describe('Basic Rendering', () => {
+        test('RentIncreaseField_shouldRenderWithDefaultProps', () => {
             const mockOnChange = jest.fn();
-
+            
             render(
                 <RentIncreaseField
-                    value={3.5}
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const label = screen.getByText('Annual Rent Increase');
+            const slider = screen.getByRole('slider');
+            const input = screen.getByRole('spinbutton');
+            const tooltip = screen.getByRole('button', { name: /more information about annual rent increase/i });
+
+            expect(label).toBeInTheDocument();
+            expect(slider).toBeInTheDocument();
+            expect(input).toBeInTheDocument();
+            expect(tooltip).toBeInTheDocument();
+        });
+
+        test('RentIncreaseField_shouldRenderSliderOnlyMode', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
                     onChange={mockOnChange}
                     displayMode="slider"
                 />
             );
 
-            // Should have slider
-            expect(screen.getByRole('slider')).toBeInTheDocument();
-
-            // Should show value display
-            expect(screen.getByText('3.5%')).toBeInTheDocument();
-            expect(screen.getByText('per year')).toBeInTheDocument();
-
-            // Should not have input field
-            expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+            const slider = screen.getByRole('slider');
+            // Check for value display (text content might include whitespace)
+            const valueDisplay = screen.getByText((_, element) => {
+                return element?.textContent?.trim() === '2.50%';
+            });
+            expect(slider).toBeInTheDocument();
+            expect(valueDisplay).toBeInTheDocument();
+            expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
         });
 
-        test('RentIncreaseField_shouldRenderInputMode', () => {
+        test('RentIncreaseField_shouldRenderInputOnlyMode', () => {
             const mockOnChange = jest.fn();
-
+            
             render(
                 <RentIncreaseField
-                    value={3.5}
+                    value={2.5}
                     onChange={mockOnChange}
                     displayMode="input"
                 />
             );
 
-            // Should have input field
-            expect(screen.getByRole('textbox')).toBeInTheDocument();
-
-            // Should not have slider
+            const input = screen.getByRole('spinbutton');
+            expect(input).toBeInTheDocument();
             expect(screen.queryByRole('slider')).not.toBeInTheDocument();
-
-            // Should not have value display
-            expect(screen.queryByText('per year')).not.toBeInTheDocument();
         });
 
         test('RentIncreaseField_shouldRenderCombinedMode', () => {
             const mockOnChange = jest.fn();
-
+            
             render(
                 <RentIncreaseField
-                    value={3.5}
+                    value={2.5}
                     onChange={mockOnChange}
                     displayMode="combined"
                 />
             );
 
-            // Should have both slider and input
-            expect(screen.getByRole('slider')).toBeInTheDocument();
-            expect(screen.getByRole('textbox')).toBeInTheDocument();
-
-            // Should not have value display (combined mode doesn't show it)
-            expect(screen.queryByText('per year')).not.toBeInTheDocument();
-        });
-
-        test('RentIncreaseField_shouldDefaultToCombinedMode', () => {
-            const mockOnChange = jest.fn();
-
-            render(
-                <RentIncreaseField
-                    value={3.5}
-                    onChange={mockOnChange}
-                />
-            );
-
-            // Should have both slider and input (combined is default)
-            expect(screen.getByRole('slider')).toBeInTheDocument();
-            expect(screen.getByRole('textbox')).toBeInTheDocument();
-        });
-
-        test('RentIncreaseField_shouldHandleSliderChange', () => {
-            const mockOnChange = jest.fn();
-
-            render(
-                <RentIncreaseField
-                    value={3.5}
-                    onChange={mockOnChange}
-                    displayMode="slider"
-                />
-            );
-
             const slider = screen.getByRole('slider');
-
-            // Verify slider properties and functionality
+            const input = screen.getByRole('spinbutton');
             expect(slider).toBeInTheDocument();
-            expect(slider).toHaveAttribute('aria-valuenow', '3.5');
-            expect(slider).toHaveAttribute('aria-valuemin', '0');
-            expect(slider).toHaveAttribute('aria-valuemax', '20');
-
-            // Verify that the slider is enabled
-            expect(slider).not.toHaveAttribute('aria-disabled', 'true');
+            expect(input).toBeInTheDocument();
         });
+    });
 
-        test('RentIncreaseField_shouldRespectMinMaxValues', () => {
+    // Value Validation Tests
+    describe('Value Validation', () => {
+        test('RentIncreaseField_shouldClampInitialValueToMinimum', () => {
             const mockOnChange = jest.fn();
-
+            
             render(
                 <RentIncreaseField
-                    value={3}
+                    value={-5}
                     onChange={mockOnChange}
-                    displayMode="slider"
-                    minValue={1}
-                    maxValue={10}
+                    minValue={0}
+                    maxValue={20}
                 />
             );
 
-            const slider = screen.getByRole('slider');
-
-            expect(slider).toHaveAttribute('aria-valuemin', '1');
-            expect(slider).toHaveAttribute('aria-valuemax', '10');
+            // Should call onChange with clamped value
+            expect(mockOnChange).toHaveBeenCalledWith(0);
         });
 
-        test('RentIncreaseField_shouldUseDefaultValue_whenEmptyInRequiredMode', () => {
+        test('RentIncreaseField_shouldClampInitialValueToMaximum', () => {
             const mockOnChange = jest.fn();
-
+            
             render(
                 <RentIncreaseField
-                    value=""
+                    value={25}
                     onChange={mockOnChange}
-                    defaultValue={4}
-                    enableValidation={true}
-                    validationMode="required"
+                    minValue={0}
+                    maxValue={20}
                 />
             );
 
-            const input = screen.getByRole('textbox');
-
-            // Focus and blur empty field
-            fireEvent.focus(input);
-            fireEvent.blur(input);
-
-            // Should call onChange with default value
-            expect(mockOnChange).toHaveBeenCalledWith(4);
+            expect(mockOnChange).toHaveBeenCalledWith(20);
         });
 
-        test('RentIncreaseField_shouldClampValues_toMinMax', () => {
+        test('RentIncreaseField_shouldHandleNaNValue', () => {
             const mockOnChange = jest.fn();
-
+            
             render(
                 <RentIncreaseField
-                    value=""
+                    value={NaN}
                     onChange={mockOnChange}
-                    minValue={1}
-                    maxValue={10}
+                    defaultValue={2.5}
                 />
             );
 
-            const input = screen.getByRole('textbox');
-
-            // Enter value below min
-            fireEvent.change(input, { target: { value: '0.5' } });
-            fireEvent.blur(input);
-
-            expect(mockOnChange).toHaveBeenCalledWith(1);
-
-            mockOnChange.mockClear();
-
-            // Enter value above max
-            fireEvent.change(input, { target: { value: '15' } });
-            fireEvent.blur(input);
-
-            expect(mockOnChange).toHaveBeenCalledWith(10);
+            expect(mockOnChange).toHaveBeenCalledWith(2.5);
         });
 
-        test('RentIncreaseField_shouldHandlePercentageFormatting', () => {
+        test('RentIncreaseField_shouldHandleInfinityValue', () => {
             const mockOnChange = jest.fn();
-
+            
             render(
                 <RentIncreaseField
-                    value=""
+                    value={Infinity}
                     onChange={mockOnChange}
+                    defaultValue={2.5}
+                    maxValue={20}
                 />
             );
 
-            const input = screen.getByRole('textbox');
+            expect(mockOnChange).toHaveBeenCalledWith(2.5);
+        });
 
-            // Test formatting of different decimal values
-            fireEvent.focus(input);
-            fireEvent.change(input, { target: { value: '2.50' } });
-            fireEvent.blur(input);
+        test('RentIncreaseField_shouldHandleNegativeInfinityValue', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={-Infinity}
+                    onChange={mockOnChange}
+                    defaultValue={2.5}
+                    minValue={0}
+                />
+            );
 
             expect(mockOnChange).toHaveBeenCalledWith(2.5);
         });
 
         test('RentIncreaseField_shouldRoundToTwoDecimalPlaces', () => {
             const mockOnChange = jest.fn();
-
+            
             render(
                 <RentIncreaseField
-                    value=""
+                    value={2.567}
                     onChange={mockOnChange}
                 />
             );
 
-            const input = screen.getByRole('textbox');
+            // Should round to 2 decimal places
+            expect(mockOnChange).toHaveBeenCalledWith(2.57);
+        });
 
-            // Enter value with more than 2 decimal places
-            fireEvent.focus(input);
-            fireEvent.change(input, { target: { value: '2.999' } });
-            fireEvent.blur(input);
+        test('RentIncreaseField_shouldHandleExtremeDecimalPrecision', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.123456789}
+                    onChange={mockOnChange}
+                />
+            );
 
             // Should round to 2 decimal places
-            expect(mockOnChange).toHaveBeenCalledWith(3);
+            expect(mockOnChange).toHaveBeenCalledWith(2.12);
+        });
+    });
+
+    // Slider Interaction Tests
+    describe('Slider Interactions', () => {
+        test('RentIncreaseField_shouldUpdateValueWhenSliderChanges', async () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+            
+            // Simulate slider keydown events (Radix Slider responds to keyboard)
+            fireEvent.keyDown(slider, { key: 'ArrowRight' });
+
+            expect(mockOnChange).toHaveBeenCalled();
+        });
+
+        test('RentIncreaseField_shouldClampSliderValueToRange', async () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                    minValue={1}
+                    maxValue={10}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+            
+            // Test that slider has correct range attributes
+            expect(slider).toHaveAttribute('aria-valuemin', '1');
+            expect(slider).toHaveAttribute('aria-valuemax', '10');
+        });
+
+        test('RentIncreaseField_shouldHandleSliderInteraction', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+            
+            // Test that slider is present and shows correct value
+            expect(slider).toBeInTheDocument();
+            expect(slider).toHaveAttribute('aria-valuenow', '2.5');
+        });
+
+        test('RentIncreaseField_shouldUseCorrectSliderStep', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+            
+            // Verify the slider is properly configured (0.1% increments are internal to Radix)
+            expect(slider).toHaveAttribute('aria-valuemin', '0');
+            expect(slider).toHaveAttribute('aria-valuemax', '20');
+            expect(slider).toHaveAttribute('aria-valuenow', '2.5');
+        });
+    });
+
+    // Input Interaction Tests
+    describe('Input Interactions', () => {
+        test('RentIncreaseField_shouldUpdateValueOnValidInput', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            
+            await user.clear(input);
+            await user.type(input, '3.5');
+
+            // Should provide immediate feedback for valid values
+            expect(mockOnChange).toHaveBeenCalledWith(3.5);
+        });
+
+        test('RentIncreaseField_shouldShowFormattedValueWhenNotFocused', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={3.25}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            // Should show formatted percentage value
+            expect(input).toHaveValue(3.25);
+        });
+
+        test('RentIncreaseField_shouldShowUnformattedValueWhenFocused', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            
+            await user.click(input);
+            
+            // When focused, should show unformatted value
+            expect(input).toHaveValue(2.5);
+        });
+
+        test('RentIncreaseField_shouldClampValueOnBlur', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                    minValue={0}
+                    maxValue={10}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            
+            await user.clear(input);
+            await user.type(input, '15');
+            await user.tab(); // Blur the input
+
+            expect(mockOnChange).toHaveBeenCalledWith(10);
+        });
+
+        test('RentIncreaseField_shouldHandleEmptyInputOnBlur', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                    defaultValue={3.0}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            
+            await user.clear(input);
+            await user.tab(); // Blur with empty input
+
+            expect(mockOnChange).toHaveBeenCalledWith(3.0);
+        });
+
+        test('RentIncreaseField_shouldHandleInvalidInputOnBlur', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                    defaultValue={3.0}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            
+            await user.clear(input);
+            await user.type(input, 'invalid');
+            await user.tab(); // Blur with invalid input
+
+            expect(mockOnChange).toHaveBeenCalledWith(3.0);
+        });
+
+        test('RentIncreaseField_shouldNotCallOnChangeForInvalidInputDuringTyping', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            
+            await user.clear(input);
+            mockOnChange.mockClear();
+            
+            await user.type(input, 'abc');
+
+            // Should not call onChange for invalid input during typing
+            expect(mockOnChange).not.toHaveBeenCalled();
+        });
+
+        test('RentIncreaseField_shouldHandleDecimalInput', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            
+            await user.clear(input);
+            await user.type(input, '2.75');
+
+            expect(mockOnChange).toHaveBeenCalledWith(2.75);
+        });
+
+        test('RentIncreaseField_shouldHandleNegativeInputCorrectly', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                    minValue={0}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            
+            await user.clear(input);
+            await user.type(input, '-1');
+            await user.tab(); // Blur to trigger validation
+
+            // Should clamp to minimum value
+            expect(mockOnChange).toHaveBeenCalledWith(0);
+        });
+    });
+
+    // Accessibility Tests
+    describe('Accessibility', () => {
+        test('RentIncreaseField_shouldHaveProperAriaLabels', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    id="test-rent-increase"
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+            const input = screen.getByRole('spinbutton');
+
+            // Test Radix slider ARIA attributes
+            expect(slider).toHaveAttribute('aria-valuemin', '0');
+            expect(slider).toHaveAttribute('aria-valuemax', '20');
+            expect(slider).toHaveAttribute('aria-valuenow', '2.5');
+
+            expect(input).toHaveAttribute('aria-label', 'Annual rent increase in percent, current value: 2.5%');
+        });
+
+        test('RentIncreaseField_shouldHaveProperTooltipAccessibility', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    id="test-rent-increase"
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const tooltipTrigger = screen.getByRole('button', { name: /more information about annual rent increase/i });
+
+            expect(tooltipTrigger).toHaveAttribute('aria-describedby', 'test-rent-increase-tooltip');
+            expect(tooltipTrigger).toHaveAttribute('aria-expanded', 'false');
+        });
+
+        test('RentIncreaseField_shouldToggleTooltip', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    id="test-rent-increase"
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const tooltipTrigger = screen.getByRole('button', { name: /more information about annual rent increase/i });
+
+            await user.click(tooltipTrigger);
+
+            expect(tooltipTrigger).toHaveAttribute('aria-expanded', 'true');
+        });
+
+        test('RentIncreaseField_shouldHavePercentSuffix', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    id="test-rent-increase"
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            // Check for percent suffix
+            const percentSuffix = screen.getByText('%');
+            expect(percentSuffix).toBeInTheDocument();
+            expect(percentSuffix.closest('div')).toHaveAttribute('aria-hidden', 'true');
+        });
+    });
+
+    // Disabled State Tests
+    describe('Disabled State', () => {
+        test('RentIncreaseField_shouldDisableAllInputsWhenDisabled', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                    disabled={true}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+            const input = screen.getByRole('spinbutton');
+
+            // Radix slider uses data-disabled attribute
+            expect(slider).toHaveAttribute('data-disabled');
+            expect(input).toBeDisabled();
+        });
+
+        test('RentIncreaseField_shouldNotCallOnChangeWhenDisabled', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                    disabled={true}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            
+            // Try to interact with disabled input
+            await user.type(input, '3.5');
+
+            expect(mockOnChange).not.toHaveBeenCalled();
+        });
+    });
+
+    // Custom Props Tests
+    describe('Custom Props', () => {
+        test('RentIncreaseField_shouldRespectCustomMinMaxValues', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={5}
+                    onChange={mockOnChange}
+                    minValue={2}
+                    maxValue={10}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+            const input = screen.getByRole('spinbutton');
+
+            // Radix slider uses aria attributes for min/max
+            expect(slider).toHaveAttribute('aria-valuemin', '2');
+            expect(slider).toHaveAttribute('aria-valuemax', '10');
+            expect(input).toHaveAttribute('min', '2');
+            expect(input).toHaveAttribute('max', '10');
+        });
+
+        test('RentIncreaseField_shouldUseCustomId', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    id="custom-rent-increase"
+                    value={2.5}
+                    onChange={mockOnChange}
+                    displayMode="input"
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            expect(input).toHaveAttribute('id', 'custom-rent-increase');
+        });
+
+        test('RentIncreaseField_shouldUseCustomClassNames', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                    className="custom-class"
+                />
+            );
+
+            // Check if the main container has the custom class
+            const container = screen.getByText('Annual Rent Increase').closest('.custom-class');
+            expect(container).toBeInTheDocument();
+        });
+
+        test('RentIncreaseField_shouldUseCustomDefaultValue', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={NaN}
+                    onChange={mockOnChange}
+                    defaultValue={4.5}
+                />
+            );
+
+            expect(mockOnChange).toHaveBeenCalledWith(4.5);
+        });
+    });
+
+    // Edge Cases Tests
+    describe('Edge Cases', () => {
+        test('RentIncreaseField_shouldHandleRapidValueChanges', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            
+            // Rapid typing
+            await user.clear(input);
+            await user.type(input, '123.456');
+            await user.tab();
+
+            // Should handle rapid changes and clamp final value
+            expect(mockOnChange).toHaveBeenLastCalledWith(20); // Assuming max is 20
+        });
+
+        test('RentIncreaseField_shouldHandleVeryLongDecimalInput', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            
+            await user.clear(input);
+            await user.type(input, '2.123456789012345');
+            await user.tab();
+
+            expect(mockOnChange).toHaveBeenCalledWith(2.12); // Should round to 2 decimals
+        });
+
+        test('RentIncreaseField_shouldPreventInfiniteLoops', () => {
+            const mockOnChange = jest.fn();
+            
+            // Render with a value that needs clamping
+            const { rerender } = render(
+                <RentIncreaseField
+                    value={100}
+                    onChange={mockOnChange}
+                    maxValue={20}
+                />
+            );
+
+            // Clear the mock and re-render with the same invalid value
+            mockOnChange.mockClear();
+            
+            rerender(
+                <RentIncreaseField
+                    value={100}
+                    onChange={mockOnChange}
+                    maxValue={20}
+                />
+            );
+
+            // Should not call onChange again if the value hasn't actually changed
+            expect(mockOnChange).not.toHaveBeenCalled();
+        });
+
+        test('RentIncreaseField_shouldHandleZeroValue', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={0}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+            expect(slider).toHaveAttribute('aria-valuenow', '0');
+        });
+
+        test('RentIncreaseField_shouldHandleVerySmallDecimals', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            
+            await user.clear(input);
+            await user.type(input, '0.01');
+            await user.tab();
+
+            expect(mockOnChange).toHaveBeenCalledWith(0.01);
+        });
+    });
+
+    // Integration Tests
+    describe('Integration Tests', () => {
+        test('RentIncreaseField_shouldSyncSliderAndInputValues', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                    displayMode="combined"
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+
+            // Test that both components are present in combined mode
+            expect(slider).toBeInTheDocument();
+            expect(screen.getByRole('spinbutton')).toBeInTheDocument();
+
+            // Test that slider shows correct value
+            expect(slider).toHaveAttribute('aria-valuenow', '2.5');
+        });
+
+        test('RentIncreaseField_shouldMaintainStateConsistency', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+
+            // Focus and change value
+            await user.click(input);
+            await user.clear(input);
+            await user.type(input, '3.5');
+
+            // Value should update immediately for valid input
+            expect(mockOnChange).toHaveBeenCalledWith(3.5);
+
+            // Blur should not change the value again if it's already valid
+            mockOnChange.mockClear();
+            await user.tab();
+
+            // Should not call onChange again since 3.5 is already valid and matches validatedValue
+            expect(mockOnChange).not.toHaveBeenCalled();
+        });
+
+        test('RentIncreaseField_shouldFormatValueDisplayCorrectly', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                    displayMode="slider"
+                />
+            );
+
+            // Value display should show formatted percentage
+            const valueDisplay = screen.getByText((_, element) => {
+                return element?.textContent?.trim() === '2.50%';
+            });
+            expect(valueDisplay).toBeInTheDocument();
+        });
+
+        test('RentIncreaseField_shouldHandleValueDisplayForZero', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={0}
+                    onChange={mockOnChange}
+                    displayMode="slider"
+                />
+            );
+
+            // Value display should show formatted zero percentage
+            const valueDisplay = screen.getByText((_, element) => {
+                return element?.textContent?.trim() === '0.00%';
+            });
+            expect(valueDisplay).toBeInTheDocument();
+        });
+    });
+
+    // Formatting Tests
+    describe('Formatting Tests', () => {
+        test('RentIncreaseField_shouldDisplayCorrectPercentageFormat', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={2.5}
+                    onChange={mockOnChange}
+                    displayMode="slider"
+                />
+            );
+
+            // Should show properly formatted percentage
+            expect(screen.getByText((_, element) => {
+                return element?.textContent?.trim() === '2.50%';
+            })).toBeInTheDocument();
+        });
+
+        test('RentIncreaseField_shouldFormatSingleDigitPercentage', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={5}
+                    onChange={mockOnChange}
+                    displayMode="slider"
+                />
+            );
+
+            expect(screen.getByText((_, element) => {
+                return element?.textContent?.trim() === '5.00%';
+            })).toBeInTheDocument();
+        });
+
+        test('RentIncreaseField_shouldFormatDecimalPercentage', () => {
+            const mockOnChange = jest.fn();
+            
+            render(
+                <RentIncreaseField
+                    value={3.25}
+                    onChange={mockOnChange}
+                    displayMode="slider"
+                />
+            );
+
+            expect(screen.getByText((_, element) => {
+                return element?.textContent?.trim() === '3.25%';
+            })).toBeInTheDocument();
         });
     });
 });

@@ -27,7 +27,7 @@ export const Circumstance1: React.FC = () => {
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
     const [analysisYears, setAnalysisYears] = useState<number>(defaultAnalysisYears)
     const [monthlyRent, setMonthlyRent] = useState<number | ''>(defaultMonthlyRent)
-    const [rentIncrease, setRentIncrease] = useState<number | ''>(defaultRentIncrease)
+    const [rentIncrease, setRentIncrease] = useState<number>(defaultRentIncrease)
     const [investmentAnnualReturn, setInvestmentAnnualReturn] = useState<number | ''>(7.5)
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
     const [tableDialogOpen, setTableDialogOpen] = useState(false)
@@ -76,8 +76,6 @@ export const Circumstance1: React.FC = () => {
                 <YearsField
                     value={analysisYears}
                     onChange={setAnalysisYears}
-                    enableValidation={true}
-                    validationMode="required"
                     defaultValue={defaultAnalysisYears}
                     minValue={1}
                     maxValue={50}
@@ -103,8 +101,6 @@ export const Circumstance1: React.FC = () => {
                             <RentIncreaseField
                                 value={rentIncrease}
                                 onChange={setRentIncrease}
-                                enableValidation={true}
-                                validationMode="required"
                                 defaultValue={defaultRentIncrease}
                                 minValue={0}
                                 maxValue={20}

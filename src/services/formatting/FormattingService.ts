@@ -1,11 +1,4 @@
 /**
- * Formatting Service
- * 
- * Provides utility functions for formatting numbers, currency, and other display values.
- * This service centralizes formatting logic to avoid duplication across components.
- */
-
-/**
  * Format a number as Canadian dollar currency
  * @param value - The numeric value to format
  * @returns Formatted currency string (e.g., "$1,234")
@@ -32,4 +25,28 @@ export const formatShortCurrency = (value: number): string => {
         return `$${(value / 1000).toFixed(0)}K`;
     }
     return formatCurrency(value);
+};
+
+export const formatToInteger = (value: number): string => {
+    return Math.round(value).toString();
+};
+
+export const parsePercentage = (formatted: string): number | undefined => {
+    // Remove all non-digit characters except decimal point and minus sign
+    const cleaned = formatted.replace(/[^\d.-]/g, '');
+    if (cleaned === '' || cleaned === '-') return undefined;
+
+    const parsed = parseFloat(cleaned);
+    return isNaN(parsed) ? undefined : parsed;
+};
+
+/**
+ * Format a number as percentage (with 1-2 decimal places as needed)
+ */
+export const formatPercentage = (value: number): string => {
+    // Show up to 2 decimal places, but remove trailing zeros
+    return new Intl.NumberFormat('en-CA', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+    }).format(value);
 };

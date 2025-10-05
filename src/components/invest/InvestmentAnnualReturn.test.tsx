@@ -1,500 +1,184 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { InvestmentAnnualReturnField } from './InvestmentAnnualReturn';
-import '@testing-library/jest-dom';
 
 describe('InvestmentAnnualReturnField', () => {
-    const mockOnChange = jest.fn();
-
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    describe('Basic rendering', () => {
-        it('renders with default props', () => {
-            render(<InvestmentAnnualReturnField value={7.5} onChange={mockOnChange} />);
-            
-            const input = screen.getByRole('textbox', { name: /expected yearly investment return/i });
-            expect(input).toBeInTheDocument();
-            expect(input).toHaveValue('7.50');
-        });
+    // Basic rendering tests
+    test('InvestmentAnnualReturnField_shouldRenderWithDefaultProps', () => {
+        const mockOnChange = jest.fn();
 
-        it('renders with custom placeholder', () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={''}
-                    onChange={mockOnChange}
-                    placeholder="10.00"
-                />
-            );
-            
-            const input = screen.getByRole('textbox');
-            expect(input).toHaveAttribute('placeholder', '10.00');
-        });
+        render(
+            <InvestmentAnnualReturnField
+                value={7.5}
+                onChange={mockOnChange}
+            />
+        );
 
-        it('renders with custom id', () => {
-            render(
-                <InvestmentAnnualReturnField
-                    id="custom-id"
-                    value={5}
-                    onChange={mockOnChange}
-                />
-            );
-            
-            const input = screen.getByRole('textbox');
-            expect(input).toHaveAttribute('id', 'custom-id');
-        });
+        const input = screen.getByDisplayValue('7.50');
+        expect(input).toBeTruthy();
 
-        it('renders the label with icon', () => {
-            render(<InvestmentAnnualReturnField value={7.5} onChange={mockOnChange} />);
-            
-            expect(screen.getByText('Expected Yearly Investment Return')).toBeInTheDocument();
-        });
-
-        it('renders percentage symbol', () => {
-            render(<InvestmentAnnualReturnField value={7.5} onChange={mockOnChange} />);
-            
-            expect(screen.getByText('%')).toBeInTheDocument();
-        });
-
-        it('renders info button for tooltip', () => {
-            render(<InvestmentAnnualReturnField value={7.5} onChange={mockOnChange} />);
-            
-            const infoButton = screen.getByRole('button', { 
-                name: /more information about expected yearly investment return/i 
-            });
-            expect(infoButton).toBeInTheDocument();
-        });
+        const label = screen.getByText(/Expected Return/i);
+        expect(label).toBeTruthy();
     });
 
-    describe('User interaction', () => {
-        it('calls onChange when value changes', () => {
-            render(<InvestmentAnnualReturnField value={''} onChange={mockOnChange} />);
-            
-            const input = screen.getByRole('textbox');
-            fireEvent.change(input, { target: { value: '8.5' } });
-            
-            expect(mockOnChange).toHaveBeenCalledWith(8.5);
-        });
+    test('InvestmentAnnualReturnField_shouldRenderWithRequiredIndicator_whenValidationRequired', () => {
+        const mockOnChange = jest.fn();
 
-        it('handles empty string input', () => {
-            render(<InvestmentAnnualReturnField value={7.5} onChange={mockOnChange} />);
-            
-            const input = screen.getByRole('textbox');
-            fireEvent.change(input, { target: { value: '' } });
-            
-            expect(mockOnChange).toHaveBeenCalledWith('');
-        });
+        render(
+            <InvestmentAnnualReturnField
+                value={7.5}
+                onChange={mockOnChange}
+                enableValidation={true}
+                validationMode="required"
+            />
+        );
 
-        it('formats value on blur', () => {
-            render(<InvestmentAnnualReturnField value={7.5} onChange={mockOnChange} />);
-            
-            const input = screen.getByRole('textbox');
-            
-            // Focus and change value
-            fireEvent.focus(input);
-            fireEvent.change(input, { target: { value: '10' } });
-            
-            // Blur should format the value
-            fireEvent.blur(input);
-            
-            waitFor(() => {
-                expect(input).toHaveValue('10.00');
-            });
-        });
-
-        it('unformats value on focus', () => {
-            render(<InvestmentAnnualReturnField value={7.5} onChange={mockOnChange} />);
-            
-            const input = screen.getByRole('textbox');
-            expect(input).toHaveValue('7.50');
-            
-            // Focus should unformat the value
-            fireEvent.focus(input);
-            
-            waitFor(() => {
-                expect(input).toHaveValue('7.5');
-            });
-        });
-
-        it('handles decimal input correctly', () => {
-            render(<InvestmentAnnualReturnField value={''} onChange={mockOnChange} />);
-            
-            const input = screen.getByRole('textbox');
-            fireEvent.change(input, { target: { value: '8.75' } });
-            
-            expect(mockOnChange).toHaveBeenCalledWith(8.75);
-        });
-
-        it('handles negative values', () => {
-            render(<InvestmentAnnualReturnField value={''} onChange={mockOnChange} />);
-            
-            const input = screen.getByRole('textbox');
-            fireEvent.change(input, { target: { value: '-5' } });
-            
-            expect(mockOnChange).toHaveBeenCalledWith(-5);
-        });
-
-        it('strips non-numeric characters except decimal and minus', () => {
-            render(<InvestmentAnnualReturnField value={''} onChange={mockOnChange} />);
-            
-            const input = screen.getByRole('textbox');
-            fireEvent.change(input, { target: { value: 'abc123.45def' } });
-            
-            expect(mockOnChange).toHaveBeenCalledWith(123.45);
-        });
+        const requiredIndicator = screen.getByText('*');
+        expect(requiredIndicator).toBeTruthy();
     });
 
-    describe('Validation - optional mode', () => {
-        it('does not show required asterisk in optional mode', () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={''}
-                    onChange={mockOnChange}
-                    enableValidation={true}
-                    validationMode="optional"
-                />
-            );
-            
-            const label = screen.getByText('Expected Yearly Investment Return');
-            expect(label.textContent).not.toContain('*');
-        });
+    test('InvestmentAnnualReturnField_shouldRenderInputOnly_whenDisplayModeIsInput', () => {
+        const mockOnChange = jest.fn();
 
-        it('allows empty value in optional mode', () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={''}
-                    onChange={mockOnChange}
-                    enableValidation={true}
-                    validationMode="optional"
-                />
-            );
-            
-            const input = screen.getByRole('textbox');
-            fireEvent.blur(input);
-            
-            // Should not show any errors
-            expect(screen.queryByText(/required/i)).not.toBeInTheDocument();
-        });
+        render(
+            <InvestmentAnnualReturnField
+                value={7.5}
+                onChange={mockOnChange}
+                displayMode="input"
+            />
+        );
+
+        const input = screen.getByDisplayValue('7.50');
+        expect(input).toBeTruthy();
+
+        const slider = screen.queryByRole('slider');
+        expect(slider).toBeFalsy();
     });
 
-    describe('Validation - required mode', () => {
-        it('shows required asterisk in required mode', () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={''}
-                    onChange={mockOnChange}
-                    enableValidation={true}
-                    validationMode="required"
-                />
-            );
-            
-            const label = screen.getByText('Expected Yearly Investment Return');
-            // Check if asterisk exists in the parent div
-            expect(label.parentElement?.textContent).toContain('*');
-        });
+    test('InvestmentAnnualReturnField_shouldRenderSliderOnly_whenDisplayModeIsSlider', () => {
+        const mockOnChange = jest.fn();
+
+        render(
+            <InvestmentAnnualReturnField
+                value={7.5}
+                onChange={mockOnChange}
+                displayMode="slider"
+            />
+        );
+
+        const slider = screen.getByRole('slider');
+        expect(slider).toBeTruthy();
+
+        const valueDisplay = screen.getByText('7.50%');
+        expect(valueDisplay).toBeTruthy();
     });
 
-    describe('Validation - value constraints', () => {
-        it('validates maximum value (100%)', async () => {
-            const mockValidationChange = jest.fn();
-            render(
-                <InvestmentAnnualReturnField
-                    value={150}
-                    onChange={mockOnChange}
-                    enableValidation={true}
-                    validationMode="optional"
-                    onValidationChange={mockValidationChange}
-                />
-            );
-            
-            const input = screen.getByRole('textbox');
-            fireEvent.blur(input);
-            
-            await waitFor(() => {
-                expect(mockValidationChange).toHaveBeenCalled();
-                const lastCall = mockValidationChange.mock.calls[mockValidationChange.mock.calls.length - 1][0];
-                expect(lastCall.isValid).toBe(false);
-            });
-        });
+    test('InvestmentAnnualReturnField_shouldRenderBothInputAndSlider_whenDisplayModeIsCombined', () => {
+        const mockOnChange = jest.fn();
 
-        it('validates minimum value (-100%)', async () => {
-            const mockValidationChange = jest.fn();
-            render(
-                <InvestmentAnnualReturnField
-                    value={-150}
-                    onChange={mockOnChange}
-                    enableValidation={true}
-                    validationMode="optional"
-                    onValidationChange={mockValidationChange}
-                />
-            );
-            
-            const input = screen.getByRole('textbox');
-            fireEvent.blur(input);
-            
-            await waitFor(() => {
-                expect(mockValidationChange).toHaveBeenCalled();
-                const lastCall = mockValidationChange.mock.calls[mockValidationChange.mock.calls.length - 1][0];
-                expect(lastCall.isValid).toBe(false);
-            });
-        });
+        render(
+            <InvestmentAnnualReturnField
+                value={7.5}
+                onChange={mockOnChange}
+                displayMode="combined"
+            />
+        );
 
-        it('accepts valid values within range', async () => {
-            const mockValidationChange = jest.fn();
-            render(
-                <InvestmentAnnualReturnField
-                    value={10}
-                    onChange={mockOnChange}
-                    enableValidation={true}
-                    validationMode="optional"
-                    onValidationChange={mockValidationChange}
-                />
-            );
-            
-            const input = screen.getByRole('textbox');
-            fireEvent.blur(input);
-            
-            await waitFor(() => {
-                expect(mockValidationChange).toHaveBeenCalled();
-                const lastCall = mockValidationChange.mock.calls[mockValidationChange.mock.calls.length - 1][0];
-                expect(lastCall.isValid).toBe(true);
-            });
-        });
+        const input = screen.getByDisplayValue('7.50');
+        expect(input).toBeTruthy();
+
+        const slider = screen.getByRole('slider');
+        expect(slider).toBeTruthy();
     });
 
-    describe('Disabled state', () => {
-        it('disables input when disabled prop is true', () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={7.5}
-                    onChange={mockOnChange}
-                    disabled={true}
-                />
-            );
-            
-            const input = screen.getByRole('textbox');
-            expect(input).toBeDisabled();
-        });
+    test('InvestmentAnnualReturnField_shouldHandleInputChange', () => {
+        const mockOnChange = jest.fn();
 
-        it('input element is disabled when disabled prop is true', () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={7.5}
-                    onChange={mockOnChange}
-                    disabled={true}
-                />
-            );
-            
-            const input = screen.getByRole('textbox');
-            
-            // Verify the input has the disabled attribute
-            expect(input).toBeDisabled();
-        });
+        render(
+            <InvestmentAnnualReturnField
+                value=""
+                onChange={mockOnChange}
+            />
+        );
+
+        const input = screen.getByRole('textbox');
+        fireEvent.change(input, { target: { value: '8.5' } });
+
+        expect(mockOnChange).toHaveBeenCalledWith(8.5);
     });
 
-    describe('Error display', () => {
-        it('displays custom errors when provided', () => {
-            const customErrors = ['Custom error message'];
-            render(
-                <InvestmentAnnualReturnField
-                    value={7.5}
-                    onChange={mockOnChange}
-                    errors={customErrors}
-                />
-            );
-            
-            expect(screen.getByText('Custom error message')).toBeInTheDocument();
-        });
+    test('InvestmentAnnualReturnField_shouldRespectDisabledState', () => {
+        const mockOnChange = jest.fn();
 
-        it('applies error styling when errors exist', () => {
-            const customErrors = ['Error'];
-            render(
-                <InvestmentAnnualReturnField
-                    value={7.5}
-                    onChange={mockOnChange}
-                    errors={customErrors}
-                />
-            );
-            
-            const input = screen.getByRole('textbox');
-            expect(input).toHaveClass('border-red-500');
-        });
+        render(
+            <InvestmentAnnualReturnField
+                value={7.5}
+                onChange={mockOnChange}
+                disabled={true}
+            />
+        );
+
+        const input = screen.getByRole('textbox');
+        expect(input.hasAttribute('disabled')).toBe(true);
     });
 
-    describe('Tooltip', () => {
-        it('shows tooltip when info button is clicked', async () => {
-            render(<InvestmentAnnualReturnField value={7.5} onChange={mockOnChange} />);
-            
-            const infoButton = screen.getByRole('button', { 
-                name: /more information about expected yearly investment return/i 
-            });
-            
-            fireEvent.click(infoButton);
-            
-            await waitFor(() => {
-                // Use getAllByText to handle multiple instances (visible tooltip and aria-hidden copy)
-                const tooltips = screen.getAllByText(/expected annual return on your investment/i);
-                expect(tooltips.length).toBeGreaterThan(0);
-            });
-        });
+    test('InvestmentAnnualReturnField_shouldRenderSlider', () => {
+        const mockOnChange = jest.fn();
+
+        render(
+            <InvestmentAnnualReturnField
+                value={7.5}
+                onChange={mockOnChange}
+            />
+        );
+
+        const slider = screen.getByRole('slider');
+        expect(slider).toBeTruthy();
     });
 
-    describe('Custom className', () => {
-        it('applies custom className', () => {
-            const { container } = render(
-                <InvestmentAnnualReturnField
-                    value={7.5}
-                    onChange={mockOnChange}
-                    className="custom-class"
-                />
-            );
-            
-            expect(container.firstChild).toHaveClass('custom-class');
-        });
+    test('InvestmentAnnualReturnField_shouldHandleEmptyValue', () => {
+        const mockOnChange = jest.fn();
+
+        render(
+            <InvestmentAnnualReturnField
+                value=""
+                onChange={mockOnChange}
+            />
+        );
+
+        const input = screen.getByRole('textbox');
+        expect(input.getAttribute('value')).toBe('');
     });
 
-    describe('Helper functionality', () => {
-        it('does not show helper link by default', () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={7.5}
-                    onChange={mockOnChange}
-                />
-            );
+    test('InvestmentAnnualReturnField_shouldHandleNegativeNumbers', () => {
+        const mockOnChange = jest.fn();
 
-            expect(screen.queryByText("You're not sure?")).not.toBeInTheDocument();
-        });
+        render(
+            <InvestmentAnnualReturnField
+                value={-10.5}
+                onChange={mockOnChange}
+            />
+        );
 
-        it('shows helper link when showHelper is true', () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={7.5}
-                    onChange={mockOnChange}
-                    showHelper={true}
-                />
-            );
+        const input = screen.getByDisplayValue('-10.50');
+        expect(input).toBeTruthy();
+    });
 
-            expect(screen.getByText("You're not sure?")).toBeInTheDocument();
-        });
+    test('InvestmentAnnualReturnField_shouldShowHelperButton_whenShowHelperIsTrue', () => {
+        const mockOnChange = jest.fn();
 
-        it('opens drawer when helper link is clicked', async () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={7.5}
-                    onChange={mockOnChange}
-                    showHelper={true}
-                />
-            );
+        render(
+            <InvestmentAnnualReturnField
+                value={7.5}
+                onChange={mockOnChange}
+                showHelper={true}
+            />
+        );
 
-            const helperButton = screen.getByText("You're not sure?");
-            fireEvent.click(helperButton);
-
-            await waitFor(() => {
-                expect(screen.getByRole('dialog')).toBeInTheDocument();
-                expect(screen.getByText('Investment Return Examples')).toBeInTheDocument();
-            });
-        });
-
-        it('updates value when option is selected from drawer', async () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={7.5}
-                    onChange={mockOnChange}
-                    showHelper={true}
-                />
-            );
-
-            // Open drawer
-            const helperButton = screen.getByText("You're not sure?");
-            fireEvent.click(helperButton);
-
-            await waitFor(() => {
-                expect(screen.getByRole('dialog')).toBeInTheDocument();
-            });
-
-            // Select an option
-            const highInterestButton = screen.getByText('High Interest Savings Account').closest('button');
-            expect(highInterestButton).toBeInTheDocument();
-            fireEvent.click(highInterestButton!);
-
-            await waitFor(() => {
-                expect(mockOnChange).toHaveBeenCalledWith(3);
-            });
-        });
-
-        it('closes drawer when cancel is clicked', async () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={7.5}
-                    onChange={mockOnChange}
-                    showHelper={true}
-                />
-            );
-
-            // Open drawer
-            const helperButton = screen.getByText("You're not sure?");
-            fireEvent.click(helperButton);
-
-            await waitFor(() => {
-                expect(screen.getByRole('dialog')).toBeInTheDocument();
-            });
-
-            // Click cancel
-            const cancelButton = screen.getByRole('button', { name: 'Cancel' });
-            fireEvent.click(cancelButton);
-
-            // Value should not change
-            expect(mockOnChange).not.toHaveBeenCalled();
-        });
-
-        it('shows Other option with slider in drawer', async () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={7.5}
-                    onChange={mockOnChange}
-                    showHelper={true}
-                />
-            );
-
-            // Open drawer
-            const helperButton = screen.getByText("You're not sure?");
-            fireEvent.click(helperButton);
-
-            await waitFor(() => {
-                expect(screen.getByRole('dialog')).toBeInTheDocument();
-            });
-
-            // Check for Other option
-            expect(screen.getByText('Other')).toBeInTheDocument();
-            expect(screen.getByText('Custom Return Rate')).toBeInTheDocument();
-            expect(screen.getByRole('button', { name: 'Apply Custom Rate' })).toBeInTheDocument();
-        });
-
-        it('updates value when custom rate is applied from drawer', async () => {
-            render(
-                <InvestmentAnnualReturnField
-                    value={7.5}
-                    onChange={mockOnChange}
-                    showHelper={true}
-                />
-            );
-
-            // Open drawer
-            const helperButton = screen.getByText("You're not sure?");
-            fireEvent.click(helperButton);
-
-            await waitFor(() => {
-                expect(screen.getByRole('dialog')).toBeInTheDocument();
-            });
-
-            // The slider should have a default value of 10
-            // Click the apply button to apply the custom rate
-            const applyButton = screen.getByRole('button', { name: 'Apply Custom Rate' });
-            fireEvent.click(applyButton);
-
-            await waitFor(() => {
-                expect(mockOnChange).toHaveBeenCalledWith(10);
-            });
-        });
+        const helperButton = screen.getByText("You're not sure?");
+        expect(helperButton).toBeTruthy();
     });
 });

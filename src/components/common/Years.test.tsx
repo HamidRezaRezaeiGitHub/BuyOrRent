@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { YearsField } from './Years';
 
 describe('YearsField', () => {
@@ -6,529 +7,61 @@ describe('YearsField', () => {
         jest.clearAllMocks();
     });
 
-    // Basic rendering tests
-    test('YearsField_shouldRenderWithDefaultProps', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-            />
-        );
-
-        const slider = screen.getByRole('slider');
-        const input = screen.getByRole('spinbutton');
-        const label = screen.getByText('Analysis Period');
-
-        expect(slider).toBeInTheDocument();
-        expect(input).toBeInTheDocument();
-        expect(label).toBeInTheDocument();
-        expect(slider).toHaveAttribute('aria-valuenow', '10');
-        expect(input).toHaveValue(10); // Input shows formatted integer value
-    });
-
-    test('YearsField_shouldRenderWithMinimumValue', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={1}
-                onChange={mockOnChange}
-                minValue={1}
-                maxValue={50}
-            />
-        );
-
-        const slider = screen.getByRole('slider');
-        const input = screen.getByRole('spinbutton');
-        
-        expect(slider).toHaveAttribute('aria-valuenow', '1');
-        expect(input).toHaveValue(1);
-        expect(slider).toHaveAttribute('aria-valuemin', '1');
-    });
-
-    test('YearsField_shouldRenderWithMaximumValue', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={50}
-                onChange={mockOnChange}
-                minValue={1}
-                maxValue={50}
-            />
-        );
-
-        const slider = screen.getByRole('slider');
-        const input = screen.getByRole('spinbutton');
-        
-        expect(slider).toHaveAttribute('aria-valuenow', '50');
-        expect(input).toHaveValue(50);
-        expect(slider).toHaveAttribute('aria-valuemax', '50');
-    });
-
-    test('YearsField_shouldDisplayCalendarIcon', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-            />
-        );
-
-        // Calendar icon is rendered (via Lucide React)
-        const label = screen.getByText('Analysis Period');
-        expect(label).toBeInTheDocument();
-    });
-
-    test('YearsField_shouldDisplayInfoIcon', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-            />
-        );
-
-        const infoButton = screen.getByRole('button', { name: /more information/i });
-        expect(infoButton).toBeInTheDocument();
-    });
-
-    test('YearsField_shouldDisplayYearsUnit', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-                displayMode="slider" // Use slider mode to show years unit
-            />
-        );
-
-        const yearsUnit = screen.getByText('years');
-        expect(yearsUnit).toBeInTheDocument();
-    });
-
-    test('YearsField_shouldDisplayYrsUnit_inInputField', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-                displayMode="combined"
-            />
-        );
-
-        const yrsUnit = screen.getByText('yrs');
-        expect(yrsUnit).toBeInTheDocument();
-    });
-
-    // Change handling tests
-    test('YearsField_shouldCallOnChange_whenSliderValueChanges', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-            />
-        );
-
-        // Test that the slider is present and functional
-        const slider = screen.getByRole('slider');
-        expect(slider).toHaveAttribute('aria-valuenow', '10');
-        
-        // For Radix UI Slider, we verify the component structure
-        // rather than simulating complex pointer interactions
-        expect(slider).toBeInTheDocument();
-    });
-
-    test('YearsField_shouldRoundToInteger_whenValueChanged', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10} // Pass integer value to avoid rounding issues
-                onChange={mockOnChange}
-            />
-        );
-
-        // The component internally handles rounding via Math.round
-        const input = screen.getByRole('spinbutton');
-        expect(input).toHaveValue(10); // Shows the actual passed value
-        const slider = screen.getByRole('slider');
-        expect(slider).toHaveAttribute('aria-valuemin', '1');
-        expect(slider).toHaveAttribute('aria-valuemax', '50');
-    });
-
-    test('YearsField_shouldUpdateDisplayedValue_whenValueChanges', () => {
-        const mockOnChange = jest.fn();
-
-        const { rerender } = render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-                displayMode="slider"
-            />
-        );
-
-        expect(screen.getByText('10')).toBeInTheDocument();
-
-        rerender(
-            <YearsField
-                value={25}
-                onChange={mockOnChange}
-                displayMode="slider"
-            />
-        );
-
-        expect(screen.getByText('25')).toBeInTheDocument();
-    });
-
-    // Validation tests
-    test('YearsField_shouldNotShowValidationErrors_whenValidationDisabled', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-                enableValidation={false}
-            />
-        );
-
-        const slider = screen.getByRole('slider');
-        fireEvent.blur(slider);
-
-        expect(screen.queryByText(/required/)).not.toBeInTheDocument();
-    });
-
-    test('YearsField_shouldShowRequiredError_whenValidationEnabledAndInvalidValue', () => {
-        const mockOnChange = jest.fn();
-        const mockOnValidationChange = jest.fn();
-
-        // Since the slider constrains values to 1-100, we test by checking
-        // that validation would work if external errors are provided
-        render(
-            <YearsField
-                value={50}
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="required"
-                onValidationChange={mockOnValidationChange}
-                errors={['Test error']}
-            />
-        );
-
-        // When validation is enabled, external errors are ignored
-        expect(screen.queryByText('Test error')).not.toBeInTheDocument();
-    });
-
-    test('YearsField_shouldNotShowError_whenValidationOptionalAndValidValue', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={50}
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        const slider = screen.getByRole('slider');
-        fireEvent.blur(slider);
-
-        expect(screen.queryByText(/required/)).not.toBeInTheDocument();
-    });
-
-    test('YearsField_shouldShowRequiredIndicator_whenValidationModeRequired', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="required"
-            />
-        );
-
-        // Check for asterisk
-        const label = screen.getByText('Analysis Period');
-        expect(label.parentElement?.innerHTML).toContain('*');
-    });
-
-    test('YearsField_shouldNotShowRequiredIndicator_whenValidationModeOptional', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        const label = screen.getByText('Analysis Period');
-        expect(label.parentElement?.innerHTML).not.toContain('*');
-    });
-
-    test('YearsField_shouldCallOnValidationChange_whenValidationStateChanges', () => {
-        const mockOnChange = jest.fn();
-        const mockOnValidationChange = jest.fn();
-
-        const { rerender } = render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="required"
-                onValidationChange={mockOnValidationChange}
-            />
-        );
-
-        const slider = screen.getByRole('slider');
-        fireEvent.blur(slider);
-
-        expect(mockOnValidationChange).toHaveBeenCalled();
-
-        rerender(
-            <YearsField
-                value={50}
-                onChange={mockOnChange}
-                enableValidation={true}
-                validationMode="required"
-                onValidationChange={mockOnValidationChange}
-            />
-        );
-
-        fireEvent.blur(slider);
-
-        expect(mockOnValidationChange).toHaveBeenCalled();
-    });
-
-    test('YearsField_shouldDisplayExternalErrors_whenValidationDisabled', () => {
-        const mockOnChange = jest.fn();
-        const externalErrors = ['Custom error message'];
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-                errors={externalErrors}
-                enableValidation={false}
-            />
-        );
-
-        expect(screen.getByText('Custom error message')).toBeInTheDocument();
-    });
-
-    test('YearsField_shouldPrioritizeValidationErrors_overExternalErrors', () => {
-        const mockOnChange = jest.fn();
-        const externalErrors = ['External error message'];
-
-        // When validation is enabled, it should ignore external errors
-        render(
-            <YearsField
-                value={50}
-                onChange={mockOnChange}
-                errors={externalErrors}
-                enableValidation={true}
-                validationMode="optional"
-            />
-        );
-
-        // External errors should not be shown when validation is enabled
-        expect(screen.queryByText('External error message')).not.toBeInTheDocument();
-    });
-
-    // Disabled state tests
-    test('YearsField_shouldBeDisabled_whenDisabledPropTrue', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-                disabled={true}
-            />
-        );
-
-        const slider = screen.getByRole('slider');
-        expect(slider).toHaveAttribute('data-disabled');
-    });
-
-    test('YearsField_shouldNotCallOnChange_whenDisabled', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-                disabled={true}
-            />
-        );
-
-        const slider = screen.getByRole('slider');
-        
-        // Verify the slider is marked as disabled
-        expect(slider).toHaveAttribute('data-disabled');
-    });
-
-    // Custom ID test
-    test('YearsField_shouldUseCustomId_whenProvided', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                id="customYearsId"
-                value={10}
-                onChange={mockOnChange}
-            />
-        );
-
-        // Check that the slider wrapper uses the custom ID
-        const slider = screen.getByRole('slider');
-        expect(slider).toBeInTheDocument();
-        // The ID is on the root element, not necessarily the slider role element
-    });
-
-    // Custom className test
-    test('YearsField_shouldApplyCustomClassName_whenProvided', () => {
-        const mockOnChange = jest.fn();
-
-        const { container } = render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-                className="custom-class"
-            />
-        );
-
-        const wrapper = container.firstChild;
-        expect(wrapper).toHaveClass('custom-class');
-    });
-
-    // Tooltip interaction test
-    test('YearsField_shouldToggleTooltip_whenInfoButtonClicked', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-            />
-        );
-
-        const infoButton = screen.getByRole('button', { name: /more information/i });
-        
-        // Verify the info button is present and clickable
-        expect(infoButton).toBeInTheDocument();
-        fireEvent.click(infoButton);
-        
-        // The tooltip component manages its own visibility state
-        // We've verified the button works for mobile-first design
-    });
-
-    // Edge case tests
-    test('YearsField_shouldHandleMinimumBoundary', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={1}
-                onChange={mockOnChange}
-                minValue={1}
-                maxValue={50}
-            />
-        );
-
-        const slider = screen.getByRole('slider');
-        expect(slider).toHaveAttribute('aria-valuemin', '1');
-        expect(slider).toHaveAttribute('aria-valuenow', '1');
-    });
-
-    test('YearsField_shouldHandleMaximumBoundary', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={50}
-                onChange={mockOnChange}
-                minValue={1}
-                maxValue={50}
-            />
-        );
-
-        const slider = screen.getByRole('slider');
-        expect(slider).toHaveAttribute('aria-valuemax', '50');
-        expect(slider).toHaveAttribute('aria-valuenow', '50');
-    });
-
-    test('YearsField_shouldShowCorrectStepValue', () => {
-        const mockOnChange = jest.fn();
-
-        render(
-            <YearsField
-                value={10}
-                onChange={mockOnChange}
-            />
-        );
-
-        const slider = screen.getByRole('slider');
-        // Radix UI Slider uses aria attributes, step of 1 means integer steps
-        expect(slider).toHaveAttribute('aria-valuemin', '1');
-        expect(slider).toHaveAttribute('aria-valuemax', '50');
-    });
-
-    // Display Mode Tests
-    describe('Display Modes', () => {
-        test('YearsField_shouldRenderSliderMode', () => {
+    // Basic Rendering Tests
+    describe('Basic Rendering', () => {
+        test('YearsField_shouldRenderWithDefaultProps', () => {
             const mockOnChange = jest.fn();
 
             render(
                 <YearsField
-                    value={10}
+                    value={25}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const label = screen.getByText('Analysis Period');
+            const slider = screen.getByRole('slider');
+            const input = screen.getByRole('spinbutton');
+            const tooltip = screen.getByRole('button', { name: /more information about analysis period/i });
+
+            expect(label).toBeInTheDocument();
+            expect(slider).toBeInTheDocument();
+            expect(input).toBeInTheDocument();
+            expect(tooltip).toBeInTheDocument();
+        });
+
+        test('YearsField_shouldRenderSliderOnlyMode', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
                     onChange={mockOnChange}
                     displayMode="slider"
                 />
             );
 
             const slider = screen.getByRole('slider');
-            const valueDisplay = screen.getByText('10');
-            const yearsUnit = screen.getByText('years');
-            
+            const valueDisplay = screen.getByText('25');
             expect(slider).toBeInTheDocument();
             expect(valueDisplay).toBeInTheDocument();
-            expect(yearsUnit).toBeInTheDocument();
             expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
         });
 
-        test('YearsField_shouldRenderInputMode', () => {
+        test('YearsField_shouldRenderInputOnlyMode', () => {
             const mockOnChange = jest.fn();
 
             render(
                 <YearsField
-                    value={10}
+                    value={25}
                     onChange={mockOnChange}
                     displayMode="input"
                 />
             );
 
             const input = screen.getByRole('spinbutton');
-            const yrsUnit = screen.getByText('yrs');
-            
             expect(input).toBeInTheDocument();
-            expect(input).toHaveValue(10);
-            expect(yrsUnit).toBeInTheDocument();
             expect(screen.queryByRole('slider')).not.toBeInTheDocument();
-            expect(screen.queryByText('years')).not.toBeInTheDocument();
         });
 
         test('YearsField_shouldRenderCombinedMode', () => {
@@ -536,7 +69,7 @@ describe('YearsField', () => {
 
             render(
                 <YearsField
-                    value={10}
+                    value={25}
                     onChange={mockOnChange}
                     displayMode="combined"
                 />
@@ -544,247 +77,593 @@ describe('YearsField', () => {
 
             const slider = screen.getByRole('slider');
             const input = screen.getByRole('spinbutton');
-            const yrsUnit = screen.getByText('yrs');
-            
             expect(slider).toBeInTheDocument();
             expect(input).toBeInTheDocument();
-            expect(input).toHaveValue(10);
-            expect(yrsUnit).toBeInTheDocument();
         });
     });
 
-    // Input Field Focus/Blur Tests
-    describe('Input Field Formatting', () => {
-        test('YearsField_shouldShowUnformattedValue_onFocus', () => {
+    // Value Validation Tests
+    describe('Value Validation', () => {
+        test('YearsField_shouldClampInitialValueToMinimum', () => {
             const mockOnChange = jest.fn();
 
             render(
                 <YearsField
-                    value={25} // Use integer value
+                    value={-5}
                     onChange={mockOnChange}
-                    displayMode="input"
-                />
-            );
-
-            const input = screen.getByRole('spinbutton');
-            expect(input).toHaveValue(25); // Initially formatted
-
-            fireEvent.focus(input);
-            
-            // When focused, should show the actual value for editing
-            expect(input).toHaveValue(25); // Same value since it's already integer
-        });
-
-        test('YearsField_shouldFormatValue_onBlur', () => {
-            const mockOnChange = jest.fn();
-
-            render(
-                <YearsField
-                    value={10}
-                    onChange={mockOnChange}
-                    displayMode="input"
-                    defaultValue={25}
                     minValue={1}
                     maxValue={50}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
-            // Focus and change value
-            fireEvent.focus(input);
-            fireEvent.change(input, { target: { value: '30' } });
-            
-            // Blur should trigger formatting and onChange
-            fireEvent.blur(input);
-            
-            expect(mockOnChange).toHaveBeenCalledWith(30); // Within bounds, no clamping needed
+            // Should call onChange with clamped value
+            expect(mockOnChange).toHaveBeenCalledWith(1);
         });
 
-        test('YearsField_shouldUseDefaultValue_whenEmptyOnBlur', () => {
+        test('YearsField_shouldClampInitialValueToMaximum', () => {
             const mockOnChange = jest.fn();
 
             render(
                 <YearsField
-                    value={10}
+                    value={100}
                     onChange={mockOnChange}
-                    displayMode="input"
+                    minValue={1}
+                    maxValue={50}
+                />
+            );
+
+            expect(mockOnChange).toHaveBeenCalledWith(50);
+        });
+
+        test('YearsField_shouldHandleNaNValue', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={NaN}
+                    onChange={mockOnChange}
                     defaultValue={25}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
-            fireEvent.focus(input);
-            fireEvent.change(input, { target: { value: '' } });
-            fireEvent.blur(input);
-            
-            expect(mockOnChange).toHaveBeenCalledWith(25); // Default value
+            expect(mockOnChange).toHaveBeenCalledWith(25);
         });
 
-        test('YearsField_shouldClampValue_withinBounds', () => {
+        test('YearsField_shouldHandleInfinityValue', () => {
             const mockOnChange = jest.fn();
 
             render(
                 <YearsField
-                    value={10}
+                    value={Infinity}
                     onChange={mockOnChange}
-                    displayMode="input"
-                    minValue={5}
-                    maxValue={15}
+                    defaultValue={25}
+                    maxValue={50}
+                />
+            );
+
+            expect(mockOnChange).toHaveBeenCalledWith(25);
+        });
+
+        test('YearsField_shouldHandleNegativeInfinityValue', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={-Infinity}
+                    onChange={mockOnChange}
+                    defaultValue={25}
+                    minValue={1}
+                />
+            );
+
+            expect(mockOnChange).toHaveBeenCalledWith(25);
+        });
+
+        test('YearsField_shouldRoundDecimalValues', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25.7}
+                    onChange={mockOnChange}
+                />
+            );
+
+            expect(mockOnChange).toHaveBeenCalledWith(26);
+        });
+    });
+
+    // Slider Interaction Tests
+    describe('Slider Interactions', () => {
+        test('YearsField_shouldUpdateValueWhenSliderChanges', async () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+
+            // Simulate slider keydown events (Radix Slider responds to keyboard)
+            fireEvent.keyDown(slider, { key: 'ArrowRight' });
+
+            expect(mockOnChange).toHaveBeenCalled();
+        });
+
+        test('YearsField_shouldClampSliderValueToRange', async () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
+                    minValue={10}
+                    maxValue={40}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+
+            // Test that slider has correct range attributes
+            expect(slider).toHaveAttribute('aria-valuemin', '10');
+            expect(slider).toHaveAttribute('aria-valuemax', '40');
+        });
+
+        test('YearsField_shouldHandleSliderInteraction', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+
+            // Test that slider is present and interactive
+            expect(slider).toBeInTheDocument();
+            expect(slider).toHaveAttribute('aria-valuenow', '25');
+        });
+    });
+
+    // Input Interaction Tests
+    describe('Input Interactions', () => {
+        test('YearsField_shouldUpdateValueOnValidInput', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
                 />
             );
 
             const input = screen.getByRole('spinbutton');
-            
-            // Test value above max
-            fireEvent.focus(input);
-            fireEvent.change(input, { target: { value: '20' } });
-            fireEvent.blur(input);
-            
-            expect(mockOnChange).toHaveBeenCalledWith(15); // Clamped to max
 
-            // Test value below min
-            fireEvent.focus(input);
-            fireEvent.change(input, { target: { value: '2' } });
-            fireEvent.blur(input);
-            
-            expect(mockOnChange).toHaveBeenCalledWith(5); // Clamped to min
+            await user.clear(input);
+            await user.type(input, '30');
+
+            // Should provide immediate feedback for valid values
+            expect(mockOnChange).toHaveBeenCalledWith(30);
         });
-    });
 
-    // Custom Props Tests
-    describe('Custom Props', () => {
-        test('YearsField_shouldUseCustomMinMaxDefault', () => {
+        test('YearsField_shouldShowFormattedValueWhenNotFocused', () => {
             const mockOnChange = jest.fn();
 
             render(
                 <YearsField
                     value={30}
                     onChange={mockOnChange}
-                    minValue={10}
-                    maxValue={100}
-                    defaultValue={50}
                 />
             );
 
-            const slider = screen.getByRole('slider');
             const input = screen.getByRole('spinbutton');
-            
-            expect(slider).toHaveAttribute('aria-valuemin', '10');
-            expect(slider).toHaveAttribute('aria-valuemax', '100');
-            expect(input).toHaveAttribute('min', '10');
-            expect(input).toHaveAttribute('max', '100');
+            expect(input).toHaveValue(30); // Should show the validated value
         });
 
-        test('YearsField_shouldUseCustomDefaultValue_onEmptyInput', () => {
+        test('YearsField_shouldShowUnformattedValueWhenFocused', async () => {
+            const user = userEvent.setup();
             const mockOnChange = jest.fn();
 
             render(
                 <YearsField
-                    value={10}
+                    value={25}
                     onChange={mockOnChange}
-                    displayMode="input"
-                    defaultValue={42}
                 />
             );
 
             const input = screen.getByRole('spinbutton');
-            
-            fireEvent.focus(input);
-            fireEvent.change(input, { target: { value: '' } });
-            fireEvent.blur(input);
-            
-            expect(mockOnChange).toHaveBeenCalledWith(42);
+
+            await user.click(input);
+
+            // When focused, should show unformatted value
+            expect(input).toHaveValue(25);
         });
 
-        test('YearsField_shouldUseCustomBounds_inValidation', () => {
+        test('YearsField_shouldClampValueOnBlur', async () => {
+            const user = userEvent.setup();
             const mockOnChange = jest.fn();
 
             render(
                 <YearsField
-                    value={10}
+                    value={25}
                     onChange={mockOnChange}
-                    enableValidation={true}
-                    validationMode="required"
-                    minValue={5}
-                    maxValue={15}
-                    displayMode="input"
+                    minValue={1}
+                    maxValue={50}
                 />
             );
 
             const input = screen.getByRole('spinbutton');
-            
-            // Verify that input field has custom min/max attributes
-            expect(input).toHaveAttribute('min', '5');
-            expect(input).toHaveAttribute('max', '15');
-            
-            // Test that values outside bounds get clamped on blur
-            fireEvent.focus(input);
-            fireEvent.change(input, { target: { value: '20' } });
-            fireEvent.blur(input);
-            
-            expect(mockOnChange).toHaveBeenCalledWith(15); // Clamped to max
+
+            await user.clear(input);
+            await user.type(input, '100');
+            await user.tab(); // Blur the input
+
+            expect(mockOnChange).toHaveBeenCalledWith(50);
+        });
+
+        test('YearsField_shouldHandleEmptyInputOnBlur', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
+                    defaultValue={30}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+
+            await user.clear(input);
+            await user.tab(); // Blur with empty input
+
+            expect(mockOnChange).toHaveBeenCalledWith(30);
+        });
+
+        test('YearsField_shouldHandleInvalidInputOnBlur', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
+                    defaultValue={30}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+
+            await user.clear(input);
+            await user.type(input, 'invalid');
+            await user.tab(); // Blur with invalid input
+
+            expect(mockOnChange).toHaveBeenCalledWith(30);
+        });
+
+        test('YearsField_shouldNotCallOnChangeForInvalidInputDuringTyping', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+
+            await user.clear(input);
+            mockOnChange.mockClear();
+
+            await user.type(input, 'abc');
+
+            // Should not call onChange for invalid input during typing
+            expect(mockOnChange).not.toHaveBeenCalled();
         });
     });
 
-    // Integration Tests
-    describe('Integration Tests', () => {
-        test('YearsField_shouldSyncSliderAndInput_inCombinedMode', () => {
+    // Accessibility Tests
+    describe('Accessibility', () => {
+        test('YearsField_shouldHaveProperAriaLabels', () => {
             const mockOnChange = jest.fn();
 
             render(
                 <YearsField
-                    value={20}
+                    id="test-years"
+                    value={25}
                     onChange={mockOnChange}
-                    displayMode="combined"
                 />
             );
 
             const slider = screen.getByRole('slider');
             const input = screen.getByRole('spinbutton');
-            
-            // Both should show the same value
-            expect(slider).toHaveAttribute('aria-valuenow', '20');
-            expect(input).toHaveValue(20);
+
+            // Test Radix slider ARIA attributes (these are automatically set by Radix)
+            expect(slider).toHaveAttribute('aria-valuemin', '1');
+            expect(slider).toHaveAttribute('aria-valuemax', '50');
+            expect(slider).toHaveAttribute('aria-valuenow', '25');
+
+            expect(input).toHaveAttribute('aria-label', 'Analysis period in years, current value: 25');
         });
 
-        test('YearsField_shouldWorkWithAllFeatures_combined', () => {
+        test('YearsField_shouldHaveProperTooltipAccessibility', () => {
             const mockOnChange = jest.fn();
-            const mockOnValidationChange = jest.fn();
+
+            render(
+                <YearsField
+                    id="test-years"
+                    value={25}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const tooltipTrigger = screen.getByRole('button', { name: /more information about analysis period/i });
+
+            expect(tooltipTrigger).toHaveAttribute('aria-describedby', 'test-years-tooltip');
+            expect(tooltipTrigger).toHaveAttribute('aria-expanded', 'false');
+        });
+
+        test('YearsField_shouldToggleTooltip', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    id="test-years"
+                    value={25}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const tooltipTrigger = screen.getByRole('button', { name: /more information about analysis period/i });
+
+            await user.click(tooltipTrigger);
+
+            expect(tooltipTrigger).toHaveAttribute('aria-expanded', 'true');
+        });
+    });
+
+    // Disabled State Tests
+    describe('Disabled State', () => {
+        test('YearsField_shouldDisableAllInputsWhenDisabled', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
+                    disabled={true}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+            const input = screen.getByRole('spinbutton');
+
+            // Radix slider uses data-disabled attribute
+            expect(slider).toHaveAttribute('data-disabled');
+            expect(input).toBeDisabled();
+        });
+
+        test('YearsField_shouldNotCallOnChangeWhenDisabled', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
+                    disabled={true}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+
+            // Try to interact with disabled input
+            await user.type(input, '30');
+
+            expect(mockOnChange).not.toHaveBeenCalled();
+        });
+    });
+
+    // Custom Props Tests
+    describe('Custom Props', () => {
+        test('YearsField_shouldRespectCustomMinMaxValues', () => {
+            const mockOnChange = jest.fn();
 
             render(
                 <YearsField
                     value={15}
                     onChange={mockOnChange}
-                    displayMode="combined"
-                    enableValidation={true}
-                    validationMode="required"
-                    onValidationChange={mockOnValidationChange}
                     minValue={10}
-                    maxValue={30}
-                    defaultValue={20}
-                    id="test-years"
-                    className="test-class"
+                    maxValue={20}
                 />
             );
 
             const slider = screen.getByRole('slider');
             const input = screen.getByRole('spinbutton');
-            const label = screen.getByText('Analysis Period');
-            const requiredIndicator = screen.getByText('*');
-            
+
+            // Radix slider uses aria attributes for min/max
+            expect(slider).toHaveAttribute('aria-valuemin', '10');
+            expect(slider).toHaveAttribute('aria-valuemax', '20');
+            expect(input).toHaveAttribute('min', '10');
+            expect(input).toHaveAttribute('max', '20');
+        });
+
+        test('YearsField_shouldUseCustomId', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    id="custom-years"
+                    value={25}
+                    onChange={mockOnChange}
+                    displayMode="input"
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+            expect(input).toHaveAttribute('id', 'custom-years');
+        });
+
+        test('YearsField_shouldUseCustomClassNames', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
+                    className="custom-class"
+                />
+            );
+
+            // Check if the main container has the custom class
+            const container = screen.getByText('Analysis Period').closest('.custom-class');
+            expect(container).toBeInTheDocument();
+        });
+    });
+
+    // Edge Cases Tests
+    describe('Edge Cases', () => {
+        test('YearsField_shouldHandleRapidValueChanges', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+
+            // Rapid typing
+            await user.clear(input);
+            await user.type(input, '123456');
+            await user.tab();
+
+            // Should handle rapid changes and clamp final value
+            expect(mockOnChange).toHaveBeenLastCalledWith(50); // Assuming max is 50
+        });
+
+        test('YearsField_shouldHandleDecimalInputs', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+
+            await user.clear(input);
+            await user.type(input, '25.7');
+            await user.tab();
+
+            expect(mockOnChange).toHaveBeenCalledWith(26); // Should round
+        });
+
+        test('YearsField_shouldPreventInfiniteLoops', () => {
+            const mockOnChange = jest.fn();
+
+            // Render with a value that needs clamping
+            const { rerender } = render(
+                <YearsField
+                    value={100}
+                    onChange={mockOnChange}
+                    maxValue={50}
+                />
+            );
+
+            // Clear the mock and re-render with the same invalid value
+            mockOnChange.mockClear();
+
+            rerender(
+                <YearsField
+                    value={100}
+                    onChange={mockOnChange}
+                    maxValue={50}
+                />
+            );
+
+            // Should not call onChange again if the value hasn't actually changed
+            expect(mockOnChange).not.toHaveBeenCalled();
+        });
+    });
+
+    // Integration Tests
+    describe('Integration Tests', () => {
+        test('YearsField_shouldSyncSliderAndInputValues', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <YearsField
+                    value={25}
+                    onChange={mockOnChange}
+                    displayMode="combined"
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+
+            // Test that both components are present in combined mode
             expect(slider).toBeInTheDocument();
-            expect(input).toBeInTheDocument();
-            expect(label).toBeInTheDocument();
-            expect(requiredIndicator).toBeInTheDocument();
-            
-            // Test input validation
-            fireEvent.focus(input);
-            fireEvent.change(input, { target: { value: '35' } }); // Above max
-            fireEvent.blur(input);
-            
-            expect(mockOnChange).toHaveBeenCalledWith(30); // Clamped to max
+            expect(screen.getByRole('spinbutton')).toBeInTheDocument();
+
+            // Test that slider shows correct value
+            expect(slider).toHaveAttribute('aria-valuenow', '25');
+        });
+
+        test('YearsField_shouldMaintainStateConsistency', async () => {
+            const user = userEvent.setup();
+            let currentValue = 25;
+            const mockOnChange = jest.fn((newValue) => {
+                currentValue = newValue; // Simulate parent updating value
+            });
+
+            const { rerender } = render(
+                <YearsField
+                    value={currentValue}
+                    onChange={mockOnChange}
+                />
+            );
+
+            const input = screen.getByRole('spinbutton');
+
+            // Focus and change value
+            await user.click(input);
+            await user.clear(input);
+            await user.type(input, '30');
+
+            // Value should update immediately for valid input
+            expect(mockOnChange).toHaveBeenCalledWith(30);
+
+            // Simulate parent re-render with new value
+            rerender(
+                <YearsField
+                    value={currentValue}
+                    onChange={mockOnChange}
+                />
+            );
+
+            // Blur should not change the value again if it's already valid
+            mockOnChange.mockClear();
+            await user.tab();
+
+            // Should not call onChange again since 30 is already valid and matches validatedValue
+            expect(mockOnChange).not.toHaveBeenCalled();
         });
     });
 });

@@ -1,4 +1,6 @@
-import { FC, useState } from 'react';
+import { cn } from '@/utils/utils';
+import { Building2, LineChart, Percent, TrendingUp } from 'lucide-react';
+import { FC, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import {
     Drawer,
@@ -9,9 +11,9 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from '../ui/drawer';
-import { TrendingUp, Building2, LineChart, Percent } from 'lucide-react';
-import { cn } from '@/utils/utils';
-import { FlexibleInputField, FieldValue } from '../common/FlexibleInputField';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Slider } from '../ui/slider';
 
 interface InvestmentReturnHelperDrawerProps {
     open: boolean;
@@ -78,13 +80,45 @@ const getCategoryBadge = (category: string): string => {
     }
 };
 
+/**
+ * Format a number as a percentage string
+ */
+const formatPercentage = (value: number): string => {
+    return new Intl.NumberFormat('en-CA', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(value);
+};
+
+/**
+ * Parse a formatted percentage string to a number
+ */
+const parsePercentage = (formatted: string): number | '' => {
+    const cleaned = formatted.replace(/[^\d.-]/g, '');
+    if (cleaned === '' || cleaned === '-') return '';
+
+    const parsed = parseFloat(cleaned);
+    return isNaN(parsed) ? '' : parsed;
+};
+
 export const InvestmentReturnHelperDrawer: FC<InvestmentReturnHelperDrawerProps> = ({
     open,
     onOpenChange,
     onSelectReturn,
     currentValue,
 }) => {
-    const [otherValue, setOtherValue] = useState<FieldValue>(10);
+    const [otherValue, setOtherValue] = useState<number | ''>(10);
+    const [displayValue, setDisplayValue] = useState<string>('');
+    const [isFocused, setIsFocused] = useState(false);
+
+    // Update display value when otherValue changes
+    useEffect(() => {
+        if (typeof otherValue === 'number') {
+            setDisplayValue(isFocused ? otherValue.toString() : formatPercentage(otherValue));
+        } else {
+            setDisplayValue('');
+        }
+    }, [otherValue, isFocused]);
 
     const handleSelectOption = (value: number) => {
         onSelectReturn(value);
@@ -98,6 +132,37 @@ export const InvestmentReturnHelperDrawer: FC<InvestmentReturnHelperDrawerProps>
         }
     };
 
+    // Handle input change
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        setDisplayValue(newValue);
+
+        const parsedValue = parsePercentage(newValue);
+        setOtherValue(parsedValue);
+    };
+
+    // Handle input focus
+    const handleFocus = () => {
+        setIsFocused(true);
+        if (typeof otherValue === 'number') {
+            setDisplayValue(otherValue.toString());
+        }
+    };
+
+    // Handle input blur
+    const handleBlur = () => {
+        setIsFocused(false);
+        if (typeof otherValue === 'number') {
+            setDisplayValue(formatPercentage(otherValue));
+        }
+    };
+
+    // Handle slider change
+    const handleSliderChange = (newValue: number[]) => {
+        const sliderValue = newValue[0];
+        setOtherValue(sliderValue);
+    };
+
     return (
         <Drawer open={open} onOpenChange={onOpenChange}>
             <DrawerContent className="max-h-[85vh]">
@@ -107,12 +172,12 @@ export const InvestmentReturnHelperDrawer: FC<InvestmentReturnHelperDrawerProps>
                         Select a common investment type to autofill the expected return rate
                     </DrawerDescription>
                 </DrawerHeader>
-                
+
                 <div className="px-4 pb-4 overflow-y-auto space-y-3">
                     {investmentOptions.map((option) => {
                         const Icon = option.icon;
                         const isSelected = currentValue === option.value;
-                        
+
                         return (
                             <button
                                 key={option.name}
@@ -162,19 +227,46 @@ export const InvestmentReturnHelperDrawer: FC<InvestmentReturnHelperDrawerProps>
                         <p className="text-xs sm:text-sm text-muted-foreground mb-3">
                             Enter a custom return rate that matches your specific investment strategy
                         </p>
-                        <FlexibleInputField
-                            id="otherReturnRate"
-                            value={otherValue}
-                            onChange={setOtherValue}
-                            category="slider"
-                            min={0}
-                            max={50}
-                            step={1}
-                            sliderValueUnit="%"
-                            label="Custom Return Rate"
-                            labelIcon={Percent}
-                        />
-                        <Button 
+                        <div className="space-y-3">
+                            <div className="flex items-center space-x-1">
+                                <Label htmlFor="otherReturnRate" className="text-sm font-medium">
+                                    Custom Return Rate
+                                </Label>
+                                <Percent className="h-4 w-4 text-muted-foreground" />
+                            </div>
+
+                            <div className="flex items-center space-x-2">
+                                <Input
+                                    id="otherReturnRate"
+                                    type="text"
+                                    inputMode="decimal"
+                                    value={displayValue}
+                                    onChange={handleInputChange}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
+                                    placeholder="10.00"
+                                    className="w-32"
+                                />
+                                <Percent className="h-4 w-4 text-muted-foreground" />
+                            </div>
+
+                            <Slider
+                                id="otherReturnRate-slider"
+                                min={0}
+                                max={50}
+                                step={0.1}
+                                value={[typeof otherValue === 'number' ? otherValue : 10]}
+                                onValueChange={handleSliderChange}
+                                className="w-full"
+                            />
+
+                            <div className="text-center">
+                                <span className="text-lg font-semibold">
+                                    {typeof otherValue === 'number' ? formatPercentage(otherValue) : '10.00'}%
+                                </span>
+                            </div>
+                        </div>
+                        <Button
                             onClick={handleOtherSubmit}
                             className="w-full mt-3"
                             disabled={otherValue === ''}

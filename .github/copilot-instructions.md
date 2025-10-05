@@ -1,6 +1,14 @@
 # BuyOrRent - React + Vite + Tailwind CSS Application
 
-BuyOrRent is a modern web application built with React 19, Vite 7, and Tailwind CSS 4. The application is a single-page application that can be developed, built, and deployed as a static website.
+BuyOrRent is a modern web application built with React 19, Vite 7, and Tailwind CSS 4. The application is a single-page application that can be developed, built, and deployed as a s### Component Development Patterns
+
+### Field Components with Validation
+The application follows a consistent pattern for form field components with built-in validation and formatting:
+
+1. **Base Structure**: All field components should have consistent prop interfaces
+2. **Shadcn UI Components**: Leverage `Input`, `Label`, `Tooltip` and other shadcn components
+3. **Lucide React Icons**: Use appropriate icons (e.g., `DollarSign` for currency, `Info` for tooltips)
+4. **Mobile-First Design**: Short labels with detailed tooltip content for comprehensive informationite.
 
 Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 
@@ -341,10 +349,6 @@ The output section currently has tabs, which will be referred to as:
 - Any component that is needed but not available yet, feel free to install and add.
 
 ### Input Field Requirements
-
-#### Smart Validation Integration
-- For any new input field request, the field **must integrate with the smart validation service**.
-- Existing fields can be used as examples for implementation patterns.
 
 #### State Management for Formatting
 - For any new input field request, the displayed value might need formatting which should be stored (in the state) **separately from the actual value**.

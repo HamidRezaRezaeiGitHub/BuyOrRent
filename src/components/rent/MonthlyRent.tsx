@@ -2,22 +2,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ValidationResult } from '@/services/validation';
-import { useSmartFieldValidation } from '@/services/validation/useSmartFieldValidation';
 import { DollarSign, Info } from 'lucide-react';
-import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export interface MonthlyRentFieldProps {
     id?: string;
-    value: number | '';
-    onChange: (value: number | '') => void;
+    value: number;
+    onChange: (value: number) => void;
     disabled?: boolean;
     className?: string;
-    errors?: string[];
-    placeholder?: string;
-    enableValidation?: boolean;
-    validationMode?: 'required' | 'optional';
-    onValidationChange?: (validationResult: ValidationResult) => void;
     displayMode?: 'slider' | 'input' | 'combined'; // Default: 'combined'
     defaultValue?: number; // Default: 2000
     minValue?: number; // Default: 0
@@ -25,26 +18,12 @@ export interface MonthlyRentFieldProps {
 }
 
 /**
- * Parse a formatted currency string to a number
- * @param formatted - The formatted string (e.g., "1,234.56" or "1234.56")
- * @returns The numeric value or empty string if invalid
- */
-const parseCurrency = (formatted: string): number | '' => {
-    // Remove all non-digit characters except decimal point and minus sign
-    const cleaned = formatted.replace(/[^\d.-]/g, '');
-    if (cleaned === '' || cleaned === '-') return '';
-
-    const parsed = parseFloat(cleaned);
-    return isNaN(parsed) ? '' : parsed;
-};
-
-/**
- * Format a number as currency (Canadian dollar format with 2 decimal places)
+ * Format a number as currency (Canadian dollar format)
  */
 const formatCurrency = (value: number): string => {
     return new Intl.NumberFormat('en-CA', {
         minimumFractionDigits: 0,
-        maximumFractionDigits: 1
+        maximumFractionDigits: 0
     }).format(value);
 };
 
@@ -54,182 +33,127 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
     onChange,
     disabled = false,
     className = '',
-    errors = [],
-    placeholder = '0.00',
-    enableValidation = false,
-    validationMode = 'optional',
-    onValidationChange,
     displayMode = 'combined',
     defaultValue = 2000,
     minValue = 0,
     maxValue = 10000
 }) => {
-    // Track tooltip open state for mobile-friendly click interaction
     const [tooltipOpen, setTooltipOpen] = useState(false);
-
-    // Track focus state for input formatting
     const [isFocused, setIsFocused] = useState(false);
+    const [inputValue, setInputValue] = useState<string>('');
 
-    // Track display value for input field (formatted vs unformatted)
-    const [displayValue, setDisplayValue] = useState<string>(() => {
-        // Initialize with formatted value since input starts unfocused
-        if (value === '') return '';
-        return formatCurrency(value as number);
-    });
+    // Reusable function to clamp and round values within valid range
+    const clampValue = useCallback((inputValue: number): number => {
+        return Math.max(minValue, Math.min(maxValue, Math.round(inputValue)));
+    }, [minValue, maxValue]);
 
-    // Internal formatted value state (not exposed to parent)
-    const [formattedValue, setFormattedValue] = useState<string>(() => {
-        if (value === '') return '';
-        return formatCurrency(value as number);
-    });
-
-    // Formatting function for currency values
-    const formatValue = useMemo(() => {
-        return (val: number): string => {
-            return formatCurrency(val);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (isFocused) {
-            // When focused, show unformatted value
-            setDisplayValue(value === '' ? '' : value.toString());
-        } else {
-            // When not focused, show formatted value
-            if (value !== '') {
-                const formattedVal = formatValue(value as number);
-                setFormattedValue(formattedVal);
-            } else {
-                setFormattedValue('');
-            }
+    // Validate and clamp the initial value with comprehensive error handling
+    const validatedValue = useMemo(() => {
+        // Handle invalid inputs: NaN, Infinity, null, undefined, etc.
+        if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
+            return clampValue(defaultValue);
         }
-    }, [value, isFocused, formatValue]);
 
+        return clampValue(value);
+    }, [value, defaultValue, clampValue]);
+
+    // Compute display value based on focus state
+    const displayValue = useMemo(() => {
+        if (isFocused) {
+            return inputValue;
+        }
+        return validatedValue.toString();
+    }, [isFocused, inputValue, validatedValue]);
+
+    // Sync inputValue when value changes externally (but not when focused)
     useEffect(() => {
         if (!isFocused) {
-            setDisplayValue(formattedValue);
+            setInputValue(validatedValue.toString());
         }
-    }, [formattedValue, isFocused]);
+    }, [validatedValue, isFocused]);
 
-    // Memoized validation rules configuration
-    const validationRules = useMemo(() => {
-        if (!enableValidation) return [];
+    // Track if we've already notified parent to prevent infinite loops
+    const lastNotifiedValue = useRef<number>(value);
 
-        return [
-            ...(validationMode === 'required' ? [{
-                name: 'required',
-                message: 'Monthly rent is required',
-                validator: (val: string) => {
-                    if (val === '') return false;
-                    const numVal = parseCurrency(val);
-                    return numVal !== '';
-                }
-            }] : []),
-            {
-                name: 'positive',
-                message: 'Monthly rent must be a positive number',
-                validator: (val: string) => {
-                    if (val === '') return validationMode === 'optional';
-                    const numVal = parseCurrency(val);
-                    return numVal === '' || (numVal as number) >= minValue;
-                }
-            },
-            {
-                name: 'maxValue',
-                message: `Monthly rent must not exceed $${formatCurrency(maxValue)}`,
-                validator: (val: string) => {
-                    if (val === '') return validationMode === 'optional';
-                    const numVal = parseCurrency(val);
-                    return numVal === '' || (numVal as number) <= maxValue;
-                }
-            }
-        ];
-    }, [enableValidation, validationMode, minValue, maxValue]);
-
-    // Determine field name for validation
-    const fieldName = useMemo(() => id || 'monthlyRent', [id]);
-
-    // Memoized config for the validation hook
-    const hookConfig = useMemo(() => ({
-        fieldName,
-        fieldType: 'text' as const,
-        required: validationMode === 'required',
-        validationRules
-    }), [fieldName, validationMode, validationRules]);
-
-    // Use the smart field validation hook
-    const { state, handlers } = useSmartFieldValidation({
-        value: value === '' ? '' : value.toString(),
-        config: hookConfig,
-        enableValidation,
-        onValidationChange
-    });
+    // Notify parent if validated value differs from prop value (only once per change)
+    useEffect(() => {
+        if (validatedValue !== value && lastNotifiedValue.current !== validatedValue) {
+            lastNotifiedValue.current = validatedValue;
+            onChange(validatedValue);
+        }
+    }, [validatedValue, value, onChange]);
 
     // Handle slider change
     const handleSliderChange = (values: number[]) => {
-        const newValue = Math.round(values[0]);
-
-        // Use the hook's change handler
-        handlers.handleChange(newValue.toString(), value === '' ? '' : value.toString());
-
-        onChange(newValue);
+        const rawValue = values[0];
+        if (typeof rawValue === 'number' && !isNaN(rawValue) && isFinite(rawValue)) {
+            const clampedValue = clampValue(rawValue);
+            onChange(clampedValue);
+        }
     };
 
-    const handleSliderBlur = () => {
-        handlers.handleBlur();
-    };
-
-    // Handle input change
+    // Handle input change with comprehensive error handling
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const oldValue = displayValue;
         const newValue = e.target.value;
+        setInputValue(newValue);
 
-        // Use the hook's change handler for validation
-        handlers.handleChange(newValue, oldValue);
-
-        // Update display value immediately (unformatted while typing)
-        setDisplayValue(newValue);
-
-        // The input field is changing when in focus, so we don't call onChange here.
-        // onChange will be called on blur after validation and formatting.
+        // Provide immediate feedback for valid numeric values
+        try {
+            const numericValue = parseFloat(newValue);
+            if (!isNaN(numericValue) && isFinite(numericValue) &&
+                numericValue >= minValue && numericValue <= maxValue) {
+                onChange(numericValue);
+            }
+        } catch (error) {
+            // Silently handle parsing errors - validation will happen on blur
+            console.debug('Input parsing error:', error);
+        }
     };
 
     const handleInputFocus = () => {
-        setIsFocused(true); // This will trigger useEffect to set the actual unformatted value to display
-        handlers.handleFocus();
+        setInputValue(validatedValue.toString());
+        setIsFocused(true);
     };
 
     const handleInputBlur = () => {
-        const lastInputValue = displayValue;
-        const numericValue = parseCurrency(lastInputValue);
-        let finalValue: number | '';
+        let finalValue: number;
 
-        if (lastInputValue.trim() === '' || numericValue === '') {
-            finalValue = validationMode === 'required' ? defaultValue : '';
-        } else {
-            // Clamp value between min and max
-            finalValue = Math.max(minValue, Math.min(maxValue, numericValue as number));
+        try {
+            const trimmedValue = inputValue.trim();
+            const numericValue = parseFloat(trimmedValue);
+
+            if (trimmedValue === '' || isNaN(numericValue) || !isFinite(numericValue)) {
+                finalValue = clampValue(defaultValue);
+            } else {
+                // Clamp value between min and max, ensure it's properly rounded
+                finalValue = clampValue(numericValue);
+            }
+        } catch (error) {
+            console.debug('Input blur parsing error:', error);
+            finalValue = clampValue(defaultValue);
         }
-        onChange(finalValue); // This will trigger the useEffect to update displayValue
 
         setIsFocused(false);
-        handlers.handleBlur();
+        
+        // Only call onChange if the finalValue is different from the input value that was just typed
+        // This prevents redundant onChange calls when the user types a valid value and then blurs
+        const originalInputValue = parseFloat(inputValue.trim());
+        const epsilon = 0.001;
+        
+        if (isNaN(originalInputValue) || Math.abs(finalValue - originalInputValue) > epsilon) {
+            // Only call onChange if:
+            // 1. The original input was invalid (NaN), so we need to notify about the fallback value
+            // 2. The final value is different from what the user typed (clamping occurred)
+            onChange(finalValue);
+        }
     };
-
-    // Determine which errors to display
-    const displayErrors = enableValidation ? state.displayErrors : errors;
-    const hasErrors = displayErrors.length > 0;
-
-    // Determine if field is required for label display
-    const isRequired = enableValidation && validationMode === 'required';
 
     // Label component with icon and tooltip
     const labelComponent = (
         <div className="flex items-center gap-1">
-            <DollarSign className="h-3 w-3 text-muted-foreground" />
+            <DollarSign className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
             <Label htmlFor={id} className="text-xs">
                 Monthly Rent
-                {isRequired && <span className="text-red-500 ml-1">*</span>}
             </Label>
             <TooltipProvider>
                 <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
@@ -238,12 +162,14 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
                             type="button"
                             className="ml-1"
                             aria-label="More information about Monthly Rent"
+                            aria-describedby={`${id}-tooltip`}
+                            aria-expanded={tooltipOpen}
                             onClick={() => setTooltipOpen(!tooltipOpen)}
                         >
-                            <Info className="h-3 w-3 text-muted-foreground" />
+                            <Info className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
                         </button>
                     </TooltipTrigger>
-                    <TooltipContent side="right" className="max-w-xs">
+                    <TooltipContent side="right" className="max-w-xs" id={`${id}-tooltip`}>
                         <div className="text-xs">
                             <p>
                                 The total monthly rent amount, including parking and utilities, that you would pay to the landlord (and/or other entities) per month if you choose to rent a place (not buy).
@@ -255,15 +181,6 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
         </div>
     );
 
-    // Error display component
-    const errorDisplay = hasErrors && (
-        <div className="space-y-1">
-            {displayErrors.map((error, index) => (
-                <p key={index} className="text-xs text-red-500">{error}</p>
-            ))}
-        </div>
-    );
-
     // Slider component
     const sliderComponent = (
         <Slider
@@ -271,11 +188,15 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
             min={minValue}
             max={maxValue}
             step={50} // $50 increments for reasonable granularity
-            value={[typeof value === 'number' ? value : minValue]}
+            value={[validatedValue]}
             onValueChange={handleSliderChange}
-            onBlur={handleSliderBlur}
             disabled={disabled}
-            className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'} ${hasErrors ? 'opacity-50' : ''}`}
+            className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
+            aria-label={`Monthly rent: $${validatedValue}`}
+            aria-valuemin={minValue}
+            aria-valuemax={maxValue}
+            aria-valuenow={validatedValue}
+            aria-valuetext={`${validatedValue} dollars per month`}
         />
     );
 
@@ -287,26 +208,38 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
             </div>
             <Input
                 id={displayMode === 'input' ? id : `${id}-input`}
-                type="text"
+                type="number"
                 inputMode="decimal"
-                placeholder={placeholder}
+                min={minValue}
+                max={maxValue}
+                step={50}
+                placeholder="Enter amount"
                 value={displayValue}
                 onFocus={handleInputFocus}
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 disabled={disabled}
-                className={`${displayMode === 'combined' ? 'w-32' : 'w-full'} pl-7 ${hasErrors ? 'border-red-500 focus:border-red-500' : ''}`}
+                className={`${displayMode === 'combined' ? 'w-32 pr-12' : 'w-full pr-12'} pl-7`}
+                aria-label={`Monthly rent in dollars, current value: $${validatedValue}`}
+                aria-describedby={`${id}-suffix ${id}-tooltip`}
             />
+            <div
+                id={`${id}-suffix`}
+                className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                aria-hidden="true"
+            >
+                <span className="text-sm text-muted-foreground">/mo</span>
+            </div>
         </div>
     );
 
     // Value display (for slider and combined modes)
     const valueDisplay = (
-        <div className="min-w-[6rem] text-center">
-            <span className="text-sm font-medium">
-                ${typeof value === 'number' ? formatCurrency(value) : '0.00'}
+        <div className="min-w-[6rem] text-center" aria-live="polite">
+            <span className="text-sm font-medium" aria-label={`Current value: ${validatedValue} dollars per month`}>
+                ${formatCurrency(validatedValue)}
             </span>
-            <span className="text-xs text-muted-foreground block">per month</span>
+            <span className="text-xs text-muted-foreground block" aria-hidden="true">per month</span>
         </div>
     );
 
@@ -356,7 +289,6 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
         <div className={`space-y-2 ${className}`}>
             {labelComponent}
             {renderField()}
-            {errorDisplay}
         </div>
     );
 };
