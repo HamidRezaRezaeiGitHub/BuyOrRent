@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import {
     Table,
     TableBody,
@@ -8,79 +8,18 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { formatCurrency } from '@/services/formatting';
+import { MonthlyRentData, YearData } from '@/services/MonthlyRentCalculator';
 
 export interface MonthlyRentTableProps {
-    monthlyRent: number;
-    analysisYears: number;
-    annualRentIncrease: number;
-    onDataCalculated?: (data: MonthlyRentData) => void;
+    data: MonthlyRentData | null;
 }
 
-export interface MonthlyRentData {
-    years: YearData[];
-    totalPaid: number;
-}
+// Re-export types for backward compatibility
+export type { MonthlyRentData, YearData };
 
-export interface YearData {
-    year: number;
-    months: number[];
-    yearTotal: number;
-    cumulativeTotal: number;
-}
 
-/**
- * Calculate monthly rent for a given year with annual rent increase
- */
-const calculateMonthlyRentForYear = (
-    baseRent: number,
-    yearIndex: number,
-    annualIncreasePercent: number
-): number => {
-    if (yearIndex === 0) return baseRent;
-    return baseRent * Math.pow(1 + annualIncreasePercent / 100, yearIndex);
-};
-
-export const MonthlyRentTable: FC<MonthlyRentTableProps> = ({
-    monthlyRent,
-    analysisYears,
-    annualRentIncrease,
-    onDataCalculated,
-}) => {
-    useEffect(() => {
-        if (monthlyRent <= 0 || analysisYears <= 0) {
-            return;
-        }
-
-        // Calculate rent data for all years
-        const currentYear = new Date().getFullYear();
-        const years: YearData[] = [];
-        let totalPaid = 0;
-
-        for (let i = 0; i < analysisYears; i++) {
-            const yearRent = calculateMonthlyRentForYear(monthlyRent, i, annualRentIncrease);
-            const months = Array(12).fill(yearRent);
-            const yearTotal = yearRent * 12;
-            totalPaid += yearTotal;
-
-            years.push({
-                year: currentYear + i,
-                months,
-                yearTotal,
-                cumulativeTotal: totalPaid,
-            });
-        }
-
-        const data: MonthlyRentData = {
-            years,
-            totalPaid,
-        };
-
-        if (onDataCalculated) {
-            onDataCalculated(data);
-        }
-    }, [monthlyRent, analysisYears, annualRentIncrease, onDataCalculated]);
-
-    if (monthlyRent <= 0 || analysisYears <= 0) {
+export const MonthlyRentTable: FC<MonthlyRentTableProps> = ({ data }) => {
+    if (!data || data.years.length === 0) {
         return (
             <div className="flex items-center justify-center p-8 text-muted-foreground">
                 <p className="text-sm">Please enter monthly rent and analysis period to see the table.</p>
@@ -88,7 +27,6 @@ export const MonthlyRentTable: FC<MonthlyRentTableProps> = ({
         );
     }
 
-    const currentYear = new Date().getFullYear();
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     return (
@@ -107,28 +45,22 @@ export const MonthlyRentTable: FC<MonthlyRentTableProps> = ({
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {Array.from({ length: analysisYears }, (_, i) => {
-                        const yearRent = calculateMonthlyRentForYear(monthlyRent, i, annualRentIncrease);
-                        const yearTotal = yearRent * 12;
-                        // Calculate cumulative total up to this year
-                        const cumulativeTotal = Array.from({ length: i + 1 }, (_, j) => {
-                            const rent = calculateMonthlyRentForYear(monthlyRent, j, annualRentIncrease);
-                            return rent * 12;
-                        }).reduce((sum, total) => sum + total, 0);
+                    {data.years.map((yearData, i) => {
+                        const yearRent = yearData.months[0]; // All months have the same rent
 
                         return (
                             <TableRow key={i}>
-                                <TableCell className="font-medium">{currentYear + i}</TableCell>
+                                <TableCell className="font-medium">{yearData.year}</TableCell>
                                 {months.map((month) => (
                                     <TableCell key={month} className="text-center text-sm">
                                         {formatCurrency(yearRent)}
                                     </TableCell>
                                 ))}
                                 <TableCell className="text-right font-medium">
-                                    {formatCurrency(yearTotal)}
+                                    {formatCurrency(yearData.yearTotal)}
                                 </TableCell>
                                 <TableCell className="text-right font-medium">
-                                    {formatCurrency(cumulativeTotal)}
+                                    {formatCurrency(yearData.cumulativeTotal)}
                                 </TableCell>
                             </TableRow>
                         );

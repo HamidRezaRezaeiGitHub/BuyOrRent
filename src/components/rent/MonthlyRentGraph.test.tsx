@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { MonthlyRentGraph } from './MonthlyRentGraph';
-import { MonthlyRentData } from './MonthlyRentTable';
+import { MonthlyRentData } from '@/services/MonthlyRentCalculator';
 
 // Mock recharts to avoid issues with SVG rendering in tests
 jest.mock('recharts', () => ({
