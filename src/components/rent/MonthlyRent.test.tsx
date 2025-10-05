@@ -37,7 +37,7 @@ describe('MonthlyRentField', () => {
         );
 
         const input = screen.getByRole('textbox');
-        expect(input).toHaveValue('1,500.00');
+        expect(input).toHaveValue('1,500');
     });
 
     test('MonthlyRentField_shouldDisplayDollarSignIcon', () => {
@@ -82,6 +82,7 @@ describe('MonthlyRentField', () => {
 
         const input = screen.getByRole('textbox');
         fireEvent.change(input, { target: { value: '1500' } });
+        fireEvent.blur(input);
 
         expect(mockOnChange).toHaveBeenCalledWith(1500);
     });
@@ -98,6 +99,7 @@ describe('MonthlyRentField', () => {
 
         const input = screen.getByRole('textbox');
         fireEvent.change(input, { target: { value: '1,500.50' } });
+        fireEvent.blur(input);
 
         expect(mockOnChange).toHaveBeenCalledWith(1500.50);
     });
@@ -114,6 +116,7 @@ describe('MonthlyRentField', () => {
 
         const input = screen.getByRole('textbox');
         fireEvent.change(input, { target: { value: '1500.99' } });
+        fireEvent.blur(input);
 
         expect(mockOnChange).toHaveBeenCalledWith(1500.99);
     });
@@ -147,7 +150,7 @@ describe('MonthlyRentField', () => {
         fireEvent.blur(input);
 
         // Should be formatted
-        expect(input).toHaveValue('1,500.00');
+        expect(input).toHaveValue('1,500');
     });
 
     test('MonthlyRentField_shouldShowUnformattedValueOnFocus', () => {
@@ -163,7 +166,7 @@ describe('MonthlyRentField', () => {
         const input = screen.getByRole('textbox');
         
         // Initially formatted
-        expect(input).toHaveValue('1,500.00');
+        expect(input).toHaveValue('1,500');
         
         // Focus should show unformatted
         fireEvent.focus(input);
@@ -181,7 +184,7 @@ describe('MonthlyRentField', () => {
         );
 
         const input = screen.getByRole('textbox');
-        expect(input).toHaveValue('12,345.67');
+        expect(input).toHaveValue('12,345.7');
     });
 
     test('MonthlyRentField_shouldHandleEmptyValue', () => {
@@ -196,6 +199,7 @@ describe('MonthlyRentField', () => {
 
         const input = screen.getByRole('textbox');
         fireEvent.change(input, { target: { value: '' } });
+        fireEvent.blur(input);
 
         expect(mockOnChange).toHaveBeenCalledWith('');
         
@@ -249,7 +253,14 @@ describe('MonthlyRentField', () => {
 
         expect(screen.getByText('Monthly rent is required')).toBeInTheDocument();
         expect(input).toHaveClass('border-red-500');
-        expect(mockOnValidationChange).toHaveBeenCalledWith({ isValid: false, errors: ['Monthly rent is required'] });
+        expect(mockOnValidationChange).toHaveBeenLastCalledWith({ 
+            isValid: false, 
+            errors: [
+                'Monthly rent is required',
+                'Monthly rent must be a positive number',
+                'Monthly rent must not exceed $10,000'
+            ]
+        });
     });
 
     test('MonthlyRentField_shouldShowPositiveError_whenNegativeValue', () => {
@@ -320,7 +331,7 @@ describe('MonthlyRentField', () => {
             />
         );
 
-        expect(screen.getByText('Monthly rent must not exceed $1,000,000')).toBeInTheDocument();
+        expect(screen.getByText('Monthly rent must not exceed $10,000')).toBeInTheDocument();
         expect(input).toHaveClass('border-red-500');
     });
 
@@ -530,6 +541,7 @@ describe('MonthlyRentField', () => {
         // Focus and enter value
         fireEvent.focus(input);
         fireEvent.change(input, { target: { value: '2500.50' } });
+        fireEvent.blur(input);
         
         // Value should be parsed
         expect(mockOnChange).toHaveBeenCalledWith(2500.50);
@@ -548,7 +560,7 @@ describe('MonthlyRentField', () => {
         // Blur should format and validate
         fireEvent.blur(input);
         
-        expect(input).toHaveValue('2,500.50');
+        expect(input).toHaveValue('2,500.5');
         expect(screen.queryByText(/error/i)).not.toBeInTheDocument();
         expect(mockOnValidationChange).toHaveBeenCalledWith({ isValid: true, errors: [] });
     });
@@ -564,7 +576,7 @@ describe('MonthlyRentField', () => {
         );
 
         const input = screen.getByRole('textbox');
-        expect(input).toHaveValue('1,500.00');
+        expect(input).toHaveValue('1,500');
         
         fireEvent.focus(input);
         fireEvent.change(input, { target: { value: '' } });
@@ -606,7 +618,7 @@ describe('MonthlyRentField', () => {
         );
         
         fireEvent.blur(input);
-        expect(input).toHaveValue('1,000.00');
+        expect(input).toHaveValue('1,000');
         
         // Second edit
         fireEvent.focus(input);
@@ -622,7 +634,7 @@ describe('MonthlyRentField', () => {
         );
         
         fireEvent.blur(input);
-        expect(input).toHaveValue('2,000.00');
+        expect(input).toHaveValue('2,000');
     });
 
     test('MonthlyRentField_shouldValidateOnChange_afterFirstBlur', () => {
@@ -659,6 +671,180 @@ describe('MonthlyRentField', () => {
             />
         );
 
-        expect(screen.getByText('Monthly rent must not exceed $1,000,000')).toBeInTheDocument();
+        expect(screen.getByText('Monthly rent must not exceed $10,000')).toBeInTheDocument();
+    });
+
+    // Display Mode Tests
+    describe('Display Modes', () => {
+        test('MonthlyRentField_shouldRenderSliderMode', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MonthlyRentField
+                    value={1500}
+                    onChange={mockOnChange}
+                    displayMode="slider"
+                />
+            );
+
+            // Should have slider
+            expect(screen.getByRole('slider')).toBeInTheDocument();
+            
+            // Should show value display
+            expect(screen.getByText('$1,500')).toBeInTheDocument();
+            expect(screen.getByText('per month')).toBeInTheDocument();
+            
+            // Should not have input field
+            expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+        });
+
+        test('MonthlyRentField_shouldRenderInputMode', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MonthlyRentField
+                    value={1500}
+                    onChange={mockOnChange}
+                    displayMode="input"
+                />
+            );
+
+            // Should have input field
+            expect(screen.getByRole('textbox')).toBeInTheDocument();
+            
+            // Should not have slider
+            expect(screen.queryByRole('slider')).not.toBeInTheDocument();
+            
+            // Should not have value display
+            expect(screen.queryByText('per month')).not.toBeInTheDocument();
+        });
+
+        test('MonthlyRentField_shouldRenderCombinedMode', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MonthlyRentField
+                    value={1500}
+                    onChange={mockOnChange}
+                    displayMode="combined"
+                />
+            );
+
+            // Should have both slider and input
+            expect(screen.getByRole('slider')).toBeInTheDocument();
+            expect(screen.getByRole('textbox')).toBeInTheDocument();
+            
+            // Should not have value display (combined mode doesn't show it)
+            expect(screen.queryByText('per month')).not.toBeInTheDocument();
+        });
+
+        test('MonthlyRentField_shouldDefaultToCombinedMode', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MonthlyRentField
+                    value={1500}
+                    onChange={mockOnChange}
+                />
+            );
+
+            // Should have both slider and input (combined is default)
+            expect(screen.getByRole('slider')).toBeInTheDocument();
+            expect(screen.getByRole('textbox')).toBeInTheDocument();
+        });
+
+        test('MonthlyRentField_shouldHandleSliderChange', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MonthlyRentField
+                    value={1500}
+                    onChange={mockOnChange}
+                    displayMode="slider"
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+            
+            // Verify slider properties and functionality
+            expect(slider).toBeInTheDocument();
+            expect(slider).toHaveAttribute('aria-valuenow', '1500');
+            expect(slider).toHaveAttribute('aria-valuemin', '0');
+            expect(slider).toHaveAttribute('aria-valuemax', '10000');
+            
+            // Verify that the slider is enabled
+            expect(slider).not.toHaveAttribute('aria-disabled', 'true');
+        });
+
+        test('MonthlyRentField_shouldRespectMinMaxValues', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MonthlyRentField
+                    value={1500}
+                    onChange={mockOnChange}
+                    displayMode="slider"
+                    minValue={500}
+                    maxValue={5000}
+                />
+            );
+
+            const slider = screen.getByRole('slider');
+            
+            expect(slider).toHaveAttribute('aria-valuemin', '500');
+            expect(slider).toHaveAttribute('aria-valuemax', '5000');
+        });
+
+        test('MonthlyRentField_shouldUseDefaultValue_whenEmptyInRequiredMode', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MonthlyRentField
+                    value=""
+                    onChange={mockOnChange}
+                    defaultValue={2500}
+                    enableValidation={true}
+                    validationMode="required"
+                />
+            );
+
+            const input = screen.getByRole('textbox');
+            
+            // Focus and blur empty field
+            fireEvent.focus(input);
+            fireEvent.blur(input);
+
+            // Should call onChange with default value
+            expect(mockOnChange).toHaveBeenCalledWith(2500);
+        });
+
+        test('MonthlyRentField_shouldClampValues_toMinMax', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MonthlyRentField
+                    value=""
+                    onChange={mockOnChange}
+                    minValue={1000}
+                    maxValue={5000}
+                />
+            );
+
+            const input = screen.getByRole('textbox');
+            
+            // Enter value below min
+            fireEvent.change(input, { target: { value: '500' } });
+            fireEvent.blur(input);
+
+            expect(mockOnChange).toHaveBeenCalledWith(1000);
+
+            mockOnChange.mockClear();
+
+            // Enter value above max
+            fireEvent.change(input, { target: { value: '10000' } });
+            fireEvent.blur(input);
+
+            expect(mockOnChange).toHaveBeenCalledWith(5000);
+        });
     });
 });

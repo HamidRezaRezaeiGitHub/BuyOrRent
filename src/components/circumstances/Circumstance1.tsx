@@ -19,11 +19,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
 import { calculateMonthlyRentData, MonthlyRentData } from '@/services/MonthlyRentCalculator'
 
 export const Circumstance1: React.FC = () => {
+    const defaultAnalysisYears = 25
+    const defaultMonthlyRent = 2500
+
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
-    const [monthlyRent, setMonthlyRent] = useState<number | ''>('')
+    const [analysisYears, setAnalysisYears] = useState<number>(defaultAnalysisYears)
+    const [monthlyRent, setMonthlyRent] = useState<number | ''>(defaultMonthlyRent)
     const [rentIncrease, setRentIncrease] = useState<number | ''>(2.5)
-    const [analysisYears, setAnalysisYears] = useState<number>(25)
     const [investmentAnnualReturn, setInvestmentAnnualReturn] = useState<number | ''>(7.5)
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
     const [tableDialogOpen, setTableDialogOpen] = useState(false)
@@ -74,7 +77,7 @@ export const Circumstance1: React.FC = () => {
                     onChange={setAnalysisYears}
                     enableValidation={true}
                     validationMode="required"
-                    defaultValue={25}
+                    defaultValue={defaultAnalysisYears}
                     minValue={1}
                     maxValue={50}
                 />
@@ -90,7 +93,11 @@ export const Circumstance1: React.FC = () => {
                                 value={monthlyRent}
                                 onChange={setMonthlyRent}
                                 enableValidation={true}
-                                validationMode="optional"
+                                validationMode="required"
+                                defaultValue={defaultMonthlyRent}
+                                minValue={0}
+                                maxValue={10000}
+                                displayMode='combined'
                             />
                             <RentIncreaseField
                                 value={rentIncrease}

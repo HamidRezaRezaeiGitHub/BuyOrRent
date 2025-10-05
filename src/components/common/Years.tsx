@@ -253,7 +253,7 @@ export const YearsField: FC<YearsFieldProps> = ({
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 disabled={disabled}
-                className={`${displayMode === 'combined' ? 'w-30' : 'w-full'} ${hasErrors ? 'border-red-500 focus:border-red-500' : ''}`}
+                className={`${displayMode === 'combined' ? 'w-32' : 'w-full'} ${hasErrors ? 'border-red-500 focus:border-red-500' : ''}`}
             />
             <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
                 <span className="text-sm text-muted-foreground">yrs</span>
