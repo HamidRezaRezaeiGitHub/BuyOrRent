@@ -33,7 +33,7 @@ const parseCurrency = (formatted: string): number | '' => {
     // Remove all non-digit characters except decimal point and minus sign
     const cleaned = formatted.replace(/[^\d.-]/g, '');
     if (cleaned === '' || cleaned === '-') return '';
-    
+
     const parsed = parseFloat(cleaned);
     return isNaN(parsed) ? '' : parsed;
 };

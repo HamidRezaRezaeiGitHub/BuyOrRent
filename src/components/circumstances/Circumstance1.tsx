@@ -21,12 +21,13 @@ import { calculateMonthlyRentData, MonthlyRentData } from '@/services/MonthlyRen
 export const Circumstance1: React.FC = () => {
     const defaultAnalysisYears = 25
     const defaultMonthlyRent = 2500
+    const defaultRentIncrease = 2.5
 
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
     const [analysisYears, setAnalysisYears] = useState<number>(defaultAnalysisYears)
     const [monthlyRent, setMonthlyRent] = useState<number | ''>(defaultMonthlyRent)
-    const [rentIncrease, setRentIncrease] = useState<number | ''>(2.5)
+    const [rentIncrease, setRentIncrease] = useState<number | ''>(defaultRentIncrease)
     const [investmentAnnualReturn, setInvestmentAnnualReturn] = useState<number | ''>(7.5)
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
     const [tableDialogOpen, setTableDialogOpen] = useState(false)
@@ -103,7 +104,11 @@ export const Circumstance1: React.FC = () => {
                                 value={rentIncrease}
                                 onChange={setRentIncrease}
                                 enableValidation={true}
-                                validationMode="optional"
+                                validationMode="required"
+                                defaultValue={defaultRentIncrease}
+                                minValue={0}
+                                maxValue={20}
+                                displayMode='combined'
                             />
                         </div>
                     </AccordionContent>

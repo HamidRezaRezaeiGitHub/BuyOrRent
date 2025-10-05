@@ -234,7 +234,7 @@ export const YearsField: FC<YearsFieldProps> = ({
             onValueChange={handleSliderChange}
             onBlur={handleSliderBlur}
             disabled={disabled}
-            className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'} ${hasErrors ? 'opacity-50' : ''}`}
+            className={`${displayMode === 'combined‚' ? 'flex-1' : 'w-full'} ${hasErrors ? 'opacity-50' : ''}`}
         />
     );
 
