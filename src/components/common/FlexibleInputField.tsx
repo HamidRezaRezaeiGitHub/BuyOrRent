@@ -206,14 +206,22 @@ export const FlexibleInputField: FC<FlexibleInputFieldProps> = ({
     // Track tooltip open state for mobile-friendly click interaction
     const [tooltipOpen, setTooltipOpen] = useState(false);
 
+    // Track focus state to prevent formatting while user is typing
+    const [isFocused, setIsFocused] = useState(false);
+
     // Sync displayValue when value prop changes externally (e.g., from drawer selection)
+    // Only update if the field is not currently focused (to avoid interfering with user typing)
     useEffect(() => {
-        if (category !== 'slider' && value !== '') {
-            setDisplayValue(defaultFormatValue(value));
-        } else if (value === '') {
-            setDisplayValue('');
+        if (category === 'slider') return;
+        
+        if (!isFocused) {
+            if (value !== '' && typeof value === 'number') {
+                setDisplayValue(defaultFormatValue(value));
+            } else {
+                setDisplayValue('');
+            }
         }
-    }, [value, category, defaultFormatValue]);
+    }, [value, category, defaultFormatValue, isFocused]);
 
     // Determine field name for validation
     const fieldName = useMemo(() => id || 'field', [id]);
@@ -247,7 +255,7 @@ export const FlexibleInputField: FC<FlexibleInputFieldProps> = ({
         // Use the hook's change handler for autofill detection
         handlers.handleChange(newValue, oldValue);
 
-        // Update the display value
+        // Update the display value immediately (unformatted while typing)
         setDisplayValue(newValue);
 
         // Parse and update the actual numeric value
@@ -260,19 +268,23 @@ export const FlexibleInputField: FC<FlexibleInputFieldProps> = ({
     };
 
     const handleFocus = () => {
+        setIsFocused(true);
         handlers.handleFocus();
         
         // When focused, show unformatted value for easier editing
-        if (value !== '') {
+        if (value !== '' && typeof value === 'number') {
             setDisplayValue(value.toString());
+        } else if (value === '') {
+            setDisplayValue('');
         }
     };
 
     const handleBlur = () => {
+        setIsFocused(false);
         handlers.handleBlur();
         
         // When blurred, format the value for display
-        if (value !== '') {
+        if (value !== '' && typeof value === 'number') {
             setDisplayValue(defaultFormatValue(value));
         } else {
             setDisplayValue('');

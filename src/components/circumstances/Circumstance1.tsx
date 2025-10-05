@@ -23,7 +23,7 @@ export const Circumstance1: React.FC = () => {
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
     const [monthlyRent, setMonthlyRent] = useState<number | ''>('')
     const [rentIncrease, setRentIncrease] = useState<number | ''>(2.5)
-    const [analysisYears, setAnalysisYears] = useState<number>(30)
+    const [analysisYears, setAnalysisYears] = useState<number>(25)
     const [investmentAnnualReturn, setInvestmentAnnualReturn] = useState<number | ''>(7.5)
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
     const [tableDialogOpen, setTableDialogOpen] = useState(false)
@@ -73,7 +73,10 @@ export const Circumstance1: React.FC = () => {
                     value={analysisYears}
                     onChange={setAnalysisYears}
                     enableValidation={true}
-                    validationMode="optional"
+                    validationMode="required"
+                    defaultValue={25}
+                    minValue={1}
+                    maxValue={50}
                 />
             </div>
 
