@@ -446,5 +446,55 @@ describe('InvestmentAnnualReturnField', () => {
             // Value should not change
             expect(mockOnChange).not.toHaveBeenCalled();
         });
+
+        it('shows Other option with slider in drawer', async () => {
+            render(
+                <InvestmentAnnualReturnField
+                    value={7.5}
+                    onChange={mockOnChange}
+                    showHelper={true}
+                />
+            );
+
+            // Open drawer
+            const helperButton = screen.getByText("You're not sure?");
+            fireEvent.click(helperButton);
+
+            await waitFor(() => {
+                expect(screen.getByRole('dialog')).toBeInTheDocument();
+            });
+
+            // Check for Other option
+            expect(screen.getByText('Other')).toBeInTheDocument();
+            expect(screen.getByText('Custom Return Rate')).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: 'Apply Custom Rate' })).toBeInTheDocument();
+        });
+
+        it('updates value when custom rate is applied from drawer', async () => {
+            render(
+                <InvestmentAnnualReturnField
+                    value={7.5}
+                    onChange={mockOnChange}
+                    showHelper={true}
+                />
+            );
+
+            // Open drawer
+            const helperButton = screen.getByText("You're not sure?");
+            fireEvent.click(helperButton);
+
+            await waitFor(() => {
+                expect(screen.getByRole('dialog')).toBeInTheDocument();
+            });
+
+            // The slider should have a default value of 10
+            // Click the apply button to apply the custom rate
+            const applyButton = screen.getByRole('button', { name: 'Apply Custom Rate' });
+            fireEvent.click(applyButton);
+
+            await waitFor(() => {
+                expect(mockOnChange).toHaveBeenCalledWith(10);
+            });
+        });
     });
 });

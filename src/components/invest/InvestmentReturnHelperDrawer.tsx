@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Button } from '../ui/button';
 import {
     Drawer,
@@ -11,6 +11,7 @@ import {
 } from '../ui/drawer';
 import { TrendingUp, Building2, LineChart, Percent } from 'lucide-react';
 import { cn } from '@/utils/utils';
+import { FlexibleInputField, FieldValue } from '../common/FlexibleInputField';
 
 interface InvestmentReturnHelperDrawerProps {
     open: boolean;
@@ -83,9 +84,18 @@ export const InvestmentReturnHelperDrawer: FC<InvestmentReturnHelperDrawerProps>
     onSelectReturn,
     currentValue,
 }) => {
+    const [otherValue, setOtherValue] = useState<FieldValue>(10);
+
     const handleSelectOption = (value: number) => {
         onSelectReturn(value);
         onOpenChange(false);
+    };
+
+    const handleOtherSubmit = () => {
+        if (typeof otherValue === 'number') {
+            onSelectReturn(otherValue);
+            onOpenChange(false);
+        }
     };
 
     return (
@@ -145,6 +155,33 @@ export const InvestmentReturnHelperDrawer: FC<InvestmentReturnHelperDrawerProps>
                             </button>
                         );
                     })}
+
+                    {/* Other option with slider */}
+                    <div className="p-4 rounded-lg border-2 bg-muted border-border">
+                        <h4 className="font-semibold text-sm sm:text-base mb-3">Other</h4>
+                        <p className="text-xs sm:text-sm text-muted-foreground mb-3">
+                            Enter a custom return rate that matches your specific investment strategy
+                        </p>
+                        <FlexibleInputField
+                            id="otherReturnRate"
+                            value={otherValue}
+                            onChange={setOtherValue}
+                            category="slider"
+                            min={0}
+                            max={50}
+                            step={1}
+                            sliderValueUnit="%"
+                            label="Custom Return Rate"
+                            labelIcon={Percent}
+                        />
+                        <Button 
+                            onClick={handleOtherSubmit}
+                            className="w-full mt-3"
+                            disabled={otherValue === ''}
+                        >
+                            Apply Custom Rate
+                        </Button>
+                    </div>
                 </div>
 
                 <DrawerFooter>

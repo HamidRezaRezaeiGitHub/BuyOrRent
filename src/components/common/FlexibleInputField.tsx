@@ -5,7 +5,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ValidationResult, ValidationRule } from '@/services/validation';
 import { useSmartFieldValidation } from '@/services/validation/useSmartFieldValidation';
 import { DollarSign, Percent, Info, LucideIcon } from 'lucide-react';
-import { ChangeEvent, FC, ReactNode, useMemo, useState } from 'react';
+import { ChangeEvent, FC, ReactNode, useMemo, useState, useEffect } from 'react';
 
 /**
  * Field category types
@@ -206,6 +206,15 @@ export const FlexibleInputField: FC<FlexibleInputFieldProps> = ({
     // Track tooltip open state for mobile-friendly click interaction
     const [tooltipOpen, setTooltipOpen] = useState(false);
 
+    // Sync displayValue when value prop changes externally (e.g., from drawer selection)
+    useEffect(() => {
+        if (category !== 'slider' && value !== '') {
+            setDisplayValue(defaultFormatValue(value));
+        } else if (value === '') {
+            setDisplayValue('');
+        }
+    }, [value, category, defaultFormatValue]);
+
     // Determine field name for validation
     const fieldName = useMemo(() => id || 'field', [id]);
 
@@ -396,7 +405,7 @@ export const FlexibleInputField: FC<FlexibleInputFieldProps> = ({
     );
 
     // Render based on category
-    const colSpanClass = colSpan === 2 ? 'sm:col-span-2' : '';
+    const colSpanClass = colSpan === 2 ? 'col-span-2' : '';
     return (
         <div className={`space-y-2 ${colSpanClass} ${className}`}>
             {labelComponent}
