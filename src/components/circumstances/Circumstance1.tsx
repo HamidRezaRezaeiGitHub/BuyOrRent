@@ -132,6 +132,7 @@ export const Circumstance1: React.FC = () => {
                                 onChange={setInvestmentAnnualReturn}
                                 enableValidation={true}
                                 validationMode="optional"
+                                showHelper={true}
                             />
                         </div>
                     </AccordionContent>

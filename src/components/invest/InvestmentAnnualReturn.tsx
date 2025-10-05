@@ -1,7 +1,8 @@
 import { ValidationResult } from '@/services/validation';
 import { Percent } from 'lucide-react';
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { FlexibleInputField, FieldValue } from '../common/FlexibleInputField';
+import { InvestmentReturnHelperDrawer } from './InvestmentReturnHelperDrawer';
 
 export interface InvestmentAnnualReturnFieldProps {
     id?: string;
@@ -14,6 +15,7 @@ export interface InvestmentAnnualReturnFieldProps {
     enableValidation?: boolean;
     validationMode?: 'required' | 'optional';
     onValidationChange?: (validationResult: ValidationResult) => void;
+    showHelper?: boolean;
 }
 
 /**
@@ -40,8 +42,11 @@ export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> =
     placeholder = '7.50',
     enableValidation = false,
     validationMode = 'optional',
-    onValidationChange
+    onValidationChange,
+    showHelper = false,
 }) => {
+    const [drawerOpen, setDrawerOpen] = useState(false);
+
     // Memoized validation rules configuration
     const validationRules = useMemo(() => {
         if (!enableValidation) return [];
@@ -87,31 +92,50 @@ export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> =
     }, [enableValidation, validationMode]);
 
     return (
-        <FlexibleInputField
-            id={id}
-            value={value as FieldValue}
-            onChange={onChange}
-            disabled={disabled}
-            className={className}
-            errors={errors}
-            placeholder={placeholder}
-            category="normal"
-            type="text"
-            inputMode="decimal"
-            numberType="percentage"
-            label="Expected Yearly Investment Return"
-            labelIcon={Percent}
-            tooltipContent={
-                <p>
-                    The expected annual return on your investment if you choose to invest instead of buying property. This represents the percentage growth you anticipate from alternative investments like stocks, bonds, or other financial instruments. Common long-term stock market returns average around 7-10% annually, but you should adjust this based on your investment strategy and risk tolerance.
-                </p>
-            }
-            enableValidation={enableValidation}
-            validationMode={validationMode}
-            validationRules={validationRules}
-            onValidationChange={onValidationChange}
-            parseValue={parsePercentage}
-        />
+        <div className={className}>
+            <FlexibleInputField
+                id={id}
+                value={value as FieldValue}
+                onChange={onChange}
+                disabled={disabled}
+                className=""
+                errors={errors}
+                placeholder={placeholder}
+                category="normal"
+                type="text"
+                inputMode="decimal"
+                numberType="percentage"
+                label="Expected Yearly Investment Return"
+                labelIcon={Percent}
+                tooltipContent={
+                    <p>
+                        The expected annual return on your investment if you choose to invest instead of buying property. This represents the percentage growth you anticipate from alternative investments like stocks, bonds, or other financial instruments. Common long-term stock market returns average around 7-10% annually, but you should adjust this based on your investment strategy and risk tolerance.
+                    </p>
+                }
+                enableValidation={enableValidation}
+                validationMode={validationMode}
+                validationRules={validationRules}
+                onValidationChange={onValidationChange}
+                parseValue={parsePercentage}
+            />
+            {showHelper && (
+                <div className="mt-2">
+                    <button
+                        type="button"
+                        onClick={() => setDrawerOpen(true)}
+                        className="text-sm text-primary hover:underline focus:outline-none focus:underline"
+                    >
+                        You're not sure?
+                    </button>
+                </div>
+            )}
+            <InvestmentReturnHelperDrawer
+                open={drawerOpen}
+                onOpenChange={setDrawerOpen}
+                onSelectReturn={onChange}
+                currentValue={value}
+            />
+        </div>
     );
 };
 

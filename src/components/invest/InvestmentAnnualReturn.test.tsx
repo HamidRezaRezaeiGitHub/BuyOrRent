@@ -352,4 +352,99 @@ describe('InvestmentAnnualReturnField', () => {
             expect(container.firstChild).toHaveClass('custom-class');
         });
     });
+
+    describe('Helper functionality', () => {
+        it('does not show helper link by default', () => {
+            render(
+                <InvestmentAnnualReturnField
+                    value={7.5}
+                    onChange={mockOnChange}
+                />
+            );
+
+            expect(screen.queryByText("You're not sure?")).not.toBeInTheDocument();
+        });
+
+        it('shows helper link when showHelper is true', () => {
+            render(
+                <InvestmentAnnualReturnField
+                    value={7.5}
+                    onChange={mockOnChange}
+                    showHelper={true}
+                />
+            );
+
+            expect(screen.getByText("You're not sure?")).toBeInTheDocument();
+        });
+
+        it('opens drawer when helper link is clicked', async () => {
+            render(
+                <InvestmentAnnualReturnField
+                    value={7.5}
+                    onChange={mockOnChange}
+                    showHelper={true}
+                />
+            );
+
+            const helperButton = screen.getByText("You're not sure?");
+            fireEvent.click(helperButton);
+
+            await waitFor(() => {
+                expect(screen.getByRole('dialog')).toBeInTheDocument();
+                expect(screen.getByText('Investment Return Examples')).toBeInTheDocument();
+            });
+        });
+
+        it('updates value when option is selected from drawer', async () => {
+            render(
+                <InvestmentAnnualReturnField
+                    value={7.5}
+                    onChange={mockOnChange}
+                    showHelper={true}
+                />
+            );
+
+            // Open drawer
+            const helperButton = screen.getByText("You're not sure?");
+            fireEvent.click(helperButton);
+
+            await waitFor(() => {
+                expect(screen.getByRole('dialog')).toBeInTheDocument();
+            });
+
+            // Select an option
+            const highInterestButton = screen.getByText('High Interest Savings Account').closest('button');
+            expect(highInterestButton).toBeInTheDocument();
+            fireEvent.click(highInterestButton!);
+
+            await waitFor(() => {
+                expect(mockOnChange).toHaveBeenCalledWith(3);
+            });
+        });
+
+        it('closes drawer when cancel is clicked', async () => {
+            render(
+                <InvestmentAnnualReturnField
+                    value={7.5}
+                    onChange={mockOnChange}
+                    showHelper={true}
+                />
+            );
+
+            // Open drawer
+            const helperButton = screen.getByText("You're not sure?");
+            fireEvent.click(helperButton);
+
+            await waitFor(() => {
+                expect(screen.getByRole('dialog')).toBeInTheDocument();
+            });
+
+            // Click cancel
+            const cancelButton = screen.getByRole('button', { name: 'Cancel' });
+            fireEvent.click(cancelButton);
+
+            // Value should not change
+            expect(mockOnChange).not.toHaveBeenCalled();
+        });
+    });
 });
