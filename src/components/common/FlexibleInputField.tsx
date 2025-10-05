@@ -6,7 +6,6 @@ import { ValidationResult, ValidationRule } from '@/services/validation';
 import { useSmartFieldValidation } from '@/services/validation/useSmartFieldValidation';
 import { DollarSign, Percent, Info, LucideIcon } from 'lucide-react';
 import { ChangeEvent, FC, ReactNode, useMemo, useState } from 'react';
-import React from 'react';
 
 /**
  * Field category types
@@ -27,6 +26,18 @@ export type InputMode = 'text' | 'decimal' | 'numeric';
  * Value type - can be number or empty string
  */
 export type FieldValue = number | '';
+
+/**
+ * Helper component to render an icon
+ */
+interface IconRendererProps {
+    Icon: LucideIcon;
+    className?: string;
+}
+
+const IconRenderer: FC<IconRendererProps> = ({ Icon, className }) => {
+    return <Icon className={className} />;
+};
 
 /**
  * Props for FlexibleInputField
@@ -283,7 +294,7 @@ export const FlexibleInputField: FC<FlexibleInputFieldProps> = ({
     // Label component with icon and tooltip
     const labelComponent = (
         <div className="flex items-center gap-1">
-            {labelIcon && React.createElement(labelIcon, { className: "h-3 w-3 text-muted-foreground" })}
+            {labelIcon && <IconRenderer Icon={labelIcon} className="h-3 w-3 text-muted-foreground" />}
             <Label htmlFor={id} className="text-xs">
                 {label}
                 {isRequired && <span className="text-red-500 ml-1">*</span>}
@@ -326,9 +337,11 @@ export const FlexibleInputField: FC<FlexibleInputFieldProps> = ({
         <div className="relative">
             {finalIcon && finalIconPosition === 'left' && (
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <span className="text-sm text-muted-foreground">
-                        {numberType === 'currency' ? '$' : React.createElement(finalIcon, { className: "h-4 w-4" })}
-                    </span>
+                    {numberType === 'currency' ? (
+                        <span className="text-sm text-muted-foreground">$</span>
+                    ) : (
+                        <IconRenderer Icon={finalIcon} className="h-4 w-4 text-muted-foreground" />
+                    )}
                 </div>
             )}
             <Input
@@ -345,9 +358,11 @@ export const FlexibleInputField: FC<FlexibleInputFieldProps> = ({
             />
             {finalIcon && finalIconPosition === 'right' && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <span className="text-sm text-muted-foreground">
-                        {numberType === 'percentage' ? '%' : React.createElement(finalIcon, { className: "h-4 w-4" })}
-                    </span>
+                    {numberType === 'percentage' ? (
+                        <span className="text-sm text-muted-foreground">%</span>
+                    ) : (
+                        <IconRenderer Icon={finalIcon} className="h-4 w-4 text-muted-foreground" />
+                    )}
                 </div>
             )}
         </div>
