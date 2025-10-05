@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronUp, Maximize2 } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { YearsField } from '../common/Years'
+import { InvestmentAnnualReturnField } from '../invest/InvestmentAnnualReturn'
 import { FlexibleNavbar } from '../navbar'
 import { CompactMonthlyRentGraph } from '../rent/CompactMonthlyRentGraph'
 import { CompactMonthlyRentTable } from '../rent/CompactMonthlyRentTable'
@@ -22,6 +23,7 @@ export const Circumstance1: React.FC = () => {
     const [monthlyRent, setMonthlyRent] = useState<number | ''>('')
     const [rentIncrease, setRentIncrease] = useState<number | ''>(2.5)
     const [analysisYears, setAnalysisYears] = useState<number>(30)
+    const [investmentAnnualReturn, setInvestmentAnnualReturn] = useState<number | ''>(7.5)
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
     const [tableDialogOpen, setTableDialogOpen] = useState(false)
     const [graphDialogOpen, setGraphDialogOpen] = useState(false)
@@ -75,9 +77,10 @@ export const Circumstance1: React.FC = () => {
             </div>
 
             <Tabs defaultValue="rent" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-4">
+                <TabsList className="grid w-full grid-cols-3 mb-4">
                     <TabsTrigger value="rent">Rental Information</TabsTrigger>
                     <TabsTrigger value="buy">Purchase Information</TabsTrigger>
+                    <TabsTrigger value="invest">Investment Information</TabsTrigger>
                 </TabsList>
 
                 {/* Rental Information Tab */}
@@ -118,6 +121,18 @@ export const Circumstance1: React.FC = () => {
                         <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
                             <span className="text-xs sm:text-sm text-muted-foreground">Maintenance & Insurance</span>
                         </div>
+                    </div>
+                </TabsContent>
+
+                {/* Investment Information Tab */}
+                <TabsContent value="invest" className="mt-0">
+                    <div className="grid gap-3 sm:gap-4">
+                        <InvestmentAnnualReturnField
+                            value={investmentAnnualReturn}
+                            onChange={setInvestmentAnnualReturn}
+                            enableValidation={true}
+                            validationMode="optional"
+                        />
                     </div>
                 </TabsContent>
             </Tabs>
