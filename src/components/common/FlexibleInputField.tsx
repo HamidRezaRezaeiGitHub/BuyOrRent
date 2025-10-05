@@ -83,6 +83,9 @@ export interface FlexibleInputFieldProps {
     icon?: LucideIcon;
     iconPosition?: 'left' | 'right';
     iconIncluded?: boolean; // If true and no icon provided, use default based on numberType
+    
+    // Grid layout configuration
+    colSpan?: 1 | 2; // For 2-column grids, specify how many columns this field should span (defaults to 1)
 }
 
 /**
@@ -173,7 +176,8 @@ export const FlexibleInputField: FC<FlexibleInputFieldProps> = ({
     parseValue,
     icon,
     iconPosition,
-    iconIncluded = true
+    iconIncluded = true,
+    colSpan = 1
 }) => {
     // Determine formatting functions
     const defaultFormatValue = useMemo(() => {
@@ -392,8 +396,9 @@ export const FlexibleInputField: FC<FlexibleInputFieldProps> = ({
     );
 
     // Render based on category
+    const colSpanClass = colSpan === 2 ? 'sm:col-span-2' : '';
     return (
-        <div className={`space-y-2 ${className}`}>
+        <div className={`space-y-2 ${colSpanClass} ${className}`}>
             {labelComponent}
             {category === 'slider' ? sliderField : normalInputField}
             {errorDisplay}
