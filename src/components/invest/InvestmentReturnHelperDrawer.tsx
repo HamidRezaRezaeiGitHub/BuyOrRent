@@ -10,6 +10,7 @@ import {
     DrawerTitle,
 } from '../ui/drawer';
 import { TrendingUp, Building2, LineChart, Percent } from 'lucide-react';
+import { cn } from '@/utils/utils';
 
 interface InvestmentReturnHelperDrawerProps {
     open: boolean;
@@ -157,8 +158,3 @@ export const InvestmentReturnHelperDrawer: FC<InvestmentReturnHelperDrawerProps>
         </Drawer>
     );
 };
-
-// Import cn utility
-function cn(...inputs: (string | undefined | null | false)[]): string {
-    return inputs.filter(Boolean).join(' ');
-}
