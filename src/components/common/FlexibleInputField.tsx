@@ -202,7 +202,7 @@ export const FlexibleInputField: FC<FlexibleInputFieldProps> = ({
         fieldType: 'text' as const,
         required: validationMode === 'required',
         validationRules
-    }), [fieldName, validationMode]); // eslint-disable-line react-hooks/exhaustive-deps
+    }), [fieldName, validationMode]); // eslint-disable-line react-hooks/exhaustive-deps -- validationRules intentionally omitted to avoid infinite loops; consumers must pass stable validationRules
 
     // Determine the value to pass to validation hook
     const validationValue = category === 'slider' ? value.toString() : displayValue;
