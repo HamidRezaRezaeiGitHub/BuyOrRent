@@ -10,12 +10,12 @@ import { MonthlyRentGraph } from '../rent/MonthlyRentGraph'
 import { MonthlyRentData, MonthlyRentTable } from '../rent/MonthlyRentTable'
 import { RentIncreaseField } from '../rent/RentIncrease'
 import { CompactThemeToggle } from '../theme'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 
 export const Circumstance1: React.FC = () => {
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
@@ -76,16 +76,11 @@ export const Circumstance1: React.FC = () => {
                 />
             </div>
 
-            <Tabs defaultValue="rent" className="w-full">
-                <TabsList className="grid w-full grid-cols-3 mb-4">
-                    <TabsTrigger value="rent">Rental Information</TabsTrigger>
-                    <TabsTrigger value="buy">Purchase Information</TabsTrigger>
-                    <TabsTrigger value="invest">Investment Information</TabsTrigger>
-                </TabsList>
-
-                {/* Rental Information Tab */}
-                <TabsContent value="rent" className="mt-0">
-                    <div className="grid gap-3 sm:gap-4">
+            <Accordion type="single" collapsible className="w-full" defaultValue="rent">
+                {/* Rental Information Accordion Item */}
+                <AccordionItem value="rent">
+                    <AccordionTrigger>Rental Information</AccordionTrigger>
+                    <AccordionContent>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <MonthlyRentField
                                 value={monthlyRent}
@@ -100,42 +95,48 @@ export const Circumstance1: React.FC = () => {
                                 validationMode="optional"
                             />
                         </div>
-                    </div>
-                </TabsContent>
+                    </AccordionContent>
+                </AccordionItem>
 
-                {/* Buy House/Condo Tab */}
-                <TabsContent value="buy" className="mt-0">
-                    <div className="grid gap-3 sm:gap-4">
-                        <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                            <span className="text-xs sm:text-sm text-muted-foreground">Property Purchase Price</span>
+                {/* Purchase Information Accordion Item */}
+                <AccordionItem value="buy">
+                    <AccordionTrigger>Purchase Information</AccordionTrigger>
+                    <AccordionContent>
+                        <div className="grid gap-3 sm:gap-4">
+                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                <span className="text-xs sm:text-sm text-muted-foreground">Property Purchase Price</span>
+                            </div>
+                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                <span className="text-xs sm:text-sm text-muted-foreground">Down Payment Amount</span>
+                            </div>
+                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                <span className="text-xs sm:text-sm text-muted-foreground">Mortgage Interest Rate</span>
+                            </div>
+                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                <span className="text-xs sm:text-sm text-muted-foreground">Property Taxes & HOA</span>
+                            </div>
+                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
+                                <span className="text-xs sm:text-sm text-muted-foreground">Maintenance & Insurance</span>
+                            </div>
                         </div>
-                        <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                            <span className="text-xs sm:text-sm text-muted-foreground">Down Payment Amount</span>
-                        </div>
-                        <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                            <span className="text-xs sm:text-sm text-muted-foreground">Mortgage Interest Rate</span>
-                        </div>
-                        <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                            <span className="text-xs sm:text-sm text-muted-foreground">Property Taxes & HOA</span>
-                        </div>
-                        <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                            <span className="text-xs sm:text-sm text-muted-foreground">Maintenance & Insurance</span>
-                        </div>
-                    </div>
-                </TabsContent>
+                    </AccordionContent>
+                </AccordionItem>
 
-                {/* Investment Information Tab */}
-                <TabsContent value="invest" className="mt-0">
-                    <div className="grid gap-3 sm:gap-4">
-                        <InvestmentAnnualReturnField
-                            value={investmentAnnualReturn}
-                            onChange={setInvestmentAnnualReturn}
-                            enableValidation={true}
-                            validationMode="optional"
-                        />
-                    </div>
-                </TabsContent>
-            </Tabs>
+                {/* Investment Information Accordion Item */}
+                <AccordionItem value="invest">
+                    <AccordionTrigger>Investment Information</AccordionTrigger>
+                    <AccordionContent>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                            <InvestmentAnnualReturnField
+                                value={investmentAnnualReturn}
+                                onChange={setInvestmentAnnualReturn}
+                                enableValidation={true}
+                                validationMode="optional"
+                            />
+                        </div>
+                    </AccordionContent>
+                </AccordionItem>
+            </Accordion>
         </>
     )
 
@@ -285,25 +286,31 @@ export const Circumstance1: React.FC = () => {
 
     // Results Section Content
     const resultsSectionContent = (
-        <Tabs defaultValue="rent" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-4">
-                <TabsTrigger value="rent">If you rent</TabsTrigger>
-                <TabsTrigger value="buy">If you buy</TabsTrigger>
-                <TabsTrigger value="comparison">Comparison</TabsTrigger>
-            </TabsList>
+        <Accordion type="single" collapsible className="w-full" defaultValue="rent">
+            {/* Rent Analysis Accordion Item */}
+            <AccordionItem value="rent">
+                <AccordionTrigger>If you rent</AccordionTrigger>
+                <AccordionContent>
+                    {rentAnalysisContent}
+                </AccordionContent>
+            </AccordionItem>
 
-            <TabsContent value="rent" className="mt-0 w-full max-w-full overflow-hidden">
-                {rentAnalysisContent}
-            </TabsContent>
+            {/* Buy Analysis Accordion Item */}
+            <AccordionItem value="buy">
+                <AccordionTrigger>If you buy</AccordionTrigger>
+                <AccordionContent>
+                    {buyAnalysisContent}
+                </AccordionContent>
+            </AccordionItem>
 
-            <TabsContent value="buy" className="mt-0 w-full max-w-full overflow-hidden">
-                {buyAnalysisContent}
-            </TabsContent>
-
-            <TabsContent value="comparison" className="mt-0 w-full max-w-full overflow-hidden">
-                {comparisonContent}
-            </TabsContent>
-        </Tabs>
+            {/* Comparison Accordion Item */}
+            <AccordionItem value="comparison">
+                <AccordionTrigger>Comparison</AccordionTrigger>
+                <AccordionContent>
+                    {comparisonContent}
+                </AccordionContent>
+            </AccordionItem>
+        </Accordion>
     )
 
     // Decision Analysis Card Component
