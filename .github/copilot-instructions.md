@@ -299,3 +299,69 @@ When a task mentions a circumstance by name or number (e.g., "Circumstance 1", "
 
 ### Integration Point
 The `MainAppPage` component (in `src/pages/MainAppPage.tsx`) serves as the entry point that imports and renders the appropriate circumstance component based on user selection or routing logic.
+
+## Issues Terminology
+
+This section defines standard terminology used in issues and development discussions to ensure clear communication.
+
+### Default Circumstance
+- Up until further notice, when no circumstance number is mentioned in an issue, we're talking about **Circumstance 1**.
+
+### Page Section Terminology
+Any page or content (e.g., `Circumstance1.tsx`) has 2 main sections, both collapsible, and in separate cards:
+
+**Upper Section** - referred to as:
+- "input"
+- "upper"
+- "questionnaire"
+
+**Lower Section** - referred to as:
+- "results"
+- "reports"
+- "lower"
+- "outputs"
+
+### Input Section Tabs
+The input section has 3 tabs, which will be referred to as:
+1. **Rent** or **rental**
+2. **Buy**, **purchase**, or **mortgage**
+3. **Investment**
+
+### Output Section Tabs
+The output section currently has tabs, which will be referred to as:
+1. **Rent** or **rental**
+2. **Buy**, **purchase**, or **mortgage**
+3. **Comparison**
+
+*Note: If/when tabs change, this terminology section will be updated accordingly.*
+
+### Component Library Priority
+- For any new feature requests, the priority is the **Shadcn library**, even if not directly mentioned in the issue.
+- The theme and current setup of the app is based on Shadcn.
+- Any component that is needed but not available yet, feel free to install and add.
+
+### Input Field Requirements
+
+#### Smart Validation Integration
+- For any new input field request, the field **must integrate with the smart validation service**.
+- Existing fields can be used as examples for implementation patterns.
+
+#### State Management for Formatting
+- For any new input field request, the displayed value might need formatting which should be stored (in the state) **separately from the actual value**.
+- Example: Display `"1,500.00"` while storing `1500` as the numeric value.
+
+#### Comprehensive Testing
+- For any new input field request, a **comprehensive test file needs to be created** after the field component creation.
+- When writing tests, try to be **unbiased** and catch the bugs.
+- If any bugs are found during testing, **fix the component**.
+- Follow the **best Jest practices** established in the codebase.
+
+#### Mobile-First Design
+- Since the app's design is **mobile-first**, the label of input fields should be **short**.
+- Fields can have a **tooltip with clear guidance** for more detailed information.
+
+### Pre-Finalization Requirements
+- Before finalizing any pull request, the app should be tested to ensure:
+  - All tests pass
+  - Code compiles successfully
+  - Build completes successfully
