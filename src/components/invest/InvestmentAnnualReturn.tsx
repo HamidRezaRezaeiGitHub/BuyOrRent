@@ -123,7 +123,7 @@ export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> =
                     <button
                         type="button"
                         onClick={() => setDrawerOpen(true)}
-                        className="text-sm text-primary hover:underline focus:outline-none focus:underline"
+                        className="text-sm text-primary hover:underline focus:outline-none focus:underline underline"
                     >
                         You're not sure?
                     </button>
