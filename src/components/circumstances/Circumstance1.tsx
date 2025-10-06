@@ -1,14 +1,15 @@
+import { calculateMonthlyRentData, MonthlyRentData } from '@/services/MonthlyRentCalculator'
 import { ChevronDown, ChevronUp, Maximize2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { YearsField } from '../common/Years'
 import { InvestmentAnnualReturnField } from '../inputs/invest/InvestmentAnnualReturn'
+import { MonthlyRentField } from '../inputs/rent/MonthlyRent'
+import { RentIncreaseField } from '../inputs/rent/RentIncrease'
 import { FlexibleNavbar } from '../navbar'
 import { CompactMonthlyRentGraph } from '../outputs/rent/CompactMonthlyRentGraph'
 import { CompactMonthlyRentTable } from '../outputs/rent/CompactMonthlyRentTable'
-import { MonthlyRentField } from '../inputs/rent/MonthlyRent'
 import { MonthlyRentGraph } from '../outputs/rent/MonthlyRentGraph'
 import { MonthlyRentTable } from '../outputs/rent/MonthlyRentTable'
-import { RentIncreaseField } from '../inputs/rent/RentIncrease'
 import { CompactThemeToggle } from '../theme'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion'
 import { Button } from '../ui/button'
@@ -16,7 +17,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
-import { calculateMonthlyRentData, MonthlyRentData } from '@/services/MonthlyRentCalculator'
 
 export const Circumstance1: React.FC = () => {
     const defaultAnalysisYears = 25
@@ -26,9 +26,9 @@ export const Circumstance1: React.FC = () => {
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
     const [analysisYears, setAnalysisYears] = useState<number>(defaultAnalysisYears)
-    const [monthlyRent, setMonthlyRent] = useState<number | ''>(defaultMonthlyRent)
+    const [monthlyRent, setMonthlyRent] = useState<number>(defaultMonthlyRent)
     const [rentIncrease, setRentIncrease] = useState<number>(defaultRentIncrease)
-    const [investmentAnnualReturn, setInvestmentAnnualReturn] = useState<number | ''>(7.5)
+    const [investmentAnnualReturn, setInvestmentAnnualReturn] = useState<number>(7.5)
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
     const [tableDialogOpen, setTableDialogOpen] = useState(false)
     const [graphDialogOpen, setGraphDialogOpen] = useState(false)
@@ -91,8 +91,6 @@ export const Circumstance1: React.FC = () => {
                             <MonthlyRentField
                                 value={monthlyRent}
                                 onChange={setMonthlyRent}
-                                enableValidation={true}
-                                validationMode="required"
                                 defaultValue={defaultMonthlyRent}
                                 minValue={0}
                                 maxValue={10000}
@@ -142,8 +140,6 @@ export const Circumstance1: React.FC = () => {
                             <InvestmentAnnualReturnField
                                 value={investmentAnnualReturn}
                                 onChange={setInvestmentAnnualReturn}
-                                enableValidation={true}
-                                validationMode="optional"
                                 showHelper={true}
                             />
                         </div>
@@ -190,7 +186,7 @@ export const Circumstance1: React.FC = () => {
 
     // Tables Carousel Component
     const tablesCarousel = (
-        <Card className="w-full max-w-full overflow-hidden">
+        <Card className="w-full max-w-full overflow-x-hidden">
             <CardHeader className="relative px-3 sm:px-4 py-3 sm:py-4">
                 <CardTitle className="text-lg pr-10">Tables</CardTitle>
                 <Button
@@ -204,11 +200,11 @@ export const Circumstance1: React.FC = () => {
                 </Button>
             </CardHeader>
             <CardContent className="p-3 sm:p-4">
-                <div className="w-full max-w-full overflow-hidden">
+                <div className="w-full max-w-full overflow-x-hidden">
                     <Carousel className="w-full" opts={{ align: "start" }}>
                         <CarouselContent className="-ml-1 sm:-ml-2">
                             <CarouselItem className="pl-1 sm:pl-2 basis-full">
-                                <div className="w-full max-w-full overflow-hidden">
+                                <div className="w-full max-w-full overflow-x-hidden">
                                     <CompactMonthlyRentTable
                                         data={rentData}
                                         maxRows={5}
@@ -231,7 +227,7 @@ export const Circumstance1: React.FC = () => {
 
     // Graphs Carousel Component
     const graphsCarousel = (
-        <Card className="w-full max-w-full overflow-hidden">
+        <Card className="w-full max-w-full overflow-x-hidden">
             <CardHeader className="relative px-3 sm:px-4 py-3 sm:py-4">
                 <CardTitle className="text-lg pr-10">Graphs</CardTitle>
                 <Button
@@ -245,11 +241,11 @@ export const Circumstance1: React.FC = () => {
                 </Button>
             </CardHeader>
             <CardContent className="p-3 sm:p-4">
-                <div className="w-full max-w-full overflow-hidden">
+                <div className="w-full max-w-full overflow-x-hidden">
                     <Carousel className="w-full" opts={{ align: "start" }}>
                         <CarouselContent className="-ml-1 sm:-ml-2">
                             <CarouselItem className="pl-1 sm:pl-2 basis-full">
-                                <div className="w-full max-w-full overflow-hidden">
+                                <div className="w-full max-w-full overflow-x-hidden">
                                     <CompactMonthlyRentGraph data={rentData} />
                                 </div>
                             </CarouselItem>
@@ -269,7 +265,7 @@ export const Circumstance1: React.FC = () => {
 
     // Rent Analysis Tab Content
     const rentAnalysisContent = (
-        <div className="w-full max-w-full overflow-hidden grid gap-3 sm:gap-4">
+        <div className="w-full max-w-full overflow-x-hidden grid gap-3 sm:gap-4">
             {tablesCarousel}
             {graphsCarousel}
         </div>

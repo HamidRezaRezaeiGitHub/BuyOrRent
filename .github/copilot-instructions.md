@@ -1,6 +1,6 @@
 # BuyOrRent - React + Vite + Tailwind CSS Application
 
-BuyOrRent is a modern web application built with React 19, Vite 7, and Tailwind CSS 4. The application is a single-page application that can be developed, built, and deployed as a s### Component Development Patterns
+BuyOrRent is a modern web application built with React 19, Vite 7, and Tailwind CSS 4. The application is a single-page application (SPA) that provides users with tools to analyze whether to buy or rent a property based on various financial inputs.
 
 ### Field Components with Validation
 The application follows a consistent pattern for form field components with built-in validation and formatting:
@@ -27,7 +27,6 @@ Run these commands in sequence for a fresh setup:
    ```
    - Takes approximately 10 seconds
    - Installs 215 packages
-   - No vulnerabilities found in current dependency tree
 
 2. **Build the application:**
    ```bash
@@ -74,9 +73,7 @@ After making changes, ALWAYS perform these validation steps:
 1. **Basic functionality test:**
    - Start development server with `npm run dev`
    - Navigate to http://localhost:5173/
-   - Verify the page displays "Hello, world!" heading
-   - Verify the welcome message: "Welcome to BuyOrRent - A React + Vite + Tailwind CSS application"
-   - Confirm Tailwind CSS styling is applied correctly (centered content, gray background)
+   - Verify main page loads without errors
 
 2. **Build validation:**
    - Run full build process: `npm run build`
@@ -166,29 +163,6 @@ src/components/
 - **Output components**: Display components that show calculated results (tables, graphs, reports)
 - **Location pattern**: `inputs/{category}/` or `outputs/{category}/` where category is `rent`, `buy`, or `invest`
 - **Test files**: Always colocated with their corresponding component files
-
-## Technology Stack
-
-### Core Technologies
-- **React 19.1.1** - UI framework
-- **TypeScript 5.8.3** - Type safety
-- **Vite 7.1.7** - Build tool and development server
-- **Tailwind CSS 4.1.13** - Utility-first CSS framework
-
-### Development Tools
-- **ESLint 9.36.0** - Code linting with React and TypeScript rules
-- **PostCSS 8.5.6** - CSS processing for Tailwind
-- **Autoprefixer 10.4.21** - CSS vendor prefixing
-
-### Available npm Scripts
-```json
-{
-  "dev": "vite",                    // Development server
-  "build": "tsc -b && vite build", // Production build
-  "lint": "eslint .",               // Code linting
-  "preview": "vite preview"         // Preview production build
-}
-```
 
 ## Common Tasks
 
@@ -281,28 +255,17 @@ dist/
 
 ## Component Development Patterns
 
-### Field Components with Validation
-The application follows a consistent pattern for form field components with built-in validation and formatting:
-
-1. **Base Structure**: All field components extend `BaseFieldProps` interface
-2. **Smart Validation Integration**: Use `useSmartFieldValidation` hook for consistent validation behavior
-3. **Shadcn UI Components**: Leverage `Input`, `Label`, `Tooltip` and other shadcn components
-4. **Lucide React Icons**: Use appropriate icons (e.g., `DollarSign` for currency, `Info` for tooltips)
-5. **Mobile-First Design**: Short labels with detailed tooltip content for comprehensive information
-
 ### Example: MonthlyRent Component
 Located in `src/components/inputs/rent/MonthlyRent.tsx`:
 - **Currency Formatting**: Canadian dollar formatting with `Intl.NumberFormat`
 - **Dual Value Management**: Separate display value (formatted string) and actual value (number)
 - **Focus/Blur Behavior**: Unformatted during editing, formatted when blurred
-- **Validation Rules**: Required, positive number, max value checks
 - **Tooltip**: Descriptive information accessible via info icon
 
 ### Testing Pattern
 All field components should have comprehensive test coverage:
 - Basic rendering and props
 - User interaction (change, focus, blur)
-- Validation behavior (required, optional, error display)
 - Formatting (if applicable)
 - Integration tests combining multiple features
 
@@ -367,18 +330,16 @@ Any page or content (e.g., `Circumstance1.tsx`) has 2 main sections, both collap
 - "outputs"
 
 ### Input Section Tabs
-The input section has 3 tabs, which will be referred to as:
+The input section has 3 tabs (accordion), which will be referred to as:
 1. **Rent** or **rental**
 2. **Buy**, **purchase**, or **mortgage**
 3. **Investment**
 
 ### Output Section Tabs
-The output section currently has tabs, which will be referred to as:
+The output section currently has tabs (accordion), which will be referred to as:
 1. **Rent** or **rental**
 2. **Buy**, **purchase**, or **mortgage**
 3. **Comparison**
-
-*Note: If/when tabs change, this terminology section will be updated accordingly.*
 
 ### Component Library Priority
 - For any new feature requests, the priority is the **Shadcn library**, even if not directly mentioned in the issue.

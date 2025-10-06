@@ -138,8 +138,6 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
         }
     };
 
-
-
     // Label component with icon and tooltip
     const labelComponent = (
         <div className="flex items-center gap-1">
