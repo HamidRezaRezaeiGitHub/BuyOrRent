@@ -1,9 +1,8 @@
 import { InvestmentReturnField } from '@/components/inputs/invest/InvestmentReturn'
 import {
-    FieldSet,
-    FieldLegend,
     FieldDescription,
     FieldGroup,
+    FieldSet
 } from '@/components/ui/field'
 
 interface InvestmentInformationProps {

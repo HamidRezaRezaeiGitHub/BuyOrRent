@@ -3,7 +3,6 @@ import { RentIncreaseField } from '@/components/inputs/rent/RentIncrease'
 import {
     FieldDescription,
     FieldGroup,
-    FieldLegend,
     FieldSet,
 } from '@/components/ui/field'
 

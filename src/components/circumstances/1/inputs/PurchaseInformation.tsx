@@ -9,11 +9,10 @@ import { PropertyTaxAmountField } from '@/components/inputs/buy/PropertyTaxAmoun
 import { PropertyTaxPercentageField } from '@/components/inputs/buy/PropertyTaxPercentage'
 import { PurchasePriceField } from '@/components/inputs/buy/PurchasePrice'
 import {
-    FieldSet,
-    FieldLegend,
     FieldDescription,
     FieldGroup,
     FieldSeparator,
+    FieldSet
 } from '@/components/ui/field'
 
 interface PurchaseInformationProps {
