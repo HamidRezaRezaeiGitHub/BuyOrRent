@@ -185,8 +185,8 @@ export const AnnualMaintenanceAmountField: FC<AnnualMaintenanceAmountFieldProps>
             </div>
             <Input
                 id={displayMode === 'input' ? id : `${id}-input`}
-                type="number"
-                inputMode="decimal"
+                type={isFocused ? 'number' : 'text'}
+                inputMode={isFocused ? 'numeric' : 'text'}
                 min={minValue}
                 max={maxValue}
                 step={500}

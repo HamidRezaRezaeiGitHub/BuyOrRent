@@ -30,37 +30,71 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
 
 export const Circumstance1: React.FC = () => {
     const defaultAnalysisYears = 25
+    const minAnalysisYears = 1
+    const maxAnalysisYears = 50
+
     const defaultMonthlyRent = 2500
+    const minMonthlyRent = 0
+    const maxMonthlyRent = 10000
+    
     const defaultRentIncrease = 2.5
+    const minRentIncrease = 0
+    const maxRentIncrease = 20
+    
+    const defaultInvestmentAnnualReturn = 7.5
+    
     const defaultPurchasePrice = 600000
+    const minPurchasePrice = 100000
+    const maxPurchasePrice = 5000000
+    
     const defaultDownPaymentPercentage = 20
-    const defaultDownPaymentAmount = 120000
+    const minDownPaymentPercentage = 0
+    const maxDownPaymentPercentage = 100
+    // const defaultDownPaymentAmount = defaultDownPaymentPercentage / 100 * purchasePrice
+    // const minDownPaymentAmount = minDownPaymentPercentage / 100 * purchasePrice
+    // const maxDownPaymentAmount = purchasePrice // Max down payment cannot exceed purchase price
+
     const defaultMortgageRate = 5.5
+    const minMortgageRate = 0
+    const maxMortgageRate = 15
+    
     const defaultMortgageLength = 25
+    const minMortgageLength = 1
+    const maxMortgageLength = 40
+    
     const defaultPropertyTaxPercentage = 0.75
-    const defaultPropertyTaxAmount = 4500
-    const defaultAnnualMaintenancePercentage = 1.0
-    const defaultAnnualMaintenanceAmount = 6000
+    const minPropertyTaxPercentage = 0
+    const maxPropertyTaxPercentage = 5.0
+    // const defaultPropertyTaxAmount = defaultPropertyTaxPercentage / 100 * purchasePrice
+    // const minPropertyTaxAmount = minPropertyTaxPercentage / 100 * purchasePrice
+    // const maxPropertyTaxAmount = maxPropertyTaxPercentage / 100 * purchasePrice
+    
+    const defaultAnnualMaintenancePercentage = 2.0
+    const minAnnualMaintenancePercentage = 0
+    const maxAnnualMaintenancePercentage = 10
+    // const defaultAnnualMaintenanceAmount = defaultAnnualMaintenancePercentage / 100 * purchasePrice
+    // const minAnnualMaintenanceAmount = minAnnualMaintenancePercentage / 100 * purchasePrice
+    // const maxAnnualMaintenanceAmount = maxAnnualMaintenancePercentage / 100 * purchasePrice
 
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
     const [analysisYears, setAnalysisYears] = useState<number>(defaultAnalysisYears)
     const [monthlyRent, setMonthlyRent] = useState<number>(defaultMonthlyRent)
     const [rentIncrease, setRentIncrease] = useState<number>(defaultRentIncrease)
-    const [investmentAnnualReturn, setInvestmentAnnualReturn] = useState<number>(7.5)
+    const [investmentAnnualReturn, setInvestmentAnnualReturn] = useState<number>(defaultInvestmentAnnualReturn)
     
     // Buy fields state
     const [purchasePrice, setPurchasePrice] = useState<number>(defaultPurchasePrice)
     const [downPaymentPercentage, setDownPaymentPercentage] = useState<number>(defaultDownPaymentPercentage)
-    const [downPaymentAmount, setDownPaymentAmount] = useState<number>(defaultDownPaymentAmount)
+    const [downPaymentAmount, setDownPaymentAmount] = useState<number>(defaultDownPaymentPercentage / 100 * purchasePrice)
     const [downPaymentMode, setDownPaymentMode] = useState<'percentage' | 'amount'>('percentage')
     const [mortgageRate, setMortgageRate] = useState<number>(defaultMortgageRate)
     const [mortgageLength, setMortgageLength] = useState<number>(defaultMortgageLength)
     const [propertyTaxPercentage, setPropertyTaxPercentage] = useState<number>(defaultPropertyTaxPercentage)
-    const [propertyTaxAmount, setPropertyTaxAmount] = useState<number>(defaultPropertyTaxAmount)
+    const [propertyTaxAmount, setPropertyTaxAmount] = useState<number>(defaultPropertyTaxPercentage / 100 * purchasePrice)
     const [propertyTaxMode, setPropertyTaxMode] = useState<'percentage' | 'amount'>('percentage')
     const [annualMaintenancePercentage, setAnnualMaintenancePercentage] = useState<number>(defaultAnnualMaintenancePercentage)
-    const [annualMaintenanceAmount, setAnnualMaintenanceAmount] = useState<number>(defaultAnnualMaintenanceAmount)
+    const [annualMaintenanceAmount, setAnnualMaintenanceAmount] = useState<number>(defaultAnnualMaintenancePercentage / 100 * purchasePrice)
     const [annualMaintenanceMode, setAnnualMaintenanceMode] = useState<'percentage' | 'amount'>('percentage')
     
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
@@ -83,8 +117,8 @@ export const Circumstance1: React.FC = () => {
             value={purchasePrice}
             onChange={setPurchasePrice}
             defaultValue={defaultPurchasePrice}
-            minValue={100000}
-            maxValue={3000000}
+            minValue={minPurchasePrice}
+            maxValue={maxPurchasePrice}
             displayMode='combined'
         />
     );
@@ -94,8 +128,8 @@ export const Circumstance1: React.FC = () => {
             value={downPaymentPercentage}
             onChange={setDownPaymentPercentage}
             defaultValue={defaultDownPaymentPercentage}
-            minValue={0}
-            maxValue={100}
+            minValue={minDownPaymentPercentage}
+            maxValue={maxDownPaymentPercentage}
             displayMode='combined'
         />
     );
@@ -104,9 +138,9 @@ export const Circumstance1: React.FC = () => {
         <DownPaymentAmountField
             value={downPaymentAmount}
             onChange={setDownPaymentAmount}
-            defaultValue={defaultDownPaymentAmount}
-            minValue={0}
-            maxValue={3000000}
+            defaultValue={defaultDownPaymentPercentage / 100 * purchasePrice}
+            minValue={minDownPaymentPercentage}
+            maxValue={purchasePrice} // Max down payment cannot exceed purchase price
             displayMode='combined'
         />
     );
@@ -131,8 +165,8 @@ export const Circumstance1: React.FC = () => {
             value={mortgageRate}
             onChange={setMortgageRate}
             defaultValue={defaultMortgageRate}
-            minValue={0}
-            maxValue={15}
+            minValue={minMortgageRate}
+            maxValue={maxMortgageRate}
             displayMode='combined'
         />
     );
@@ -142,8 +176,8 @@ export const Circumstance1: React.FC = () => {
             value={mortgageLength}
             onChange={setMortgageLength}
             defaultValue={defaultMortgageLength}
-            minValue={1}
-            maxValue={40}
+            minValue={minMortgageLength}
+            maxValue={maxMortgageLength}
             displayMode='combined'
         />
     );
@@ -153,8 +187,8 @@ export const Circumstance1: React.FC = () => {
             value={propertyTaxPercentage}
             onChange={setPropertyTaxPercentage}
             defaultValue={defaultPropertyTaxPercentage}
-            minValue={0}
-            maxValue={5}
+            minValue={minPropertyTaxPercentage}
+            maxValue={maxPropertyTaxPercentage}
             displayMode='combined'
         />
     );
@@ -163,9 +197,9 @@ export const Circumstance1: React.FC = () => {
         <PropertyTaxAmountField
             value={propertyTaxAmount}
             onChange={setPropertyTaxAmount}
-            defaultValue={defaultPropertyTaxAmount}
-            minValue={0}
-            maxValue={50000}
+            defaultValue={defaultPropertyTaxPercentage / 100 * purchasePrice}
+            minValue={minPropertyTaxPercentage / 100 * purchasePrice}
+            maxValue={maxPropertyTaxPercentage / 100 * purchasePrice}
             displayMode='combined'
         />
     );
@@ -190,8 +224,8 @@ export const Circumstance1: React.FC = () => {
             value={annualMaintenancePercentage}
             onChange={setAnnualMaintenancePercentage}
             defaultValue={defaultAnnualMaintenancePercentage}
-            minValue={0}
-            maxValue={10}
+            minValue={minAnnualMaintenancePercentage}
+            maxValue={maxAnnualMaintenancePercentage}
             displayMode='combined'
         />
     );
@@ -200,9 +234,9 @@ export const Circumstance1: React.FC = () => {
         <AnnualMaintenanceAmountField
             value={annualMaintenanceAmount}
             onChange={setAnnualMaintenanceAmount}
-            defaultValue={defaultAnnualMaintenanceAmount}
-            minValue={0}
-            maxValue={100000}
+            defaultValue={defaultAnnualMaintenancePercentage / 100 * purchasePrice}
+            minValue={minAnnualMaintenancePercentage / 100 * purchasePrice}
+            maxValue={maxAnnualMaintenancePercentage / 100 * purchasePrice}
             displayMode='combined'
         />
     );
@@ -256,8 +290,8 @@ export const Circumstance1: React.FC = () => {
                     value={analysisYears}
                     onChange={setAnalysisYears}
                     defaultValue={defaultAnalysisYears}
-                    minValue={1}
-                    maxValue={50}
+                    minValue={minAnalysisYears}
+                    maxValue={maxAnalysisYears}
                 />
             </div>
 
@@ -271,16 +305,16 @@ export const Circumstance1: React.FC = () => {
                                 value={monthlyRent}
                                 onChange={setMonthlyRent}
                                 defaultValue={defaultMonthlyRent}
-                                minValue={0}
-                                maxValue={10000}
+                                minValue={minMonthlyRent}
+                                maxValue={maxMonthlyRent}
                                 displayMode='combined'
                             />
                             <RentIncreaseField
                                 value={rentIncrease}
                                 onChange={setRentIncrease}
                                 defaultValue={defaultRentIncrease}
-                                minValue={0}
-                                maxValue={20}
+                                minValue={minRentIncrease}
+                                maxValue={maxRentIncrease}
                                 displayMode='combined'
                             />
                         </div>

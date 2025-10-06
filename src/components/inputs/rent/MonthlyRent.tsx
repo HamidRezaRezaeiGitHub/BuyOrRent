@@ -62,7 +62,7 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
         if (isFocused) {
             return inputValue;
         }
-        return validatedValue.toString();
+        return formatCurrency(validatedValue);
     }, [isFocused, inputValue, validatedValue]);
 
     // Sync inputValue when value changes externally (but not when focused)
@@ -208,8 +208,8 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
             </div>
             <Input
                 id={displayMode === 'input' ? id : `${id}-input`}
-                type="number"
-                inputMode="decimal"
+                type={isFocused ? 'number' : 'text'}
+                inputMode={isFocused ? 'numeric' : 'text'}
                 min={minValue}
                 max={maxValue}
                 step={50}
