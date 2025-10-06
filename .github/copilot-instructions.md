@@ -130,6 +130,43 @@ When making changes, always check these files for consistency:
 - **package.json** - For script definitions and dependencies
 - **vite.config.ts** - Build and development server configuration
 
+### Component Organization
+Components are organized by type and function under `src/components/`:
+
+```
+src/components/
+├── inputs/                 # Input components (user-facing form fields)
+│   ├── rent/              # Rent-related input fields
+│   │   ├── MonthlyRent.tsx
+│   │   ├── RentIncrease.tsx
+│   │   └── *.test.tsx     # Tests for input components
+│   ├── buy/               # Purchase/mortgage-related input fields
+│   └── invest/            # Investment-related input fields
+│       ├── InvestmentAnnualReturn.tsx
+│       ├── InvestmentReturnHelperDrawer.tsx
+│       └── *.test.tsx
+├── outputs/               # Output components (tables, graphs, reports)
+│   ├── rent/              # Rent-related outputs
+│   │   ├── MonthlyRentTable.tsx
+│   │   ├── MonthlyRentGraph.tsx
+│   │   ├── CompactMonthlyRentTable.tsx
+│   │   ├── CompactMonthlyRentGraph.tsx
+│   │   └── *.test.tsx     # Tests for output components
+│   ├── buy/               # Purchase/mortgage-related outputs
+│   └── invest/            # Investment-related outputs
+├── circumstances/         # Full page implementations for different scenarios
+├── common/                # Shared components (e.g., YearsField)
+├── navbar/                # Navigation components
+├── theme/                 # Theme-related components
+└── ui/                    # Base UI components (shadcn)
+```
+
+**Organization Rules**:
+- **Input components**: User-facing form fields that collect data (sliders, text inputs, etc.)
+- **Output components**: Display components that show calculated results (tables, graphs, reports)
+- **Location pattern**: `inputs/{category}/` or `outputs/{category}/` where category is `rent`, `buy`, or `invest`
+- **Test files**: Always colocated with their corresponding component files
+
 ## Technology Stack
 
 ### Core Technologies
@@ -254,7 +291,7 @@ The application follows a consistent pattern for form field components with buil
 5. **Mobile-First Design**: Short labels with detailed tooltip content for comprehensive information
 
 ### Example: MonthlyRent Component
-Located in `src/components/rent/MonthlyRent.tsx`:
+Located in `src/components/inputs/rent/MonthlyRent.tsx`:
 - **Currency Formatting**: Canadian dollar formatting with `Intl.NumberFormat`
 - **Dual Value Management**: Separate display value (formatted string) and actual value (number)
 - **Focus/Blur Behavior**: Unformatted during editing, formatted when blurred

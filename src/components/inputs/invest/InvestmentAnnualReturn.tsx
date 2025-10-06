@@ -1,11 +1,11 @@
 import { ValidationResult } from '@/services/validation';
 import { Info, Percent } from 'lucide-react';
 import { FC, useEffect, useMemo, useState } from 'react';
-import { useSmartFieldValidation } from '../../services/validation/useSmartFieldValidation';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Slider } from '../ui/slider';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { useSmartFieldValidation } from '../../../services/validation/useSmartFieldValidation';
+import { Input } from '../../ui/input';
+import { Label } from '../../ui/label';
+import { Slider } from '../../ui/slider';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../ui/tooltip';
 import { InvestmentReturnHelperDrawer } from './InvestmentReturnHelperDrawer';
 
 export type DisplayMode = 'slider' | 'input' | 'combined';

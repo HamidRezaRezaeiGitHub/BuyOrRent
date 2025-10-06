@@ -1,7 +1,7 @@
 import { cn } from '@/utils/utils';
 import { Building2, LineChart, Percent, TrendingUp } from 'lucide-react';
 import { FC, useEffect, useState } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 import {
     Drawer,
     DrawerClose,
@@ -10,10 +10,10 @@ import {
     DrawerFooter,
     DrawerHeader,
     DrawerTitle,
-} from '../ui/drawer';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Slider } from '../ui/slider';
+} from '../../ui/drawer';
+import { Input } from '../../ui/input';
+import { Label } from '../../ui/label';
+import { Slider } from '../../ui/slider';
 
 interface InvestmentReturnHelperDrawerProps {
     open: boolean;
