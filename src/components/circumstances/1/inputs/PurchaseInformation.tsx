@@ -8,6 +8,13 @@ import { MortgageRateField } from '@/components/inputs/buy/MortgageRate'
 import { PropertyTaxAmountField } from '@/components/inputs/buy/PropertyTaxAmount'
 import { PropertyTaxPercentageField } from '@/components/inputs/buy/PropertyTaxPercentage'
 import { PurchasePriceField } from '@/components/inputs/buy/PurchasePrice'
+import {
+    FieldSet,
+    FieldLegend,
+    FieldDescription,
+    FieldGroup,
+    FieldSeparator,
+} from '@/components/ui/field'
 
 interface PurchaseInformationProps {
     purchasePrice: number
@@ -249,24 +256,50 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
     );
 
     return (
-        <div className="grid gap-3 sm:gap-4">
-            {/* Purchase Price */}
-            {purchasePriceComponent}
+        <FieldSet>
+            <FieldDescription>
+                Purchase terms
+            </FieldDescription>
 
-            {/* Down Payment with Percentage/Amount Switch */}
-            {downPaymentSwitchComponent}
+            <FieldGroup>
+                <div className="grid gap-6">
+                    {/* Purchase Price */}
+                    {purchasePriceComponent}
 
-            {/* Mortgage Rate */}
-            {mortgageRateComponent}
+                    {/* Down Payment with Percentage/Amount Switch */}
+                    {downPaymentSwitchComponent}
+                </div>
+            </FieldGroup>
 
-            {/* Mortgage Length */}
-            {mortgageLengthComponent}
+            <FieldSeparator />
 
-            {/* Property Tax with Percentage/Amount Switch */}
-            {propertyTaxSwitchComponent}
+            <FieldGroup>
+                <FieldDescription>
+                    Mortgage interest rate and amortization period
+                </FieldDescription>
+                <div className="grid gap-6">
+                    {/* Mortgage Rate */}
+                    {mortgageRateComponent}
 
-            {/* Annual Maintenance with Percentage/Amount Switch */}
-            {maintenanceSwitchComponent}
-        </div>
+                    {/* Mortgage Length */}
+                    {mortgageLengthComponent}
+                </div>
+            </FieldGroup>
+
+            <FieldSeparator />
+
+            <FieldGroup>
+                <FieldDescription>
+                    Ongoing property taxes and maintenance expenses
+                </FieldDescription>
+                <div className="grid gap-6">
+                    {/* Property Tax with Percentage/Amount Switch */}
+                    {propertyTaxSwitchComponent}
+
+                    {/* Annual Maintenance with Percentage/Amount Switch */}
+                    {maintenanceSwitchComponent}
+                </div>
+            </FieldGroup>
+        </FieldSet>
     )
 }

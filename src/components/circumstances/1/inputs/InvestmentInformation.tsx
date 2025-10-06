@@ -1,4 +1,10 @@
 import { InvestmentReturnField } from '@/components/inputs/invest/InvestmentReturn'
+import {
+    FieldSet,
+    FieldLegend,
+    FieldDescription,
+    FieldGroup,
+} from '@/components/ui/field'
 
 interface InvestmentInformationProps {
     investmentReturn: number
@@ -10,12 +16,19 @@ export const InvestmentInformation: React.FC<InvestmentInformationProps> = ({
     setInvestmentReturn,
 }) => {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <InvestmentReturnField
-                value={investmentReturn}
-                onChange={setInvestmentReturn}
-                showHelper={true}
-            />
-        </div>
+        <FieldSet>
+            <FieldDescription>
+                Expected annual return rate for alternative investments if you choose to rent instead of buying
+            </FieldDescription>
+            <FieldGroup>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <InvestmentReturnField
+                        value={investmentReturn}
+                        onChange={setInvestmentReturn}
+                        showHelper={true}
+                    />
+                </div>
+            </FieldGroup>
+        </FieldSet>
     )
 }

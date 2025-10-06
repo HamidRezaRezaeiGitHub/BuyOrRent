@@ -242,13 +242,9 @@ export const Circumstance1: React.FC = () => {
         </Card>
     )
 
-
-
-
-
     // Results Section Content
     const resultsSectionContent = (
-        <Accordion type="single" collapsible className="w-full" defaultValue="rent">
+        <Accordion type="single" collapsible className="w-full">
             {/* Rent Analysis Accordion Item */}
             <AccordionItem value="rent">
                 <AccordionTrigger>If you rent</AccordionTrigger>

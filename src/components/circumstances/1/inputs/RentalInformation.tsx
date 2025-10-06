@@ -1,5 +1,11 @@
 import { MonthlyRentField } from '@/components/inputs/rent/MonthlyRent'
 import { RentIncreaseField } from '@/components/inputs/rent/RentIncrease'
+import {
+    FieldDescription,
+    FieldGroup,
+    FieldLegend,
+    FieldSet,
+} from '@/components/ui/field'
 
 interface RentalInformationProps {
     monthlyRent: number
@@ -27,23 +33,30 @@ export const RentalInformation: React.FC<RentalInformationProps> = ({
     maxRentIncrease,
 }) => {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            <MonthlyRentField
-                value={monthlyRent}
-                onChange={setMonthlyRent}
-                defaultValue={defaultMonthlyRent}
-                minValue={minMonthlyRent}
-                maxValue={maxMonthlyRent}
-                displayMode='combined'
-            />
-            <RentIncreaseField
-                value={rentIncrease}
-                onChange={setRentIncrease}
-                defaultValue={defaultRentIncrease}
-                minValue={minRentIncrease}
-                maxValue={maxRentIncrease}
-                displayMode='combined'
-            />
-        </div>
+        <FieldSet>
+            <FieldDescription>
+                Current or expected rental costs and annual increases
+            </FieldDescription>
+            <FieldGroup>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <MonthlyRentField
+                        value={monthlyRent}
+                        onChange={setMonthlyRent}
+                        defaultValue={defaultMonthlyRent}
+                        minValue={minMonthlyRent}
+                        maxValue={maxMonthlyRent}
+                        displayMode='combined'
+                    />
+                    <RentIncreaseField
+                        value={rentIncrease}
+                        onChange={setRentIncrease}
+                        defaultValue={defaultRentIncrease}
+                        minValue={minRentIncrease}
+                        maxValue={maxRentIncrease}
+                        displayMode='combined'
+                    />
+                </div>
+            </FieldGroup>
+        </FieldSet>
     )
 }
