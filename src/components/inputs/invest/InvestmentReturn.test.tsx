@@ -1,29 +1,29 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { InvestmentAnnualReturnField } from './InvestmentAnnualReturn';
+import { InvestmentReturnField } from './InvestmentReturn';
 
-describe('InvestmentAnnualReturnField', () => {
+describe('InvestmentReturnField', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
     // Basic Rendering Tests
     describe('Basic Rendering', () => {
-        test('InvestmentAnnualReturnField_shouldRenderWithDefaultProps', () => {
+        test('InvestmentReturnField_shouldRenderWithDefaultProps', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
             );
 
-            const label = screen.getByText('Expected yearly investment return');
+            const label = screen.getByText('Investment Return Rate');
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
-            const tooltip = screen.getByRole('button', { name: /more information about expected yearly investment return/i });
+            const input = screen.getByRole('textbox');
+            const tooltip = screen.getByRole('button', { name: /more information about Investment Return Rate/i });
 
             expect(label).toBeInTheDocument();
             expect(slider).toBeInTheDocument();
@@ -31,11 +31,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(tooltip).toBeInTheDocument();
         });
 
-        test('InvestmentAnnualReturnField_shouldRenderSliderOnlyMode', () => {
+        test('InvestmentReturnField_shouldRenderSliderOnlyMode', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     displayMode="slider"
@@ -49,30 +49,30 @@ describe('InvestmentAnnualReturnField', () => {
             });
             expect(slider).toBeInTheDocument();
             expect(valueDisplay).toBeInTheDocument();
-            expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
+            expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
         });
 
-        test('InvestmentAnnualReturnField_shouldRenderInputOnlyMode', () => {
+        test('InvestmentReturnField_shouldRenderInputOnlyMode', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     displayMode="input"
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             expect(input).toBeInTheDocument();
             expect(screen.queryByRole('slider')).not.toBeInTheDocument();
         });
 
-        test('InvestmentAnnualReturnField_shouldRenderCombinedMode', () => {
+        test('InvestmentReturnField_shouldRenderCombinedMode', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     displayMode="combined"
@@ -80,16 +80,16 @@ describe('InvestmentAnnualReturnField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             expect(slider).toBeInTheDocument();
             expect(input).toBeInTheDocument();
         });
 
-        test('InvestmentAnnualReturnField_shouldRenderWithHelperWhenEnabled', () => {
+        test('InvestmentReturnField_shouldRenderWithHelperWhenEnabled', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     showHelper={true}
@@ -100,11 +100,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(helperLink).toBeInTheDocument();
         });
 
-        test('InvestmentAnnualReturnField_shouldNotRenderHelperWhenDisabled', () => {
+        test('InvestmentReturnField_shouldNotRenderHelperWhenDisabled', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     showHelper={false}
@@ -118,11 +118,11 @@ describe('InvestmentAnnualReturnField', () => {
 
     // Value Validation Tests
     describe('Value Validation', () => {
-        test('InvestmentAnnualReturnField_shouldClampInitialValueToMinimum', () => {
+        test('InvestmentReturnField_shouldClampInitialValueToMinimum', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={-30}
                     onChange={mockOnChange}
                     minValue={-20}
@@ -134,11 +134,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(-20);
         });
 
-        test('InvestmentAnnualReturnField_shouldClampInitialValueToMaximum', () => {
+        test('InvestmentReturnField_shouldClampInitialValueToMaximum', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={150}
                     onChange={mockOnChange}
                     minValue={-20}
@@ -149,11 +149,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(100);
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleNaNValue', () => {
+        test('InvestmentReturnField_shouldHandleNaNValue', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={NaN}
                     onChange={mockOnChange}
                     defaultValue={7.5}
@@ -163,11 +163,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(7.5);
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleInfinityValue', () => {
+        test('InvestmentReturnField_shouldHandleInfinityValue', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={Infinity}
                     onChange={mockOnChange}
                     defaultValue={7.5}
@@ -178,11 +178,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(7.5);
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleNegativeInfinityValue', () => {
+        test('InvestmentReturnField_shouldHandleNegativeInfinityValue', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={-Infinity}
                     onChange={mockOnChange}
                     defaultValue={7.5}
@@ -193,11 +193,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(7.5);
         });
 
-        test('InvestmentAnnualReturnField_shouldRoundToTwoDecimalPlaces', () => {
+        test('InvestmentReturnField_shouldRoundToTwoDecimalPlaces', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.567}
                     onChange={mockOnChange}
                 />
@@ -207,11 +207,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(7.57);
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleExtremeDecimalPrecision', () => {
+        test('InvestmentReturnField_shouldHandleExtremeDecimalPrecision', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.123456789}
                     onChange={mockOnChange}
                 />
@@ -221,11 +221,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(7.12);
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleNegativeValues', () => {
+        test('InvestmentReturnField_shouldHandleNegativeValues', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={-5.5}
                     onChange={mockOnChange}
                     minValue={-20}
@@ -240,11 +240,11 @@ describe('InvestmentAnnualReturnField', () => {
 
     // Slider Interaction Tests
     describe('Slider Interactions', () => {
-        test('InvestmentAnnualReturnField_shouldUpdateValueWhenSliderChanges', async () => {
+        test('InvestmentReturnField_shouldUpdateValueWhenSliderChanges', async () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
@@ -258,11 +258,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalled();
         });
 
-        test('InvestmentAnnualReturnField_shouldClampSliderValueToRange', async () => {
+        test('InvestmentReturnField_shouldClampSliderValueToRange', async () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     minValue={-10}
@@ -277,11 +277,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(slider).toHaveAttribute('aria-valuemax', '50');
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleSliderInteraction', () => {
+        test('InvestmentReturnField_shouldHandleSliderInteraction', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
@@ -294,11 +294,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(slider).toHaveAttribute('aria-valuenow', '7.5');
         });
 
-        test('InvestmentAnnualReturnField_shouldUseCorrectSliderStep', () => {
+        test('InvestmentReturnField_shouldUseCorrectSliderStep', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
@@ -312,11 +312,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(slider).toHaveAttribute('aria-valuenow', '7.5');
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleNegativeSliderValues', () => {
+        test('InvestmentReturnField_shouldHandleNegativeSliderValues', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={-5}
                     onChange={mockOnChange}
                     minValue={-20}
@@ -336,18 +336,18 @@ describe('InvestmentAnnualReturnField', () => {
 
     // Input Interaction Tests
     describe('Input Interactions', () => {
-        test('InvestmentAnnualReturnField_shouldUpdateValueOnValidInput', async () => {
+        test('InvestmentReturnField_shouldUpdateValueOnValidInput', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.clear(input);
             await user.type(input, '8.5');
@@ -356,33 +356,33 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(8.5);
         });
 
-        test('InvestmentAnnualReturnField_shouldShowFormattedValueWhenNotFocused', () => {
+        test('InvestmentReturnField_shouldShowFormattedValueWhenNotFocused', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.25}
                     onChange={mockOnChange}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             // Should show formatted percentage value
-            expect(input).toHaveValue(7.25);
+            expect(input).toHaveValue('7.25');
         });
 
-        test('InvestmentAnnualReturnField_shouldShowUnformattedValueWhenFocused', async () => {
+        test('InvestmentReturnField_shouldShowUnformattedValueWhenFocused', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.click(input);
             
@@ -390,12 +390,12 @@ describe('InvestmentAnnualReturnField', () => {
             expect(input).toHaveValue(7.5);
         });
 
-        test('InvestmentAnnualReturnField_shouldClampValueOnBlur', async () => {
+        test('InvestmentReturnField_shouldClampValueOnBlur', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     minValue={-20}
@@ -403,7 +403,7 @@ describe('InvestmentAnnualReturnField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.clear(input);
             await user.type(input, '75');
@@ -412,19 +412,19 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(50);
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleEmptyInputOnBlur', async () => {
+        test('InvestmentReturnField_shouldHandleEmptyInputOnBlur', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     defaultValue={8.0}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.clear(input);
             await user.tab(); // Blur with empty input
@@ -432,19 +432,19 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(8.0);
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleInvalidInputOnBlur', async () => {
+        test('InvestmentReturnField_shouldHandleInvalidInputOnBlur', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     defaultValue={8.0}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.clear(input);
             await user.type(input, 'invalid');
@@ -453,18 +453,18 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(8.0);
         });
 
-        test('InvestmentAnnualReturnField_shouldNotCallOnChangeForInvalidInputDuringTyping', async () => {
+        test('InvestmentReturnField_shouldNotCallOnChangeForInvalidInputDuringTyping', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.clear(input);
             mockOnChange.mockClear();
@@ -475,18 +475,18 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).not.toHaveBeenCalled();
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleDecimalInput', async () => {
+        test('InvestmentReturnField_shouldHandleDecimalInput', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.clear(input);
             await user.type(input, '8.75');
@@ -494,19 +494,19 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(8.75);
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleNegativeInputCorrectly', async () => {
+        test('InvestmentReturnField_shouldHandleNegativeInputCorrectly', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     minValue={-10}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.clear(input);
             await user.type(input, '-5');
@@ -515,19 +515,19 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(-5);
         });
 
-        test('InvestmentAnnualReturnField_shouldClampNegativeInputBelowMinimum', async () => {
+        test('InvestmentReturnField_shouldClampNegativeInputBelowMinimum', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     minValue={-10}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.clear(input);
             await user.type(input, '-25');
@@ -540,11 +540,11 @@ describe('InvestmentAnnualReturnField', () => {
 
     // Accessibility Tests
     describe('Accessibility', () => {
-        test('InvestmentAnnualReturnField_shouldHaveProperAriaLabels', () => {
+        test('InvestmentReturnField_shouldHaveProperAriaLabels', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     id="test-investment-return"
                     value={7.5}
                     onChange={mockOnChange}
@@ -552,57 +552,57 @@ describe('InvestmentAnnualReturnField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Test Radix slider ARIA attributes
             expect(slider).toHaveAttribute('aria-valuemin', '-20');
             expect(slider).toHaveAttribute('aria-valuemax', '100');
             expect(slider).toHaveAttribute('aria-valuenow', '7.5');
 
-            expect(input).toHaveAttribute('aria-label', 'Expected yearly investment return in percent, current value: 7.5%');
+            expect(input).toHaveAttribute('aria-label', 'Investment return rate in percent, current value: 7.5%');
         });
 
-        test('InvestmentAnnualReturnField_shouldHaveProperTooltipAccessibility', () => {
+        test('InvestmentReturnField_shouldHaveProperTooltipAccessibility', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     id="test-investment-return"
                     value={7.5}
                     onChange={mockOnChange}
                 />
             );
 
-            const tooltipTrigger = screen.getByRole('button', { name: /more information about expected yearly investment return/i });
+            const tooltipTrigger = screen.getByRole('button', { name: /more information about Investment Return Rate/i });
 
             expect(tooltipTrigger).toHaveAttribute('aria-describedby', 'test-investment-return-tooltip');
             expect(tooltipTrigger).toHaveAttribute('aria-expanded', 'false');
         });
 
-        test('InvestmentAnnualReturnField_shouldToggleTooltip', async () => {
+        test('InvestmentReturnField_shouldToggleTooltip', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     id="test-investment-return"
                     value={7.5}
                     onChange={mockOnChange}
                 />
             );
 
-            const tooltipTrigger = screen.getByRole('button', { name: /more information about expected yearly investment return/i });
+            const tooltipTrigger = screen.getByRole('button', { name: /more information about Investment Return Rate/i });
 
             await user.click(tooltipTrigger);
 
             expect(tooltipTrigger).toHaveAttribute('aria-expanded', 'true');
         });
 
-        test('InvestmentAnnualReturnField_shouldHavePercentSuffix', () => {
+        test('InvestmentReturnField_shouldHavePercentSuffix', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     id="test-investment-return"
                     value={7.5}
                     onChange={mockOnChange}
@@ -612,14 +612,15 @@ describe('InvestmentAnnualReturnField', () => {
             // Check for percent suffix in input
             const percentSuffix = screen.getByText('%');
             expect(percentSuffix).toBeInTheDocument();
-            expect(percentSuffix.closest('div')).toHaveAttribute('aria-hidden', 'true');
+            // In the new InputGroup structure, the % is within a span that has the id
+            expect(percentSuffix).toHaveAttribute('id', 'test-investment-return-suffix');
         });
 
-        test('InvestmentAnnualReturnField_shouldHaveProperValueDisplayAccessibility', () => {
+        test('InvestmentReturnField_shouldHaveProperValueDisplayAccessibility', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     displayMode="slider"
@@ -634,11 +635,11 @@ describe('InvestmentAnnualReturnField', () => {
 
     // Disabled State Tests
     describe('Disabled State', () => {
-        test('InvestmentAnnualReturnField_shouldDisableAllInputsWhenDisabled', () => {
+        test('InvestmentReturnField_shouldDisableAllInputsWhenDisabled', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     disabled={true}
@@ -646,26 +647,26 @@ describe('InvestmentAnnualReturnField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Radix slider uses data-disabled attribute
             expect(slider).toHaveAttribute('data-disabled');
             expect(input).toBeDisabled();
         });
 
-        test('InvestmentAnnualReturnField_shouldNotCallOnChangeWhenDisabled', async () => {
+        test('InvestmentReturnField_shouldNotCallOnChangeWhenDisabled', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     disabled={true}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             // Try to interact with disabled input
             await user.type(input, '8.5');
@@ -673,11 +674,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).not.toHaveBeenCalled();
         });
 
-        test('InvestmentAnnualReturnField_shouldDisableHelperWhenDisabled', () => {
+        test('InvestmentReturnField_shouldDisableHelperWhenDisabled', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     showHelper={true}
@@ -693,11 +694,11 @@ describe('InvestmentAnnualReturnField', () => {
 
     // Custom Props Tests
     describe('Custom Props', () => {
-        test('InvestmentAnnualReturnField_shouldRespectCustomMinMaxValues', () => {
+        test('InvestmentReturnField_shouldRespectCustomMinMaxValues', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={10}
                     onChange={mockOnChange}
                     minValue={-10}
@@ -706,7 +707,7 @@ describe('InvestmentAnnualReturnField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Radix slider uses aria attributes for min/max
             expect(slider).toHaveAttribute('aria-valuemin', '-10');
@@ -715,11 +716,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(input).toHaveAttribute('max', '50');
         });
 
-        test('InvestmentAnnualReturnField_shouldUseCustomId', () => {
+        test('InvestmentReturnField_shouldUseCustomId', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     id="custom-investment-return"
                     value={7.5}
                     onChange={mockOnChange}
@@ -727,15 +728,15 @@ describe('InvestmentAnnualReturnField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             expect(input).toHaveAttribute('id', 'custom-investment-return');
         });
 
-        test('InvestmentAnnualReturnField_shouldUseCustomClassNames', () => {
+        test('InvestmentReturnField_shouldUseCustomClassNames', () => {
             const mockOnChange = jest.fn();
             
             const { container } = render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     className="custom-class"
@@ -746,11 +747,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(fieldWrapper).toHaveClass('custom-class');
         });
 
-        test('InvestmentAnnualReturnField_shouldUseCustomDefaultValue', () => {
+        test('InvestmentReturnField_shouldUseCustomDefaultValue', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={NaN}
                     onChange={mockOnChange}
                     defaultValue={10.0}
@@ -764,12 +765,12 @@ describe('InvestmentAnnualReturnField', () => {
 
     // Helper Drawer Tests
     describe('Helper Drawer Tests', () => {
-        test('InvestmentAnnualReturnField_shouldOpenHelperDrawerWhenClicked', async () => {
+        test('InvestmentReturnField_shouldOpenHelperDrawerWhenClicked', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     showHelper={true}
@@ -784,12 +785,12 @@ describe('InvestmentAnnualReturnField', () => {
             expect(helperLink).toBeInTheDocument();
         });
 
-        test('InvestmentAnnualReturnField_shouldBlurHelperLinkOnClick', async () => {
+        test('InvestmentReturnField_shouldBlurHelperLinkOnClick', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     showHelper={true}
@@ -811,18 +812,18 @@ describe('InvestmentAnnualReturnField', () => {
 
     // Edge Cases Tests
     describe('Edge Cases', () => {
-        test('InvestmentAnnualReturnField_shouldHandleRapidValueChanges', async () => {
+        test('InvestmentReturnField_shouldHandleRapidValueChanges', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             // Rapid typing
             await user.clear(input);
@@ -834,18 +835,18 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(10.5);
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleVeryLongDecimalInput', async () => {
+        test('InvestmentReturnField_shouldHandleVeryLongDecimalInput', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.clear(input);
             await user.type(input, '7.123456789123456');
@@ -855,14 +856,14 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(7.12);
         });
 
-        test('InvestmentAnnualReturnField_shouldPreventInfiniteLoops', () => {
+        test('InvestmentReturnField_shouldPreventInfiniteLoops', () => {
             const mockOnChange = jest.fn();
             
             const TestWrapper = () => {
                 const [value, setValue] = React.useState(7.5);
                 
                 return (
-                    <InvestmentAnnualReturnField
+                    <InvestmentReturnField
                         value={value}
                         onChange={(newValue) => {
                             mockOnChange(newValue);
@@ -878,11 +879,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledTimes(0);
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleZeroValue', () => {
+        test('InvestmentReturnField_shouldHandleZeroValue', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={0}
                     onChange={mockOnChange}
                 />
@@ -892,18 +893,18 @@ describe('InvestmentAnnualReturnField', () => {
             expect(slider).toHaveAttribute('aria-valuenow', '0');
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleVerySmallDecimals', async () => {
+        test('InvestmentReturnField_shouldHandleVerySmallDecimals', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.clear(input);
             await user.type(input, '0.01');
@@ -914,11 +915,11 @@ describe('InvestmentAnnualReturnField', () => {
 
     // Integration Tests
     describe('Integration Tests', () => {
-        test('InvestmentAnnualReturnField_shouldSyncSliderAndInputValues', () => {
+        test('InvestmentReturnField_shouldSyncSliderAndInputValues', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     displayMode="combined"
@@ -926,14 +927,14 @@ describe('InvestmentAnnualReturnField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Both should show the same value
             expect(slider).toHaveAttribute('aria-valuenow', '7.5');
-            expect(input).toHaveValue(7.5);
+            expect(input).toHaveValue('7.50');
         });
 
-        test('InvestmentAnnualReturnField_shouldMaintainStateConsistency', async () => {
+        test('InvestmentReturnField_shouldMaintainStateConsistency', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             
@@ -941,7 +942,7 @@ describe('InvestmentAnnualReturnField', () => {
                 const [value, setValue] = React.useState(7.5);
                 
                 return (
-                    <InvestmentAnnualReturnField
+                    <InvestmentReturnField
                         value={value}
                         onChange={(newValue) => {
                             setValue(newValue);
@@ -953,7 +954,7 @@ describe('InvestmentAnnualReturnField', () => {
 
             render(<TestComponent />);
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.clear(input);
             await user.type(input, '10.25');
@@ -963,11 +964,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(10.25);
         });
 
-        test('InvestmentAnnualReturnField_shouldFormatValueDisplayCorrectly', () => {
+        test('InvestmentReturnField_shouldFormatValueDisplayCorrectly', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                     displayMode="slider"
@@ -982,11 +983,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(yearlyText).toBeInTheDocument();
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleValueDisplayForZero', () => {
+        test('InvestmentReturnField_shouldHandleValueDisplayForZero', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={0}
                     onChange={mockOnChange}
                     displayMode="slider"
@@ -997,11 +998,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(valueDisplay).toBeInTheDocument();
         });
 
-        test('InvestmentAnnualReturnField_shouldHandleValueDisplayForNegative', () => {
+        test('InvestmentReturnField_shouldHandleValueDisplayForNegative', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={-5.25}
                     onChange={mockOnChange}
                     displayMode="slider"
@@ -1016,30 +1017,30 @@ describe('InvestmentAnnualReturnField', () => {
 
     // Formatting Tests
     describe('Formatting Tests', () => {
-        test('InvestmentAnnualReturnField_shouldDisplayCorrectPercentageFormat', () => {
+        test('InvestmentReturnField_shouldDisplayCorrectPercentageFormat', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
             );
 
             // Input should show decimal value
-            const input = screen.getByRole('spinbutton');
-            expect(input).toHaveValue(7.5);
+            const input = screen.getByRole('textbox');
+            expect(input).toHaveValue('7.50');
 
             // Input should have % suffix
             const percentSuffix = screen.getByText('%');
             expect(percentSuffix).toBeInTheDocument();
         });
 
-        test('InvestmentAnnualReturnField_shouldFormatSingleDigitPercentage', () => {
+        test('InvestmentReturnField_shouldFormatSingleDigitPercentage', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={5}
                     onChange={mockOnChange}
                     displayMode="slider"
@@ -1050,11 +1051,11 @@ describe('InvestmentAnnualReturnField', () => {
             expect(valueDisplay).toBeInTheDocument();
         });
 
-        test('InvestmentAnnualReturnField_shouldFormatDecimalPercentage', () => {
+        test('InvestmentReturnField_shouldFormatDecimalPercentage', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.75}
                     onChange={mockOnChange}
                     displayMode="slider"
@@ -1065,17 +1066,17 @@ describe('InvestmentAnnualReturnField', () => {
             expect(valueDisplay).toBeInTheDocument();
         });
 
-        test('InvestmentAnnualReturnField_shouldShowCorrectPlaceholder', () => {
+        test('InvestmentReturnField_shouldShowCorrectPlaceholder', () => {
             const mockOnChange = jest.fn();
             
             render(
-                <InvestmentAnnualReturnField
+                <InvestmentReturnField
                     value={7.5}
                     onChange={mockOnChange}
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             expect(input).toHaveAttribute('placeholder', 'Enter percentage');
         });
     });

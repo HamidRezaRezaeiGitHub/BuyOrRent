@@ -3,8 +3,8 @@ import { ChevronDown, ChevronUp, Maximize2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { YearsField } from '../common/Years'
 import { PercentageAmountSwitch } from '../inputs/PercentageAmountSwitch'
-import { AnnualMaintenanceAmountField } from '../inputs/buy/AnnualMaintenanceAmount'
-import { AnnualMaintenancePercentageField } from '../inputs/buy/AnnualMaintenancePercentage'
+import { MaintenanceAmountField } from '../inputs/buy/MaintenanceAmount'
+import { MaintenancePercentageField } from '../inputs/buy/MaintenancePercentage'
 import { DownPaymentAmountField } from '../inputs/buy/DownPaymentAmount'
 import { DownPaymentPercentageField } from '../inputs/buy/DownPaymentPercentage'
 import { MortgageLengthField } from '../inputs/buy/MortgageLength'
@@ -12,7 +12,7 @@ import { MortgageRateField } from '../inputs/buy/MortgageRate'
 import { PropertyTaxAmountField } from '../inputs/buy/PropertyTaxAmount'
 import { PropertyTaxPercentageField } from '../inputs/buy/PropertyTaxPercentage'
 import { PurchasePriceField } from '../inputs/buy/PurchasePrice'
-import { InvestmentAnnualReturnField } from '../inputs/invest/InvestmentAnnualReturn'
+import { InvestmentReturnField } from '../inputs/invest/InvestmentReturn'
 import { MonthlyRentField } from '../inputs/rent/MonthlyRent'
 import { RentIncreaseField } from '../inputs/rent/RentIncrease'
 import { FlexibleNavbar } from '../navbar'
@@ -41,7 +41,7 @@ export const Circumstance1: React.FC = () => {
     const minRentIncrease = 0
     const maxRentIncrease = 20
     
-    const defaultInvestmentAnnualReturn = 7.5
+    const defaultInvestmentReturn = 7.5
     
     const defaultPurchasePrice = 600000
     const minPurchasePrice = 100000
@@ -69,19 +69,19 @@ export const Circumstance1: React.FC = () => {
     // const minPropertyTaxAmount = minPropertyTaxPercentage / 100 * purchasePrice
     // const maxPropertyTaxAmount = maxPropertyTaxPercentage / 100 * purchasePrice
     
-    const defaultAnnualMaintenancePercentage = 2.0
-    const minAnnualMaintenancePercentage = 0
-    const maxAnnualMaintenancePercentage = 10
-    // const defaultAnnualMaintenanceAmount = defaultAnnualMaintenancePercentage / 100 * purchasePrice
-    // const minAnnualMaintenanceAmount = minAnnualMaintenancePercentage / 100 * purchasePrice
-    // const maxAnnualMaintenanceAmount = maxAnnualMaintenancePercentage / 100 * purchasePrice
+    const defaultMaintenancePercentage = 2.0
+    const minMaintenancePercentage = 0
+    const maxMaintenancePercentage = 10
+    // const defaultMaintenanceAmount = defaultMaintenancePercentage / 100 * purchasePrice
+    // const minMaintenanceAmount = minMaintenancePercentage / 100 * purchasePrice
+    // const maxMaintenanceAmount = maxMaintenancePercentage / 100 * purchasePrice
 
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
     const [analysisYears, setAnalysisYears] = useState<number>(defaultAnalysisYears)
     const [monthlyRent, setMonthlyRent] = useState<number>(defaultMonthlyRent)
     const [rentIncrease, setRentIncrease] = useState<number>(defaultRentIncrease)
-    const [investmentAnnualReturn, setInvestmentAnnualReturn] = useState<number>(defaultInvestmentAnnualReturn)
+    const [investmentReturn, setInvestmentReturn] = useState<number>(defaultInvestmentReturn)
     
     // Buy fields state
     const [purchasePrice, setPurchasePrice] = useState<number>(defaultPurchasePrice)
@@ -93,9 +93,9 @@ export const Circumstance1: React.FC = () => {
     const [propertyTaxPercentage, setPropertyTaxPercentage] = useState<number>(defaultPropertyTaxPercentage)
     const [propertyTaxAmount, setPropertyTaxAmount] = useState<number>(defaultPropertyTaxPercentage / 100 * purchasePrice)
     const [propertyTaxMode, setPropertyTaxMode] = useState<'percentage' | 'amount'>('percentage')
-    const [annualMaintenancePercentage, setAnnualMaintenancePercentage] = useState<number>(defaultAnnualMaintenancePercentage)
-    const [annualMaintenanceAmount, setAnnualMaintenanceAmount] = useState<number>(defaultAnnualMaintenancePercentage / 100 * purchasePrice)
-    const [annualMaintenanceMode, setAnnualMaintenanceMode] = useState<'percentage' | 'amount'>('percentage')
+    const [maintenancePercentage, setMaintenancePercentage] = useState<number>(defaultMaintenancePercentage)
+    const [maintenanceAmount, setMaintenanceAmount] = useState<number>(defaultMaintenancePercentage / 100 * purchasePrice)
+    const [maintenanceMode, setMaintenanceMode] = useState<'percentage' | 'amount'>('percentage')
     
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
     const [tableDialogOpen, setTableDialogOpen] = useState(false)
@@ -219,39 +219,39 @@ export const Circumstance1: React.FC = () => {
         />
     );
 
-    const annualMaintenancePercentageComponent = (
-        <AnnualMaintenancePercentageField
-            value={annualMaintenancePercentage}
-            onChange={setAnnualMaintenancePercentage}
-            defaultValue={defaultAnnualMaintenancePercentage}
-            minValue={minAnnualMaintenancePercentage}
-            maxValue={maxAnnualMaintenancePercentage}
+    const maintenancePercentageComponent = (
+        <MaintenancePercentageField
+            value={maintenancePercentage}
+            onChange={setMaintenancePercentage}
+            defaultValue={defaultMaintenancePercentage}
+            minValue={minMaintenancePercentage}
+            maxValue={maxMaintenancePercentage}
             displayMode='combined'
         />
     );
 
-    const annualMaintenanceAmountComponent = (
-        <AnnualMaintenanceAmountField
-            value={annualMaintenanceAmount}
-            onChange={setAnnualMaintenanceAmount}
-            defaultValue={defaultAnnualMaintenancePercentage / 100 * purchasePrice}
-            minValue={minAnnualMaintenancePercentage / 100 * purchasePrice}
-            maxValue={maxAnnualMaintenancePercentage / 100 * purchasePrice}
+    const maintenanceAmountComponent = (
+        <MaintenanceAmountField
+            value={maintenanceAmount}
+            onChange={setMaintenanceAmount}
+            defaultValue={defaultMaintenancePercentage / 100 * purchasePrice}
+            minValue={minMaintenancePercentage / 100 * purchasePrice}
+            maxValue={maxMaintenancePercentage / 100 * purchasePrice}
             displayMode='combined'
         />
     );
 
-    const annualMaintenanceSwitchComponent = (
+    const maintenanceSwitchComponent = (
         <PercentageAmountSwitch
-            label="Annual Maintenance"
-            percentageComponent={annualMaintenancePercentageComponent}
-            amountComponent={annualMaintenanceAmountComponent}
-            mode={annualMaintenanceMode}
-            onModeChange={setAnnualMaintenanceMode}
-            percentageValue={annualMaintenancePercentage}
-            amountValue={annualMaintenanceAmount}
-            onPercentageChange={setAnnualMaintenancePercentage}
-            onAmountChange={setAnnualMaintenanceAmount}
+            label="Maintenance"
+            percentageComponent={maintenancePercentageComponent}
+            amountComponent={maintenanceAmountComponent}
+            mode={maintenanceMode}
+            onModeChange={setMaintenanceMode}
+            percentageValue={maintenancePercentage}
+            amountValue={maintenanceAmount}
+            onPercentageChange={setMaintenancePercentage}
+            onAmountChange={setMaintenanceAmount}
             totalAmount={purchasePrice}
         />
     );
@@ -342,7 +342,7 @@ export const Circumstance1: React.FC = () => {
                             {propertyTaxSwitchComponent}
                             
                             {/* Annual Maintenance with Percentage/Amount Switch */}
-                            {annualMaintenanceSwitchComponent}
+                            {maintenanceSwitchComponent}
                         </div>
                     </AccordionContent>
                 </AccordionItem>
@@ -352,9 +352,9 @@ export const Circumstance1: React.FC = () => {
                     <AccordionTrigger>Investment Information</AccordionTrigger>
                     <AccordionContent>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                            <InvestmentAnnualReturnField
-                                value={investmentAnnualReturn}
-                                onChange={setInvestmentAnnualReturn}
+                            <InvestmentReturnField
+                                value={investmentReturn}
+                                onChange={setInvestmentReturn}
                                 showHelper={true}
                             />
                         </div>

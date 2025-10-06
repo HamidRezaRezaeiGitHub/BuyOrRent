@@ -21,7 +21,7 @@ describe('MonthlyRentField', () => {
 
             const label = screen.getByText('Monthly Rent');
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             const tooltip = screen.getByRole('button', { name: /more information about monthly rent/i });
 
             expect(label).toBeInTheDocument();
@@ -48,7 +48,7 @@ describe('MonthlyRentField', () => {
             });
             expect(slider).toBeInTheDocument();
             expect(valueDisplay).toBeInTheDocument();
-            expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
+            expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
         });
 
         test('MonthlyRentField_shouldRenderInputOnlyMode', () => {
@@ -62,7 +62,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             expect(input).toBeInTheDocument();
             expect(screen.queryByRole('slider')).not.toBeInTheDocument();
         });
@@ -79,7 +79,7 @@ describe('MonthlyRentField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             expect(slider).toBeInTheDocument();
             expect(input).toBeInTheDocument();
         });
@@ -265,7 +265,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Clear existing onChange calls from initial render
             mockOnChange.mockClear();
@@ -287,10 +287,10 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
-            // When not focused, should show numeric value (no commas in number input)
-            expect(input).toHaveValue(2500);
+            // When not focused, should show formatted value with commas
+            expect(input).toHaveValue('2,500');
         });
 
         test('MonthlyRentField_shouldShowUnformattedValueWhenFocused', async () => {
@@ -304,7 +304,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             await user.click(input);
             
@@ -325,7 +325,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             await user.clear(input);
             await user.type(input, '15000');
@@ -346,7 +346,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             await user.clear(input);
             await user.tab(); // Blur with empty input
@@ -366,7 +366,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             await user.clear(input);
             await user.type(input, 'invalid');
@@ -386,7 +386,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             // Clear existing onChange calls
             mockOnChange.mockClear();
@@ -409,7 +409,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             mockOnChange.mockClear();
 
@@ -432,7 +432,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             await user.clear(input);
             await user.type(input, '-500');
@@ -457,7 +457,7 @@ describe('MonthlyRentField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Check if slider has aria attributes (Radix may not set aria-label)
             expect(slider).toHaveAttribute('aria-valuenow', '2000');
@@ -547,7 +547,7 @@ describe('MonthlyRentField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             expect(slider).toHaveAttribute('data-disabled');
             expect(input).toBeDisabled();
@@ -565,7 +565,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             // Clear any initial onChange calls
             mockOnChange.mockClear();
@@ -609,7 +609,7 @@ describe('MonthlyRentField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Check that components can be found by role (Radix may not set IDs directly)
             expect(slider).toBeInTheDocument();
@@ -659,7 +659,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Rapidly change values
             await user.clear(input);
@@ -684,7 +684,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             await user.clear(input);
             await user.type(input, '2000.123456789');
@@ -718,8 +718,8 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            expect(input).toHaveValue(0);
+            const input = screen.getByRole('textbox');
+            expect(input).toHaveValue('0');
         });
 
         test('MonthlyRentField_shouldHandleVerySmallDecimals', async () => {
@@ -733,7 +733,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             await user.clear(input);
             await user.type(input, '0.01');
@@ -756,10 +756,10 @@ describe('MonthlyRentField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             expect(slider).toHaveAttribute('aria-valuenow', '2000');
-            expect(input).toHaveValue(2000);
+            expect(input).toHaveValue('2,000');
         });
 
         test('MonthlyRentField_shouldMaintainStateConsistency', async () => {
@@ -773,7 +773,7 @@ describe('MonthlyRentField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Focus and change value
             await user.click(input);

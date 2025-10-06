@@ -1,5 +1,5 @@
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DollarSign, Info } from 'lucide-react';
@@ -150,13 +150,25 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
         }
     };
 
+    // Determine the correct htmlFor based on display mode
+    const getMainControlId = () => {
+        switch (displayMode) {
+            case 'slider':
+                return id;
+            case 'input':
+                return id;
+            case 'combined':
+                return `${id}-slider`; // Point to slider as primary control in combined mode
+            default:
+                return id;
+        }
+    };
+
     // Label component with icon and tooltip
     const labelComponent = (
-        <div className="flex items-center gap-1">
+        <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <DollarSign className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
-            <Label htmlFor={id} className="text-xs">
-                Down Payment
-            </Label>
+            Down Payment
             <TooltipProvider>
                 <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
                     <TooltipTrigger asChild>
@@ -180,7 +192,7 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
-        </div>
+        </FieldLabel>
     );
 
     // Slider component
@@ -204,11 +216,11 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
 
     // Input component
     const inputComponent = (
-        <div className="relative">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                <span className="text-sm text-muted-foreground">$</span>
-            </div>
-            <Input
+        <InputGroup className={displayMode === 'combined' ? 'w-32' : 'w-full'}>
+            <InputGroupAddon>
+                <InputGroupText>$</InputGroupText>
+            </InputGroupAddon>
+            <InputGroupInput
                 id={displayMode === 'input' ? id : `${id}-input`}
                 type={isFocused ? 'number' : 'text'}
                 inputMode={isFocused ? 'numeric' : 'text'}
@@ -221,17 +233,16 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 disabled={disabled}
-                className={`${displayMode === 'combined' ? 'w-32 pr-3' : 'w-full pr-3'} pl-7`}
                 aria-label={`Down payment amount in dollars, current value: $${validatedValue}`}
                 aria-describedby={`${id}-tooltip`}
             />
-        </div>
+        </InputGroup>
     );
 
     // Value display (for slider and combined modes)
     const valueDisplay = (
-        <div className="min-w-[5rem] text-center" aria-live="polite">
-            <span className="text-sm font-medium" aria-label={`Current value: $${validatedValue}`}>
+        <div className="min-w-[6rem] text-center" aria-live="polite">
+            <span className="text-sm font-medium" aria-label={`Current value: ${validatedValue} dollars`}>
                 ${formatCurrency(validatedValue)}
             </span>
         </div>
@@ -242,48 +253,41 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
         switch (displayMode) {
             case 'slider':
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {valueDisplay}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {valueDisplay}
                     </div>
                 );
 
             case 'input':
-                return (
-                    <div className="space-y-2">
-                        {inputComponent}
-                    </div>
-                );
+                return inputComponent;
 
             case 'combined':
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {inputComponent}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {inputComponent}
                     </div>
                 );
 
             default:
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {valueDisplay}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {valueDisplay}
                     </div>
                 );
         }
     };
 
     return (
-        <div className={`space-y-2 ${className}`}>
+        <Field className={className}>
             {labelComponent}
             {renderField()}
-        </div>
+            <FieldDescription className="text-xs text-muted-foreground">
+                Upfront payment amount to reduce mortgage amount
+            </FieldDescription>
+        </Field>
     );
 };
 

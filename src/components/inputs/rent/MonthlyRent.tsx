@@ -1,5 +1,5 @@
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DollarSign, Info } from 'lucide-react';
@@ -134,12 +134,12 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
         }
 
         setIsFocused(false);
-        
+
         // Only call onChange if the finalValue is different from the input value that was just typed
         // This prevents redundant onChange calls when the user types a valid value and then blurs
         const originalInputValue = parseFloat(inputValue.trim());
         const epsilon = 0.001;
-        
+
         if (isNaN(originalInputValue) || Math.abs(finalValue - originalInputValue) > epsilon) {
             // Only call onChange if:
             // 1. The original input was invalid (NaN), so we need to notify about the fallback value
@@ -148,13 +148,25 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
         }
     };
 
+    // Determine the correct htmlFor based on display mode
+    const getMainControlId = () => {
+        switch (displayMode) {
+            case 'slider':
+                return id;
+            case 'input':
+                return id;
+            case 'combined':
+                return `${id}-slider`; // Point to slider as primary control in combined mode
+            default:
+                return id;
+        }
+    };
+
     // Label component with icon and tooltip
     const labelComponent = (
-        <div className="flex items-center gap-1">
+        <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <DollarSign className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
-            <Label htmlFor={id} className="text-xs">
-                Monthly Rent
-            </Label>
+            Monthly Rent
             <TooltipProvider>
                 <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
                     <TooltipTrigger asChild>
@@ -178,7 +190,7 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
-        </div>
+        </FieldLabel>
     );
 
     // Slider component
@@ -202,11 +214,11 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
 
     // Input component
     const inputComponent = (
-        <div className="relative">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                <span className="text-sm text-muted-foreground">$</span>
-            </div>
-            <Input
+        <InputGroup className={displayMode === 'combined' ? 'w-32' : 'w-full'}>
+            <InputGroupAddon>
+                <InputGroupText>$</InputGroupText>
+            </InputGroupAddon>
+            <InputGroupInput
                 id={displayMode === 'input' ? id : `${id}-input`}
                 type={isFocused ? 'number' : 'text'}
                 inputMode={isFocused ? 'numeric' : 'text'}
@@ -219,18 +231,13 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 disabled={disabled}
-                className={`${displayMode === 'combined' ? 'w-32 pr-12' : 'w-full pr-12'} pl-7`}
                 aria-label={`Monthly rent in dollars, current value: $${validatedValue}`}
                 aria-describedby={`${id}-suffix ${id}-tooltip`}
             />
-            <div
-                id={`${id}-suffix`}
-                className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                aria-hidden="true"
-            >
-                <span className="text-sm text-muted-foreground">/mo</span>
-            </div>
-        </div>
+            <InputGroupAddon align="inline-end">
+                <InputGroupText id={`${id}-suffix`}>/mo</InputGroupText>
+            </InputGroupAddon>
+        </InputGroup>
     );
 
     // Value display (for slider and combined modes)
@@ -248,48 +255,41 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
         switch (displayMode) {
             case 'slider':
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {valueDisplay}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {valueDisplay}
                     </div>
                 );
 
             case 'input':
-                return (
-                    <div className="space-y-2">
-                        {inputComponent}
-                    </div>
-                );
+                return inputComponent;
 
             case 'combined':
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {inputComponent}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {inputComponent}
                     </div>
                 );
 
             default:
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {valueDisplay}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {valueDisplay}
                     </div>
                 );
         }
     };
 
     return (
-        <div className={`space-y-2 ${className}`}>
+        <Field className={className}>
             {labelComponent}
             {renderField()}
-        </div>
+            <FieldDescription className="text-xs text-muted-foreground">
+                Including parking and utilities (if applicable)
+            </FieldDescription>
+        </Field>
     );
 };
 

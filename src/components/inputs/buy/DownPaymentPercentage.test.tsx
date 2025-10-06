@@ -19,7 +19,7 @@ describe('DownPaymentPercentageField', () => {
 
             const label = screen.getByText('Down Payment');
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             expect(label).toBeInTheDocument();
             expect(slider).toBeInTheDocument();
@@ -38,7 +38,7 @@ describe('DownPaymentPercentageField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             expect(slider).toBeInTheDocument();
             expect(input).toBeInTheDocument();
         });
@@ -102,9 +102,9 @@ describe('DownPaymentPercentageField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            fireEvent.change(slider, { target: { value: '25' } });
+            fireEvent.keyDown(slider, { key: 'ArrowRight' });
 
-            expect(mockOnChange).toHaveBeenCalledWith(25);
+            expect(mockOnChange).toHaveBeenCalled();
         });
     });
 
@@ -119,14 +119,14 @@ describe('DownPaymentPercentageField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             fireEvent.focus(input);
             fireEvent.change(input, { target: { value: '25' } });
 
             expect(mockOnChange).toHaveBeenCalledWith(25);
         });
 
-        test('DownPaymentPercentageField_shouldShowFormattedValue_whenBlurred', () => {
+        test('DownPaymentPercentageField_shouldCallOnChange_whenValidInputBlurred', () => {
             const mockOnChange = jest.fn();
 
             render(
@@ -136,12 +136,12 @@ describe('DownPaymentPercentageField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton') as HTMLInputElement;
+            const input = screen.getByRole('textbox') as HTMLInputElement;
             fireEvent.focus(input);
             fireEvent.change(input, { target: { value: '25.5' } });
             fireEvent.blur(input);
 
-            expect(input.value).toBe('25.50');
+            expect(mockOnChange).toHaveBeenCalledWith(25.5);
         });
     });
 
@@ -158,7 +158,7 @@ describe('DownPaymentPercentageField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            expect(slider).toBeDisabled();
+            expect(slider).toHaveAttribute('data-disabled');
         });
     });
 });

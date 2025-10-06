@@ -11,7 +11,7 @@ describe('RentIncreaseField', () => {
     describe('Basic Rendering', () => {
         test('RentIncreaseField_shouldRenderWithDefaultProps', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -19,10 +19,10 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const label = screen.getByText('Annual Rent Increase');
+            const label = screen.getByText('Rent Increase Rate');
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
-            const tooltip = screen.getByRole('button', { name: /more information about annual rent increase/i });
+            const input = screen.getByRole('textbox');
+            const tooltip = screen.getByRole('button', { name: /more information about Rent Increase Rate/i });
 
             expect(label).toBeInTheDocument();
             expect(slider).toBeInTheDocument();
@@ -32,7 +32,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldRenderSliderOnlyMode', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -48,12 +48,12 @@ describe('RentIncreaseField', () => {
             });
             expect(slider).toBeInTheDocument();
             expect(valueDisplay).toBeInTheDocument();
-            expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
+            expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
         });
 
         test('RentIncreaseField_shouldRenderInputOnlyMode', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -62,14 +62,14 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             expect(input).toBeInTheDocument();
             expect(screen.queryByRole('slider')).not.toBeInTheDocument();
         });
 
         test('RentIncreaseField_shouldRenderCombinedMode', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -79,7 +79,7 @@ describe('RentIncreaseField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             expect(slider).toBeInTheDocument();
             expect(input).toBeInTheDocument();
         });
@@ -89,7 +89,7 @@ describe('RentIncreaseField', () => {
     describe('Value Validation', () => {
         test('RentIncreaseField_shouldClampInitialValueToMinimum', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={-5}
@@ -105,7 +105,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldClampInitialValueToMaximum', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={25}
@@ -120,7 +120,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleNaNValue', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={NaN}
@@ -134,7 +134,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleInfinityValue', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={Infinity}
@@ -149,7 +149,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleNegativeInfinityValue', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={-Infinity}
@@ -164,7 +164,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldRoundToTwoDecimalPlaces', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.567}
@@ -178,7 +178,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleExtremeDecimalPrecision', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.123456789}
@@ -195,7 +195,7 @@ describe('RentIncreaseField', () => {
     describe('Slider Interactions', () => {
         test('RentIncreaseField_shouldUpdateValueWhenSliderChanges', async () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -204,7 +204,7 @@ describe('RentIncreaseField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            
+
             // Simulate slider keydown events (Radix Slider responds to keyboard)
             fireEvent.keyDown(slider, { key: 'ArrowRight' });
 
@@ -213,7 +213,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldClampSliderValueToRange', async () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -224,7 +224,7 @@ describe('RentIncreaseField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            
+
             // Test that slider has correct range attributes
             expect(slider).toHaveAttribute('aria-valuemin', '1');
             expect(slider).toHaveAttribute('aria-valuemax', '10');
@@ -232,7 +232,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleSliderInteraction', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -241,7 +241,7 @@ describe('RentIncreaseField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            
+
             // Test that slider is present and shows correct value
             expect(slider).toBeInTheDocument();
             expect(slider).toHaveAttribute('aria-valuenow', '2.5');
@@ -249,7 +249,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldUseCorrectSliderStep', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -258,7 +258,7 @@ describe('RentIncreaseField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            
+
             // Verify the slider is properly configured (0.1% increments are internal to Radix)
             expect(slider).toHaveAttribute('aria-valuemin', '0');
             expect(slider).toHaveAttribute('aria-valuemax', '20');
@@ -271,7 +271,7 @@ describe('RentIncreaseField', () => {
         test('RentIncreaseField_shouldUpdateValueOnValidInput', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -279,8 +279,8 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
+            const input = screen.getByRole('textbox');
+
             await user.clear(input);
             await user.type(input, '3.5');
 
@@ -290,7 +290,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldShowFormattedValueWhenNotFocused', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={3.25}
@@ -298,15 +298,15 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            // Should show formatted percentage value
-            expect(input).toHaveValue(3.25);
+            const input = screen.getByRole('textbox');
+            // Should show formatted percentage value as string
+            expect(input).toHaveValue('3.25');
         });
 
         test('RentIncreaseField_shouldShowUnformattedValueWhenFocused', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -314,10 +314,10 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
+            const input = screen.getByRole('textbox');
+
             await user.click(input);
-            
+
             // When focused, should show unformatted value
             expect(input).toHaveValue(2.5);
         });
@@ -325,7 +325,7 @@ describe('RentIncreaseField', () => {
         test('RentIncreaseField_shouldClampValueOnBlur', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -335,8 +335,8 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
+            const input = screen.getByRole('textbox');
+
             await user.clear(input);
             await user.type(input, '15');
             await user.tab(); // Blur the input
@@ -347,7 +347,7 @@ describe('RentIncreaseField', () => {
         test('RentIncreaseField_shouldHandleEmptyInputOnBlur', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -356,8 +356,8 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
+            const input = screen.getByRole('textbox');
+
             await user.clear(input);
             await user.tab(); // Blur with empty input
 
@@ -367,7 +367,7 @@ describe('RentIncreaseField', () => {
         test('RentIncreaseField_shouldHandleInvalidInputOnBlur', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -376,8 +376,8 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
+            const input = screen.getByRole('textbox');
+
             await user.clear(input);
             await user.type(input, 'invalid');
             await user.tab(); // Blur with invalid input
@@ -388,7 +388,7 @@ describe('RentIncreaseField', () => {
         test('RentIncreaseField_shouldNotCallOnChangeForInvalidInputDuringTyping', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -396,11 +396,11 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
+            const input = screen.getByRole('textbox');
+
             await user.clear(input);
             mockOnChange.mockClear();
-            
+
             await user.type(input, 'abc');
 
             // Should not call onChange for invalid input during typing
@@ -410,7 +410,7 @@ describe('RentIncreaseField', () => {
         test('RentIncreaseField_shouldHandleDecimalInput', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -418,8 +418,8 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
+            const input = screen.getByRole('textbox');
+
             await user.clear(input);
             await user.type(input, '2.75');
 
@@ -429,7 +429,7 @@ describe('RentIncreaseField', () => {
         test('RentIncreaseField_shouldHandleNegativeInputCorrectly', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -438,8 +438,8 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
+            const input = screen.getByRole('textbox');
+
             await user.clear(input);
             await user.type(input, '-1');
             await user.tab(); // Blur to trigger validation
@@ -453,7 +453,7 @@ describe('RentIncreaseField', () => {
     describe('Accessibility', () => {
         test('RentIncreaseField_shouldHaveProperAriaLabels', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     id="test-rent-increase"
@@ -463,14 +463,14 @@ describe('RentIncreaseField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Test Radix slider ARIA attributes
             expect(slider).toHaveAttribute('aria-valuemin', '0');
             expect(slider).toHaveAttribute('aria-valuemax', '20');
             expect(slider).toHaveAttribute('aria-valuenow', '2.5');
 
-            expect(input).toHaveAttribute('aria-label', 'Annual rent increase in percent, current value: 2.5%');
+            expect(input).toHaveAttribute('aria-label', 'Rent increase rate in percent, current value: 2.5%');
         });
 
         test('RentIncreaseField_shouldHaveProperTooltipAccessibility', () => {
@@ -484,16 +484,14 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const tooltipTrigger = screen.getByRole('button', { name: /more information about annual rent increase/i });
+            const tooltipTrigger = screen.getByRole('button', { name: /more information about Rent Increase Rate/i });
 
             expect(tooltipTrigger).toHaveAttribute('aria-describedby', 'test-rent-increase-tooltip');
             expect(tooltipTrigger).toHaveAttribute('aria-expanded', 'false');
-        });
-
-        test('RentIncreaseField_shouldToggleTooltip', async () => {
+        });        test('RentIncreaseField_shouldToggleTooltip', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     id="test-rent-increase"
@@ -502,7 +500,7 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const tooltipTrigger = screen.getByRole('button', { name: /more information about annual rent increase/i });
+            const tooltipTrigger = screen.getByRole('button', { name: /more information about Rent Increase Rate/i });
 
             await user.click(tooltipTrigger);
 
@@ -511,7 +509,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHavePercentSuffix', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     id="test-rent-increase"
@@ -520,10 +518,11 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            // Check for percent suffix
+            // Check for percent suffix in InputGroup structure
             const percentSuffix = screen.getByText('%');
             expect(percentSuffix).toBeInTheDocument();
-            expect(percentSuffix.closest('div')).toHaveAttribute('aria-hidden', 'true');
+            // Verify it has the correct ID for aria-describedby relationship
+            expect(percentSuffix).toHaveAttribute('id', 'test-rent-increase-suffix');
         });
     });
 
@@ -531,7 +530,7 @@ describe('RentIncreaseField', () => {
     describe('Disabled State', () => {
         test('RentIncreaseField_shouldDisableAllInputsWhenDisabled', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -541,7 +540,7 @@ describe('RentIncreaseField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Radix slider uses data-disabled attribute
             expect(slider).toHaveAttribute('data-disabled');
@@ -551,7 +550,7 @@ describe('RentIncreaseField', () => {
         test('RentIncreaseField_shouldNotCallOnChangeWhenDisabled', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -560,8 +559,8 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
+            const input = screen.getByRole('textbox');
+
             // Try to interact with disabled input
             await user.type(input, '3.5');
 
@@ -573,7 +572,7 @@ describe('RentIncreaseField', () => {
     describe('Custom Props', () => {
         test('RentIncreaseField_shouldRespectCustomMinMaxValues', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={5}
@@ -584,7 +583,7 @@ describe('RentIncreaseField', () => {
             );
 
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Radix slider uses aria attributes for min/max
             expect(slider).toHaveAttribute('aria-valuemin', '2');
@@ -595,7 +594,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldUseCustomId', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     id="custom-rent-increase"
@@ -605,13 +604,13 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             expect(input).toHaveAttribute('id', 'custom-rent-increase');
         });
 
         test('RentIncreaseField_shouldUseCustomClassNames', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -621,13 +620,13 @@ describe('RentIncreaseField', () => {
             );
 
             // Check if the main container has the custom class
-            const container = screen.getByText('Annual Rent Increase').closest('.custom-class');
+            const container = screen.getByText('Rent Increase Rate').closest('.custom-class');
             expect(container).toBeInTheDocument();
         });
 
         test('RentIncreaseField_shouldUseCustomDefaultValue', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={NaN}
@@ -645,7 +644,7 @@ describe('RentIncreaseField', () => {
         test('RentIncreaseField_shouldHandleRapidValueChanges', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -653,8 +652,8 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
+            const input = screen.getByRole('textbox');
+
             // Rapid typing
             await user.clear(input);
             await user.type(input, '123.456');
@@ -667,7 +666,7 @@ describe('RentIncreaseField', () => {
         test('RentIncreaseField_shouldHandleVeryLongDecimalInput', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -675,8 +674,8 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
+            const input = screen.getByRole('textbox');
+
             await user.clear(input);
             await user.type(input, '2.123456789012345');
             await user.tab();
@@ -686,7 +685,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldPreventInfiniteLoops', () => {
             const mockOnChange = jest.fn();
-            
+
             // Render with a value that needs clamping
             const { rerender } = render(
                 <RentIncreaseField
@@ -698,7 +697,7 @@ describe('RentIncreaseField', () => {
 
             // Clear the mock and re-render with the same invalid value
             mockOnChange.mockClear();
-            
+
             rerender(
                 <RentIncreaseField
                     value={100}
@@ -713,7 +712,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleZeroValue', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={0}
@@ -728,7 +727,7 @@ describe('RentIncreaseField', () => {
         test('RentIncreaseField_shouldHandleVerySmallDecimals', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -736,8 +735,8 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
-            
+            const input = screen.getByRole('textbox');
+
             await user.clear(input);
             await user.type(input, '0.01');
             await user.tab();
@@ -750,7 +749,7 @@ describe('RentIncreaseField', () => {
     describe('Integration Tests', () => {
         test('RentIncreaseField_shouldSyncSliderAndInputValues', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -763,7 +762,7 @@ describe('RentIncreaseField', () => {
 
             // Test that both components are present in combined mode
             expect(slider).toBeInTheDocument();
-            expect(screen.getByRole('spinbutton')).toBeInTheDocument();
+            expect(screen.getByRole('textbox')).toBeInTheDocument();
 
             // Test that slider shows correct value
             expect(slider).toHaveAttribute('aria-valuenow', '2.5');
@@ -772,7 +771,7 @@ describe('RentIncreaseField', () => {
         test('RentIncreaseField_shouldMaintainStateConsistency', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -780,7 +779,7 @@ describe('RentIncreaseField', () => {
                 />
             );
 
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
 
             // Focus and change value
             await user.click(input);
@@ -800,7 +799,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldFormatValueDisplayCorrectly', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -818,7 +817,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleValueDisplayForZero', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={0}
@@ -839,7 +838,7 @@ describe('RentIncreaseField', () => {
     describe('Formatting Tests', () => {
         test('RentIncreaseField_shouldDisplayCorrectPercentageFormat', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={2.5}
@@ -856,7 +855,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldFormatSingleDigitPercentage', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={5}
@@ -872,7 +871,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldFormatDecimalPercentage', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     value={3.25}

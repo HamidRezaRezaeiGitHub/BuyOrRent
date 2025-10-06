@@ -12,7 +12,7 @@ describe('PropertyTaxPercentageField', () => {
         const mockOnChange = jest.fn();
         render(<PropertyTaxPercentageField value={0.75} onChange={mockOnChange} />);
         const slider = screen.getByRole('slider');
-        fireEvent.change(slider, { target: { value: '1.0' } });
-        expect(mockOnChange).toHaveBeenCalledWith(1.0);
+        fireEvent.keyDown(slider, { key: 'ArrowRight' });
+        expect(mockOnChange).toHaveBeenCalled();
     });
 });

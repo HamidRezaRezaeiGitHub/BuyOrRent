@@ -1,5 +1,5 @@
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DollarSign, Info } from 'lucide-react';
@@ -128,12 +128,24 @@ export const PropertyTaxAmountField: FC<PropertyTaxAmountFieldProps> = ({
         }
     };
 
+    // Determine the correct htmlFor based on display mode
+    const getMainControlId = () => {
+        switch (displayMode) {
+            case 'slider':
+                return id;
+            case 'input':
+                return id;
+            case 'combined':
+                return `${id}-slider`; // Point to slider as primary control in combined mode
+            default:
+                return id;
+        }
+    };
+
     const labelComponent = (
-        <div className="flex items-center gap-1">
+        <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <DollarSign className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
-            <Label htmlFor={id} className="text-xs">
-                Property Tax
-            </Label>
+            Property Tax
             <TooltipProvider>
                 <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
                     <TooltipTrigger asChild>
@@ -157,7 +169,7 @@ export const PropertyTaxAmountField: FC<PropertyTaxAmountFieldProps> = ({
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
-        </div>
+        </FieldLabel>
     );
 
     const sliderComponent = (
@@ -179,11 +191,11 @@ export const PropertyTaxAmountField: FC<PropertyTaxAmountFieldProps> = ({
     );
 
     const inputComponent = (
-        <div className="relative">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                <span className="text-sm text-muted-foreground">$</span>
-            </div>
-            <Input
+        <InputGroup className={displayMode === 'combined' ? 'w-32' : 'w-full'}>
+            <InputGroupAddon>
+                <InputGroupText>$</InputGroupText>
+            </InputGroupAddon>
+            <InputGroupInput
                 id={displayMode === 'input' ? id : `${id}-input`}
                 type={isFocused ? 'number' : 'text'}
                 inputMode={isFocused ? 'numeric' : 'text'}
@@ -196,16 +208,18 @@ export const PropertyTaxAmountField: FC<PropertyTaxAmountFieldProps> = ({
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 disabled={disabled}
-                className={`${displayMode === 'combined' ? 'w-32 pr-3' : 'w-full pr-3'} pl-7`}
                 aria-label={`Property tax amount in dollars, current value: $${validatedValue}`}
-                aria-describedby={`${id}-tooltip`}
+                aria-describedby={`${id}-suffix ${id}-tooltip`}
             />
-        </div>
+            <InputGroupAddon align="inline-end">
+                <InputGroupText id={`${id}-suffix`}>/yr</InputGroupText>
+            </InputGroupAddon>
+        </InputGroup>
     );
 
     const valueDisplay = (
-        <div className="min-w-[5rem] text-center" aria-live="polite">
-            <span className="text-sm font-medium" aria-label={`Current value: $${validatedValue}`}>
+        <div className="min-w-[6rem] text-center" aria-live="polite">
+            <span className="text-sm font-medium" aria-label={`Current value: ${validatedValue} dollars per year`}>
                 ${formatCurrency(validatedValue)}
             </span>
             <span className="text-xs text-muted-foreground block" aria-hidden="true">per year</span>
@@ -216,48 +230,41 @@ export const PropertyTaxAmountField: FC<PropertyTaxAmountFieldProps> = ({
         switch (displayMode) {
             case 'slider':
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {valueDisplay}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {valueDisplay}
                     </div>
                 );
 
             case 'input':
-                return (
-                    <div className="space-y-2">
-                        {inputComponent}
-                    </div>
-                );
+                return inputComponent;
 
             case 'combined':
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {inputComponent}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {inputComponent}
                     </div>
                 );
 
             default:
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {valueDisplay}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {valueDisplay}
                     </div>
                 );
         }
     };
 
     return (
-        <div className={`space-y-2 ${className}`}>
+        <Field className={className}>
             {labelComponent}
             {renderField()}
-        </div>
+            <FieldDescription className="text-xs text-muted-foreground">
+                Annual property tax paid to municipality
+            </FieldDescription>
+        </Field>
     );
 };
 

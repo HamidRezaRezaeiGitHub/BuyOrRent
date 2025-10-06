@@ -1,58 +1,48 @@
-
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Info, Percent } from 'lucide-react';
 import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { InvestmentReturnHelperDrawer } from './InvestmentReturnHelperDrawer';
 
-export interface InvestmentAnnualReturnFieldProps {
+export interface MaintenancePercentageFieldProps {
     id?: string;
     value: number;
     onChange: (value: number) => void;
     disabled?: boolean;
     className?: string;
-    displayMode?: 'slider' | 'input' | 'combined'; // Default: 'combined'
-    defaultValue?: number; // Default: 7.5
-    minValue?: number; // Default: -20
-    maxValue?: number; // Default: 100
-    showHelper?: boolean; // Default: false
+    displayMode?: 'slider' | 'input' | 'combined';
+    defaultValue?: number;
+    minValue?: number;
+    maxValue?: number;
 }
 
-export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> = ({
-    id = 'investmentAnnualReturn',
+export const MaintenancePercentageField: FC<MaintenancePercentageFieldProps> = ({
+    id = 'maintenancePercentage',
     value,
     onChange,
     disabled = false,
     className = '',
     displayMode = 'combined',
-    defaultValue = 7.5,
-    minValue = -20,
-    maxValue = 100,
-    showHelper = false
+    defaultValue = 1.0,
+    minValue = 0,
+    maxValue = 10
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
-    const [drawerOpen, setDrawerOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const [inputValue, setInputValue] = useState<string>('');
 
-    // Reusable function to clamp and round percentage values within valid range
     const clampValue = useCallback((inputValue: number): number => {
         return Math.max(minValue, Math.min(maxValue, Math.round(inputValue * 100) / 100));
     }, [minValue, maxValue]);
 
-    // Validate and clamp the initial value with comprehensive error handling
     const validatedValue = useMemo(() => {
-        // Handle invalid inputs: NaN, Infinity, null, undefined, etc.
         if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
             return clampValue(defaultValue);
         }
-
         return clampValue(value);
     }, [value, defaultValue, clampValue]);
 
-    // Compute display value based on focus state
     const displayValue = useMemo(() => {
         if (isFocused) {
             return inputValue;
@@ -60,17 +50,14 @@ export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> =
         return validatedValue.toFixed(2);
     }, [isFocused, inputValue, validatedValue]);
 
-    // Sync inputValue when value changes externally (but not when focused)
     useEffect(() => {
         if (!isFocused) {
             setInputValue(validatedValue.toString());
         }
     }, [validatedValue, isFocused]);
 
-    // Track if we've already notified parent to prevent infinite loops
     const lastNotifiedValue = useRef<number>(value);
 
-    // Notify parent if validated value differs from prop value (only once per change)
     useEffect(() => {
         if (validatedValue !== value && lastNotifiedValue.current !== validatedValue) {
             lastNotifiedValue.current = validatedValue;
@@ -78,7 +65,6 @@ export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> =
         }
     }, [validatedValue, value, onChange]);
 
-    // Handle slider change
     const handleSliderChange = (values: number[]) => {
         const rawValue = values[0];
         if (typeof rawValue === 'number' && !isNaN(rawValue) && isFinite(rawValue)) {
@@ -87,19 +73,17 @@ export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> =
         }
     };
 
-    // Handle input change with comprehensive error handling
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         setInputValue(newValue);
 
-        // Provide immediate feedback for valid numeric values
         try {
             const numericValue = parseFloat(newValue);
             if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= minValue && numericValue <= maxValue) {
-                onChange(numericValue);
+                const clampedValue = clampValue(numericValue);
+                onChange(clampedValue);
             }
         } catch (error) {
-            // Silently handle parsing errors - validation will happen on blur
             console.debug('Input parsing error:', error);
         }
     };
@@ -119,7 +103,6 @@ export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> =
             if (trimmedValue === '' || isNaN(numericValue) || !isFinite(numericValue)) {
                 finalValue = clampValue(defaultValue);
             } else {
-                // Clamp value between min and max, ensure it's properly rounded
                 finalValue = clampValue(numericValue);
             }
         } catch (error) {
@@ -129,33 +112,40 @@ export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> =
 
         setIsFocused(false);
 
-        // Only call onChange if the finalValue is different from the input value that was just typed
-        // This prevents redundant onChange calls when the user types a valid value and then blurs
         const originalInputValue = parseFloat(inputValue.trim());
         const epsilon = 0.001;
 
         if (isNaN(originalInputValue) || Math.abs(finalValue - originalInputValue) > epsilon) {
-            // Only call onChange if:
-            // 1. The original input was invalid (NaN), so we need to notify about the fallback value
-            // 2. The final value is different from what the user typed (clamping occurred)
             onChange(finalValue);
+        }
+    };
+
+    // Determine the correct htmlFor based on display mode
+    const getMainControlId = () => {
+        switch (displayMode) {
+            case 'slider':
+                return id;
+            case 'input':
+                return id;
+            case 'combined':
+                return `${id}-slider`; // Point to slider as primary control in combined mode
+            default:
+                return id;
         }
     };
 
     // Label component with icon and tooltip
     const labelComponent = (
-        <div className="flex items-center gap-1">
+        <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <Percent className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
-            <Label htmlFor={id} className="text-xs">
-                Expected yearly investment return
-            </Label>
+            Maintenance
             <TooltipProvider>
                 <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
                     <TooltipTrigger asChild>
                         <button
                             type="button"
                             className="ml-1"
-                            aria-label="More information about expected yearly investment return"
+                            aria-label="More information about Maintenance Percentage"
                             aria-describedby={`${id}-tooltip`}
                             aria-expanded={tooltipOpen}
                             onClick={() => setTooltipOpen(!tooltipOpen)}
@@ -166,46 +156,15 @@ export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> =
                     <TooltipContent side="right" className="max-w-xs" id={`${id}-tooltip`}>
                         <div className="text-xs">
                             <p>
-                                The average annual percentage return you expect from your investments if you were to buy instead of rent. This helps calculate the opportunity cost of tying up money in real estate.
+                                The estimated annual maintenance and repair costs as a percentage of your property value. Includes routine upkeep, repairs, and improvements.
                             </p>
                         </div>
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
-        </div>
+        </FieldLabel>
     );
 
-    // Input component
-    const inputComponent = (
-        <div className="relative">
-            <Input
-                id={displayMode === 'input' ? id : `${id}-input`}
-                type="number"
-                inputMode="decimal"
-                min={minValue}
-                max={maxValue}
-                step={0.1}
-                placeholder="Enter percentage"
-                value={displayValue}
-                onFocus={handleInputFocus}
-                onChange={handleInputChange}
-                onBlur={handleInputBlur}
-                disabled={disabled}
-                className={`${displayMode === 'combined' ? 'w-32 pr-12' : 'w-full pr-12'}`}
-                aria-label={`Expected yearly investment return in percent, current value: ${validatedValue}%`}
-                aria-describedby={`${id}-suffix ${id}-tooltip`}
-            />
-            <div
-                id={`${id}-suffix`}
-                className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                aria-hidden="true"
-            >
-                <span className="text-sm text-muted-foreground">%</span>
-            </div>
-        </div>
-    );
-
-    // Slider component
     const sliderComponent = (
         <Slider
             id={displayMode === 'slider' ? id : `${id}-slider`}
@@ -216,7 +175,7 @@ export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> =
             onValueChange={handleSliderChange}
             disabled={disabled}
             className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
-            aria-label={`Expected yearly investment return: ${validatedValue}%`}
+            aria-label={`Maintenance percentage: ${validatedValue}%`}
             aria-valuemin={minValue}
             aria-valuemax={maxValue}
             aria-valuenow={validatedValue}
@@ -224,7 +183,31 @@ export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> =
         />
     );
 
-    // Value display (for slider and combined modes)
+    // Input component
+    const inputComponent = (
+        <InputGroup className={displayMode === 'combined' ? 'w-32' : 'w-full'}>
+            <InputGroupInput
+                id={displayMode === 'input' ? id : `${id}-input`}
+                type={isFocused ? 'number' : 'text'}
+                inputMode={isFocused ? 'decimal' : 'text'}
+                min={minValue}
+                max={maxValue}
+                step={0.1}
+                placeholder="Enter percentage"
+                value={displayValue}
+                onFocus={handleInputFocus}
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+                disabled={disabled}
+                aria-label={`Maintenance percentage, current value: ${validatedValue}%`}
+                aria-describedby={`${id}-suffix ${id}-tooltip`}
+            />
+            <InputGroupAddon align="inline-end">
+                <InputGroupText id={`${id}-suffix`}>%</InputGroupText>
+            </InputGroupAddon>
+        </InputGroup>
+    );
+
     const valueDisplay = (
         <div className="min-w-[5rem] text-center" aria-live="polite">
             <span className="text-sm font-medium" aria-label={`Current value: ${validatedValue} percent`}>
@@ -239,74 +222,42 @@ export const InvestmentAnnualReturnField: FC<InvestmentAnnualReturnFieldProps> =
         switch (displayMode) {
             case 'slider':
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {valueDisplay}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {valueDisplay}
                     </div>
                 );
 
             case 'input':
-                return (
-                    <div className="space-y-2">
-                        {inputComponent}
-                    </div>
-                );
+                return inputComponent;
 
             case 'combined':
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {inputComponent}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {inputComponent}
                     </div>
                 );
 
             default:
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {valueDisplay}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {valueDisplay}
                     </div>
                 );
         }
     };
 
     return (
-        <div className={`space-y-2 ${className}`}>
+        <Field className={className}>
             {labelComponent}
             {renderField()}
-
-            {/* Helper link */}
-            {showHelper && (
-                <button
-                    type="button"
-                    className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline"
-                    onClick={(e) => {
-                        e.currentTarget.blur(); // Remove focus to prevent aria-hidden issues
-                        setDrawerOpen(true);
-                    }}
-                >
-                    Need help choosing a return rate?
-                </button>
-            )}
-
-            {/* Helper Drawer */}
-            {showHelper && (
-                <InvestmentReturnHelperDrawer
-                    open={drawerOpen}
-                    onOpenChange={setDrawerOpen}
-                    onSelectReturn={onChange}
-                    currentValue={value}
-                    displayMode={displayMode}
-                />
-            )}
-        </div>
+            <FieldDescription className="text-xs text-muted-foreground">
+                Annual maintenance costs as percentage of property value
+            </FieldDescription>
+        </Field>
     );
 };
 
-export default InvestmentAnnualReturnField;
+export default MaintenancePercentageField;

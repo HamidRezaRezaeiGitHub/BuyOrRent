@@ -139,7 +139,7 @@ src/components/
 │   │   └── *.test.tsx     # Tests for input components
 │   ├── buy/               # Purchase/mortgage-related input fields
 │   └── invest/            # Investment-related input fields
-│       ├── InvestmentAnnualReturn.tsx
+│       ├── InvestmentReturn.tsx
 │       ├── InvestmentReturnHelperDrawer.tsx
 │       └── *.test.tsx
 ├── outputs/               # Output components (tables, graphs, reports)
