@@ -2,6 +2,16 @@ import { calculateMonthlyRentData, MonthlyRentData } from '@/services/MonthlyRen
 import { ChevronDown, ChevronUp, Maximize2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { YearsField } from '../common/Years'
+import { PercentageAmountSwitch } from '../inputs/PercentageAmountSwitch'
+import { AnnualMaintenanceAmountField } from '../inputs/buy/AnnualMaintenanceAmount'
+import { AnnualMaintenancePercentageField } from '../inputs/buy/AnnualMaintenancePercentage'
+import { DownPaymentAmountField } from '../inputs/buy/DownPaymentAmount'
+import { DownPaymentPercentageField } from '../inputs/buy/DownPaymentPercentage'
+import { MortgageLengthField } from '../inputs/buy/MortgageLength'
+import { MortgageRateField } from '../inputs/buy/MortgageRate'
+import { PropertyTaxAmountField } from '../inputs/buy/PropertyTaxAmount'
+import { PropertyTaxPercentageField } from '../inputs/buy/PropertyTaxPercentage'
+import { PurchasePriceField } from '../inputs/buy/PurchasePrice'
 import { InvestmentAnnualReturnField } from '../inputs/invest/InvestmentAnnualReturn'
 import { MonthlyRentField } from '../inputs/rent/MonthlyRent'
 import { RentIncreaseField } from '../inputs/rent/RentIncrease'
@@ -22,6 +32,15 @@ export const Circumstance1: React.FC = () => {
     const defaultAnalysisYears = 25
     const defaultMonthlyRent = 2500
     const defaultRentIncrease = 2.5
+    const defaultPurchasePrice = 600000
+    const defaultDownPaymentPercentage = 20
+    const defaultDownPaymentAmount = 120000
+    const defaultMortgageRate = 5.5
+    const defaultMortgageLength = 25
+    const defaultPropertyTaxPercentage = 0.75
+    const defaultPropertyTaxAmount = 4500
+    const defaultAnnualMaintenancePercentage = 1.0
+    const defaultAnnualMaintenanceAmount = 6000
 
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
@@ -29,6 +48,21 @@ export const Circumstance1: React.FC = () => {
     const [monthlyRent, setMonthlyRent] = useState<number>(defaultMonthlyRent)
     const [rentIncrease, setRentIncrease] = useState<number>(defaultRentIncrease)
     const [investmentAnnualReturn, setInvestmentAnnualReturn] = useState<number>(7.5)
+    
+    // Buy fields state
+    const [purchasePrice, setPurchasePrice] = useState<number>(defaultPurchasePrice)
+    const [downPaymentPercentage, setDownPaymentPercentage] = useState<number>(defaultDownPaymentPercentage)
+    const [downPaymentAmount, setDownPaymentAmount] = useState<number>(defaultDownPaymentAmount)
+    const [downPaymentMode, setDownPaymentMode] = useState<'percentage' | 'amount'>('percentage')
+    const [mortgageRate, setMortgageRate] = useState<number>(defaultMortgageRate)
+    const [mortgageLength, setMortgageLength] = useState<number>(defaultMortgageLength)
+    const [propertyTaxPercentage, setPropertyTaxPercentage] = useState<number>(defaultPropertyTaxPercentage)
+    const [propertyTaxAmount, setPropertyTaxAmount] = useState<number>(defaultPropertyTaxAmount)
+    const [propertyTaxMode, setPropertyTaxMode] = useState<'percentage' | 'amount'>('percentage')
+    const [annualMaintenancePercentage, setAnnualMaintenancePercentage] = useState<number>(defaultAnnualMaintenancePercentage)
+    const [annualMaintenanceAmount, setAnnualMaintenanceAmount] = useState<number>(defaultAnnualMaintenanceAmount)
+    const [annualMaintenanceMode, setAnnualMaintenanceMode] = useState<'percentage' | 'amount'>('percentage')
+    
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
     const [tableDialogOpen, setTableDialogOpen] = useState(false)
     const [graphDialogOpen, setGraphDialogOpen] = useState(false)
@@ -42,6 +76,151 @@ export const Circumstance1: React.FC = () => {
         );
         setRentData(data);
     }, [monthlyRent, analysisYears, rentIncrease]);
+
+    // Buy field components
+    const purchasePriceComponent = (
+        <PurchasePriceField
+            value={purchasePrice}
+            onChange={setPurchasePrice}
+            defaultValue={defaultPurchasePrice}
+            minValue={100000}
+            maxValue={3000000}
+            displayMode='combined'
+        />
+    );
+
+    const downPaymentPercentageComponent = (
+        <DownPaymentPercentageField
+            value={downPaymentPercentage}
+            onChange={setDownPaymentPercentage}
+            defaultValue={defaultDownPaymentPercentage}
+            minValue={0}
+            maxValue={100}
+            displayMode='combined'
+        />
+    );
+
+    const downPaymentAmountComponent = (
+        <DownPaymentAmountField
+            value={downPaymentAmount}
+            onChange={setDownPaymentAmount}
+            defaultValue={defaultDownPaymentAmount}
+            minValue={0}
+            maxValue={3000000}
+            displayMode='combined'
+        />
+    );
+
+    const downPaymentSwitchComponent = (
+        <PercentageAmountSwitch
+            label="Down Payment"
+            percentageComponent={downPaymentPercentageComponent}
+            amountComponent={downPaymentAmountComponent}
+            mode={downPaymentMode}
+            onModeChange={setDownPaymentMode}
+            percentageValue={downPaymentPercentage}
+            amountValue={downPaymentAmount}
+            onPercentageChange={setDownPaymentPercentage}
+            onAmountChange={setDownPaymentAmount}
+            totalAmount={purchasePrice}
+        />
+    );
+
+    const mortgageRateComponent = (
+        <MortgageRateField
+            value={mortgageRate}
+            onChange={setMortgageRate}
+            defaultValue={defaultMortgageRate}
+            minValue={0}
+            maxValue={15}
+            displayMode='combined'
+        />
+    );
+
+    const mortgageLengthComponent = (
+        <MortgageLengthField
+            value={mortgageLength}
+            onChange={setMortgageLength}
+            defaultValue={defaultMortgageLength}
+            minValue={1}
+            maxValue={40}
+            displayMode='combined'
+        />
+    );
+
+    const propertyTaxPercentageComponent = (
+        <PropertyTaxPercentageField
+            value={propertyTaxPercentage}
+            onChange={setPropertyTaxPercentage}
+            defaultValue={defaultPropertyTaxPercentage}
+            minValue={0}
+            maxValue={5}
+            displayMode='combined'
+        />
+    );
+
+    const propertyTaxAmountComponent = (
+        <PropertyTaxAmountField
+            value={propertyTaxAmount}
+            onChange={setPropertyTaxAmount}
+            defaultValue={defaultPropertyTaxAmount}
+            minValue={0}
+            maxValue={50000}
+            displayMode='combined'
+        />
+    );
+
+    const propertyTaxSwitchComponent = (
+        <PercentageAmountSwitch
+            label="Property Tax"
+            percentageComponent={propertyTaxPercentageComponent}
+            amountComponent={propertyTaxAmountComponent}
+            mode={propertyTaxMode}
+            onModeChange={setPropertyTaxMode}
+            percentageValue={propertyTaxPercentage}
+            amountValue={propertyTaxAmount}
+            onPercentageChange={setPropertyTaxPercentage}
+            onAmountChange={setPropertyTaxAmount}
+            totalAmount={purchasePrice}
+        />
+    );
+
+    const annualMaintenancePercentageComponent = (
+        <AnnualMaintenancePercentageField
+            value={annualMaintenancePercentage}
+            onChange={setAnnualMaintenancePercentage}
+            defaultValue={defaultAnnualMaintenancePercentage}
+            minValue={0}
+            maxValue={10}
+            displayMode='combined'
+        />
+    );
+
+    const annualMaintenanceAmountComponent = (
+        <AnnualMaintenanceAmountField
+            value={annualMaintenanceAmount}
+            onChange={setAnnualMaintenanceAmount}
+            defaultValue={defaultAnnualMaintenanceAmount}
+            minValue={0}
+            maxValue={100000}
+            displayMode='combined'
+        />
+    );
+
+    const annualMaintenanceSwitchComponent = (
+        <PercentageAmountSwitch
+            label="Annual Maintenance"
+            percentageComponent={annualMaintenancePercentageComponent}
+            amountComponent={annualMaintenanceAmountComponent}
+            mode={annualMaintenanceMode}
+            onModeChange={setAnnualMaintenanceMode}
+            percentageValue={annualMaintenancePercentage}
+            amountValue={annualMaintenanceAmount}
+            onPercentageChange={setAnnualMaintenancePercentage}
+            onAmountChange={setAnnualMaintenanceAmount}
+            totalAmount={purchasePrice}
+        />
+    );
 
     // Monthly Rent Table Component (for dialog display only)
     const monthlyRentTableComponent = (
@@ -113,21 +292,23 @@ export const Circumstance1: React.FC = () => {
                     <AccordionTrigger>Purchase Information</AccordionTrigger>
                     <AccordionContent>
                         <div className="grid gap-3 sm:gap-4">
-                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                <span className="text-xs sm:text-sm text-muted-foreground">Property Purchase Price</span>
-                            </div>
-                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                <span className="text-xs sm:text-sm text-muted-foreground">Down Payment Amount</span>
-                            </div>
-                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                <span className="text-xs sm:text-sm text-muted-foreground">Mortgage Interest Rate</span>
-                            </div>
-                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                <span className="text-xs sm:text-sm text-muted-foreground">Property Taxes & HOA</span>
-                            </div>
-                            <div className="h-10 sm:h-12 bg-muted rounded border-2 border-dashed border-muted-foreground/20 flex items-center justify-center">
-                                <span className="text-xs sm:text-sm text-muted-foreground">Maintenance & Insurance</span>
-                            </div>
+                            {/* Purchase Price */}
+                            {purchasePriceComponent}
+                            
+                            {/* Down Payment with Percentage/Amount Switch */}
+                            {downPaymentSwitchComponent}
+                            
+                            {/* Mortgage Rate */}
+                            {mortgageRateComponent}
+                            
+                            {/* Mortgage Length */}
+                            {mortgageLengthComponent}
+                            
+                            {/* Property Tax with Percentage/Amount Switch */}
+                            {propertyTaxSwitchComponent}
+                            
+                            {/* Annual Maintenance with Percentage/Amount Switch */}
+                            {annualMaintenanceSwitchComponent}
                         </div>
                     </AccordionContent>
                 </AccordionItem>
