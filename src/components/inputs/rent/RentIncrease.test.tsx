@@ -885,4 +885,70 @@ describe('RentIncreaseField', () => {
             })).toBeInTheDocument();
         });
     });
+    // Label Props Tests
+    describe('Label Props', () => {
+        test('RentIncreaseField_shouldCallOnLabelSetWithLabelElement', () => {
+            const mockOnChange = jest.fn();
+            const mockOnLabelSet = jest.fn();
+
+            render(
+                <RentIncreaseField
+                    value={20}
+                    onChange={mockOnChange}
+                    onLabelSet={mockOnLabelSet}
+                />
+            );
+
+            // onLabelSet should be called with a React element
+            expect(mockOnLabelSet).toHaveBeenCalledTimes(1);
+            expect(mockOnLabelSet).toHaveBeenCalledWith(expect.any(Object));
+        });
+
+        test('RentIncreaseField_shouldHideLabelWhenShowLabelIsFalse', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <RentIncreaseField
+                    value={20}
+                    onChange={mockOnChange}
+                    showLabel={false}
+                />
+            );
+
+            // Label should not be visible
+            const label = screen.queryByText('Rent Increase');
+            expect(label).not.toBeInTheDocument();
+        });
+
+        test('RentIncreaseField_shouldShowLabelByDefault', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <RentIncreaseField
+                    value={20}
+                    onChange={mockOnChange}
+                />
+            );
+
+            // Label should be visible by default
+            const label = screen.getByText('Rent Increase');
+            expect(label).toBeInTheDocument();
+        });
+
+        test('RentIncreaseField_shouldShowLabelWhenShowLabelIsTrue', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <RentIncreaseField
+                    value={20}
+                    onChange={mockOnChange}
+                    showLabel={true}
+                />
+            );
+
+            // Label should be visible
+            const label = screen.getByText('Rent Increase');
+            expect(label).toBeInTheDocument();
+        });
+    });
 });

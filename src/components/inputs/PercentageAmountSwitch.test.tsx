@@ -443,4 +443,151 @@ describe('PercentageAmountSwitch', () => {
             expect(container.querySelector('.custom-class')).toBeInTheDocument();
         });
     });
+
+    // Label Integration Tests
+    describe('Label Integration', () => {
+        test('PercentageAmountSwitch_shouldCaptureAndDisplayLabelFromPercentageComponent', () => {
+            const mockOnModeChange = jest.fn();
+            const mockOnPercentageChange = jest.fn();
+            const mockOnAmountChange = jest.fn();
+
+            // Create components with onLabelSet support
+            const PercentageComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
+                const label = <div data-testid="percentage-label">Percentage Label</div>;
+                onLabelSet?.(label);
+                return showLabel !== false ? label : null;
+            };
+
+            const AmountComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
+                const label = <div data-testid="amount-label">Amount Label</div>;
+                onLabelSet?.(label);
+                return showLabel !== false ? label : null;
+            };
+
+            const percentageComponent = <PercentageComp />;
+            const amountComponent = <AmountComp />;
+
+            render(
+                <PercentageAmountSwitch
+                    label="Test Field"
+                    percentageComponent={percentageComponent}
+                    amountComponent={amountComponent}
+                    mode="percentage"
+                    onModeChange={mockOnModeChange}
+                    percentageValue={20}
+                    amountValue={50000}
+                    onPercentageChange={mockOnPercentageChange}
+                    onAmountChange={mockOnAmountChange}
+                    totalAmount={250000}
+                />
+            );
+
+            // The percentage label should be displayed in the switch header
+            expect(screen.getByTestId('percentage-label')).toBeInTheDocument();
+        });
+
+        test('PercentageAmountSwitch_shouldSwitchLabelsWhenModeChanges', () => {
+            const mockOnModeChange = jest.fn();
+            const mockOnPercentageChange = jest.fn();
+            const mockOnAmountChange = jest.fn();
+
+            // Create components with onLabelSet support
+            const PercentageComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
+                const label = <div data-testid="percentage-label">Percentage Label</div>;
+                onLabelSet?.(label);
+                return showLabel !== false ? label : null;
+            };
+
+            const AmountComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
+                const label = <div data-testid="amount-label">Amount Label</div>;
+                onLabelSet?.(label);
+                return showLabel !== false ? label : null;
+            };
+
+            const percentageComponent = <PercentageComp />;
+            const amountComponent = <AmountComp />;
+
+            const { rerender } = render(
+                <PercentageAmountSwitch
+                    label="Test Field"
+                    percentageComponent={percentageComponent}
+                    amountComponent={amountComponent}
+                    mode="percentage"
+                    onModeChange={mockOnModeChange}
+                    percentageValue={20}
+                    amountValue={50000}
+                    onPercentageChange={mockOnPercentageChange}
+                    onAmountChange={mockOnAmountChange}
+                    totalAmount={250000}
+                />
+            );
+
+            // Initially showing percentage label
+            expect(screen.getByTestId('percentage-label')).toBeInTheDocument();
+
+            // Switch to amount mode
+            rerender(
+                <PercentageAmountSwitch
+                    label="Test Field"
+                    percentageComponent={percentageComponent}
+                    amountComponent={amountComponent}
+                    mode="amount"
+                    onModeChange={mockOnModeChange}
+                    percentageValue={20}
+                    amountValue={50000}
+                    onPercentageChange={mockOnPercentageChange}
+                    onAmountChange={mockOnAmountChange}
+                    totalAmount={250000}
+                />
+            );
+
+            // Now showing amount label
+            expect(screen.getByTestId('amount-label')).toBeInTheDocument();
+        });
+
+        test('PercentageAmountSwitch_shouldPassShowLabelFalseToChildComponents', () => {
+            const mockOnModeChange = jest.fn();
+            const mockOnPercentageChange = jest.fn();
+            const mockOnAmountChange = jest.fn();
+            const percentageLabelSetCalled = jest.fn();
+            const amountLabelSetCalled = jest.fn();
+
+            // Create components that track if showLabel prop is false
+            const PercentageComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
+                const label = <div data-testid="percentage-label">Percentage Label</div>;
+                onLabelSet?.(label);
+                percentageLabelSetCalled(showLabel);
+                return showLabel !== false ? label : <div data-testid="percentage-hidden">Hidden</div>;
+            };
+
+            const AmountComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
+                const label = <div data-testid="amount-label">Amount Label</div>;
+                onLabelSet?.(label);
+                amountLabelSetCalled(showLabel);
+                return showLabel !== false ? label : <div data-testid="amount-hidden">Hidden</div>;
+            };
+
+            const percentageComponent = <PercentageComp />;
+            const amountComponent = <AmountComp />;
+
+            render(
+                <PercentageAmountSwitch
+                    label="Test Field"
+                    percentageComponent={percentageComponent}
+                    amountComponent={amountComponent}
+                    mode="percentage"
+                    onModeChange={mockOnModeChange}
+                    percentageValue={20}
+                    amountValue={50000}
+                    onPercentageChange={mockOnPercentageChange}
+                    onAmountChange={mockOnAmountChange}
+                    totalAmount={250000}
+                />
+            );
+
+            // Child component should receive showLabel=false
+            expect(percentageLabelSetCalled).toHaveBeenCalledWith(false);
+            expect(screen.getByTestId('percentage-hidden')).toBeInTheDocument();
+        });
+    });
 });

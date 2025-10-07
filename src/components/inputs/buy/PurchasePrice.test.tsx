@@ -434,4 +434,70 @@ describe('PurchasePriceField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(600001);
         });
     });
+    // Label Props Tests
+    describe('Label Props', () => {
+        test('PurchasePriceField_shouldCallOnLabelSetWithLabelElement', () => {
+            const mockOnChange = jest.fn();
+            const mockOnLabelSet = jest.fn();
+
+            render(
+                <PurchasePriceField
+                    value={20}
+                    onChange={mockOnChange}
+                    onLabelSet={mockOnLabelSet}
+                />
+            );
+
+            // onLabelSet should be called with a React element
+            expect(mockOnLabelSet).toHaveBeenCalledTimes(1);
+            expect(mockOnLabelSet).toHaveBeenCalledWith(expect.any(Object));
+        });
+
+        test('PurchasePriceField_shouldHideLabelWhenShowLabelIsFalse', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <PurchasePriceField
+                    value={20}
+                    onChange={mockOnChange}
+                    showLabel={false}
+                />
+            );
+
+            // Label should not be visible
+            const label = screen.queryByText('Purchase Price');
+            expect(label).not.toBeInTheDocument();
+        });
+
+        test('PurchasePriceField_shouldShowLabelByDefault', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <PurchasePriceField
+                    value={20}
+                    onChange={mockOnChange}
+                />
+            );
+
+            // Label should be visible by default
+            const label = screen.getByText('Purchase Price');
+            expect(label).toBeInTheDocument();
+        });
+
+        test('PurchasePriceField_shouldShowLabelWhenShowLabelIsTrue', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <PurchasePriceField
+                    value={20}
+                    onChange={mockOnChange}
+                    showLabel={true}
+                />
+            );
+
+            // Label should be visible
+            const label = screen.getByText('Purchase Price');
+            expect(label).toBeInTheDocument();
+        });
+    });
 });

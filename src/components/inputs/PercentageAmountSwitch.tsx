@@ -1,6 +1,6 @@
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { FC, ReactElement, useEffect, useState } from 'react';
+import { cloneElement, FC, ReactElement, useCallback, useEffect, useState } from 'react';
 
 export interface PercentageAmountSwitchProps {
     id?: string;
@@ -38,11 +38,23 @@ export const PercentageAmountSwitch: FC<PercentageAmountSwitchProps> = ({
     disabled = false
 }) => {
     const [internalMode, setInternalMode] = useState<'percentage' | 'amount'>(mode);
+    const [percentageLabel, setPercentageLabel] = useState<React.ReactElement | null>(null);
+    const [amountLabel, setAmountLabel] = useState<React.ReactElement | null>(null);
 
     // Sync internal mode with prop
     useEffect(() => {
         setInternalMode(mode);
     }, [mode]);
+
+    // Memoized callback for percentage label
+    const handlePercentageLabelSet = useCallback((label: React.ReactElement) => {
+        setPercentageLabel(label);
+    }, []);
+
+    // Memoized callback for amount label
+    const handleAmountLabelSet = useCallback((label: React.ReactElement) => {
+        setAmountLabel(label);
+    }, []);
 
     // Handle mode change
     const handleModeChange = (newMode: 'percentage' | 'amount') => {
@@ -66,6 +78,22 @@ export const PercentageAmountSwitch: FC<PercentageAmountSwitchProps> = ({
             }
         }
     };
+
+    // Clone the components to inject the onLabelSet and showLabel props
+    const enhancedPercentageComponent = cloneElement(percentageComponent, {
+        onLabelSet: handlePercentageLabelSet,
+        showLabel: false
+    } as Partial<typeof percentageComponent.props>);
+
+    const enhancedAmountComponent = cloneElement(amountComponent, {
+        onLabelSet: handleAmountLabelSet,
+        showLabel: false
+    } as Partial<typeof amountComponent.props>);
+
+    // Use the captured label from the active component, fallback to prop label
+    const displayLabel = internalMode === 'percentage' ? 
+        (percentageLabel || <span className="text-sm font-medium">{label}</span>) : 
+        (amountLabel || <span className="text-sm font-medium">{label}</span>);
 
     // Radio group component
     const radioGroupComponent = (
@@ -93,11 +121,11 @@ export const PercentageAmountSwitch: FC<PercentageAmountSwitchProps> = ({
     return (
         <div className={`space-y-3 ${className}`}>
             <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{label}</span>
+                {displayLabel}
                 {radioGroupComponent}
             </div>
             <div>
-                {internalMode === 'percentage' ? percentageComponent : amountComponent}
+                {internalMode === 'percentage' ? enhancedPercentageComponent : enhancedAmountComponent}
             </div>
         </div>
     );
