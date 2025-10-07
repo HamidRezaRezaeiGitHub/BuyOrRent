@@ -77,7 +77,6 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
         }
     }, [validatedValue, value, onChange]);
 
-
     // Handle slider change
     const handleSliderChange = (values: number[]) => {
         const rawValue = values[0];
