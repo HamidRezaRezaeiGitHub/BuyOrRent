@@ -15,6 +15,8 @@ export interface PropertyTaxAmountFieldProps {
     defaultValue?: number;
     minValue?: number;
     maxValue?: number;
+    onLabelSet?: (label: React.ReactElement) => void;
+    showLabel?: boolean; // Default: true
 }
 
 const formatCurrency = (value: number): string => {
@@ -33,7 +35,9 @@ export const PropertyTaxAmountField: FC<PropertyTaxAmountFieldProps> = ({
     displayMode = 'combined',
     defaultValue = 4500,
     minValue = 0,
-    maxValue = 50000
+    maxValue = 50000,
+    onLabelSet,
+    showLabel = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -142,7 +146,7 @@ export const PropertyTaxAmountField: FC<PropertyTaxAmountFieldProps> = ({
         }
     };
 
-    const labelComponent = (
+    const labelComponent = useMemo(() => (
         <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <DollarSign className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
             Property Tax
@@ -170,7 +174,14 @@ export const PropertyTaxAmountField: FC<PropertyTaxAmountFieldProps> = ({
                 </Tooltip>
             </TooltipProvider>
         </FieldLabel>
-    );
+    ), [id, tooltipOpen]);
+
+    // Notify parent about label if onLabelSet is provided
+    useEffect(() => {
+        if (onLabelSet) {
+            onLabelSet(labelComponent);
+        }
+    }, [onLabelSet, labelComponent]);
 
     const sliderComponent = (
         <Slider
@@ -259,7 +270,7 @@ export const PropertyTaxAmountField: FC<PropertyTaxAmountFieldProps> = ({
 
     return (
         <Field className={className}>
-            {labelComponent}
+            {showLabel && labelComponent}
             {renderField()}
             <FieldDescription className="text-xs text-muted-foreground">
                 Annual property tax paid to municipality

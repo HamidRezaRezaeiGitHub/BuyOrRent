@@ -15,6 +15,8 @@ export interface RentIncreaseFieldProps {
     defaultValue?: number; // Default: 2.5
     minValue?: number; // Default: 0
     maxValue?: number; // Default: 20
+    onLabelSet?: (label: React.ReactElement) => void;
+    showLabel?: boolean; // Default: true
 }
 
 export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
@@ -26,7 +28,9 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
     displayMode = 'combined',
     defaultValue = 2.5,
     minValue = 0,
-    maxValue = 20
+    maxValue = 20,
+    onLabelSet,
+    showLabel = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -72,6 +76,7 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
             onChange(validatedValue);
         }
     }, [validatedValue, value, onChange]);
+
 
     // Handle slider change
     const handleSliderChange = (values: number[]) => {
@@ -152,8 +157,8 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
         }
     };
 
-    // Label component with icon and tooltip
-    const labelComponent = (
+    // Label component with icon and tooltip (memoized)
+    const labelComponent = useMemo(() => (
         <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <Percent className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
             Rent Increase Rate
@@ -181,7 +186,14 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
                 </Tooltip>
             </TooltipProvider>
         </FieldLabel>
-    );
+    ), [id, tooltipOpen]);
+
+    // Notify parent about label if onLabelSet is provided
+    useEffect(() => {
+        if (onLabelSet) {
+            onLabelSet(labelComponent);
+        }
+    }, [onLabelSet, labelComponent]);
 
     // Slider component
     const sliderComponent = (
@@ -271,7 +283,7 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
 
     return (
         <Field className={className}>
-            {labelComponent}
+            {showLabel && labelComponent}
             {renderField()}
             <FieldDescription className="text-xs text-muted-foreground">
                 Expected yearly growth in rental costs

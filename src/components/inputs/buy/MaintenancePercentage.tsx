@@ -15,6 +15,8 @@ export interface MaintenancePercentageFieldProps {
     defaultValue?: number;
     minValue?: number;
     maxValue?: number;
+    onLabelSet?: (label: React.ReactElement) => void;
+    showLabel?: boolean; // Default: true
 }
 
 export const MaintenancePercentageField: FC<MaintenancePercentageFieldProps> = ({
@@ -26,7 +28,9 @@ export const MaintenancePercentageField: FC<MaintenancePercentageFieldProps> = (
     displayMode = 'combined',
     defaultValue = 1.0,
     minValue = 0,
-    maxValue = 10
+    maxValue = 10,
+    onLabelSet,
+    showLabel = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -134,8 +138,8 @@ export const MaintenancePercentageField: FC<MaintenancePercentageFieldProps> = (
         }
     };
 
-    // Label component with icon and tooltip
-    const labelComponent = (
+    // Label component with icon and tooltip (memoized)
+    const labelComponent = useMemo(() => (
         <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <Percent className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
             Maintenance
@@ -163,7 +167,14 @@ export const MaintenancePercentageField: FC<MaintenancePercentageFieldProps> = (
                 </Tooltip>
             </TooltipProvider>
         </FieldLabel>
-    );
+    ), [id, tooltipOpen]);
+
+    // Notify parent about label if onLabelSet is provided
+    useEffect(() => {
+        if (onLabelSet) {
+            onLabelSet(labelComponent);
+        }
+    }, [onLabelSet, labelComponent]);
 
     const sliderComponent = (
         <Slider
@@ -251,7 +262,7 @@ export const MaintenancePercentageField: FC<MaintenancePercentageFieldProps> = (
 
     return (
         <Field className={className}>
-            {labelComponent}
+            {showLabel && labelComponent}
             {renderField()}
             <FieldDescription className="text-xs text-muted-foreground">
                 Annual maintenance costs as percentage of property value

@@ -15,6 +15,8 @@ export interface DownPaymentAmountFieldProps {
     defaultValue?: number; // Default: 120000
     minValue?: number; // Default: 0
     maxValue?: number; // Default: 3000000
+    onLabelSet?: (label: React.ReactElement) => void;
+    showLabel?: boolean; // Default: true
 }
 
 /**
@@ -36,7 +38,9 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
     displayMode = 'combined',
     defaultValue = 120000,
     minValue = 0,
-    maxValue = 3000000
+    maxValue = 3000000,
+    onLabelSet,
+    showLabel = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -164,8 +168,8 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
         }
     };
 
-    // Label component with icon and tooltip
-    const labelComponent = (
+    // Label component with icon and tooltip (memoized)
+    const labelComponent = useMemo(() => (
         <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <DollarSign className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
             Down Payment
@@ -193,7 +197,14 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
                 </Tooltip>
             </TooltipProvider>
         </FieldLabel>
-    );
+    ), [id, tooltipOpen]);
+
+    // Notify parent about label if onLabelSet is provided
+    useEffect(() => {
+        if (onLabelSet) {
+            onLabelSet(labelComponent);
+        }
+    }, [onLabelSet, labelComponent]);
 
     // Slider component
     const sliderComponent = (
@@ -282,7 +293,7 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
 
     return (
         <Field className={className}>
-            {labelComponent}
+            {showLabel && labelComponent}
             {renderField()}
             <FieldDescription className="text-xs text-muted-foreground">
                 Upfront payment amount to reduce mortgage amount
