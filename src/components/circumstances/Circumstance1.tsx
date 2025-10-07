@@ -28,7 +28,7 @@ export const Circumstance1: React.FC = () => {
     const defaultInvestmentReturn = 7.5
 
     const defaultPurchasePrice = 0
-    const minPurchasePrice = 100000
+    const minPurchasePrice = 0
     const maxPurchasePrice = 5000000
 
     const defaultDownPaymentPercentage = 20
