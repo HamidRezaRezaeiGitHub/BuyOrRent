@@ -17,6 +17,7 @@ export interface RentIncreaseFieldProps {
     maxValue?: number; // Default: 20
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
+    showDescription?: boolean; // Default: true
 }
 
 export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
@@ -30,7 +31,8 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
     minValue = 0,
     maxValue = 20,
     onLabelSet,
-    showLabel = true
+    showLabel = true,
+    showDescription = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -284,9 +286,11 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
         <Field className={className}>
             {showLabel && labelComponent}
             {renderField()}
-            <FieldDescription className="text-xs text-muted-foreground">
-                Expected yearly growth in rental costs
-            </FieldDescription>
+            {showDescription && (
+                <FieldDescription className="text-xs text-muted-foreground">
+                    Expected yearly growth in rental costs
+                </FieldDescription>
+            )}
         </Field>
     );
 };

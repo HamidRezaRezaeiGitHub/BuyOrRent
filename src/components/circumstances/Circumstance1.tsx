@@ -17,7 +17,7 @@ export const Circumstance1: React.FC = () => {
     const minAnalysisYears = 1
     const maxAnalysisYears = 50
 
-    const defaultMonthlyRent = 2500
+    const defaultMonthlyRent = 0
     const minMonthlyRent = 0
     const maxMonthlyRent = 10000
 
@@ -27,7 +27,7 @@ export const Circumstance1: React.FC = () => {
 
     const defaultInvestmentReturn = 7.5
 
-    const defaultPurchasePrice = 600000
+    const defaultPurchasePrice = 0
     const minPurchasePrice = 100000
     const maxPurchasePrice = 5000000
 

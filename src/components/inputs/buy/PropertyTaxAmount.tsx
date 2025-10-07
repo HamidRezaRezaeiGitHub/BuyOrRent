@@ -17,6 +17,7 @@ export interface PropertyTaxAmountFieldProps {
     maxValue?: number;
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
+    showDescription?: boolean; // Default: true
 }
 
 const formatCurrency = (value: number): string => {
@@ -37,7 +38,8 @@ export const PropertyTaxAmountField: FC<PropertyTaxAmountFieldProps> = ({
     minValue = 0,
     maxValue = 50000,
     onLabelSet,
-    showLabel = true
+    showLabel = true,
+    showDescription = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -272,9 +274,11 @@ export const PropertyTaxAmountField: FC<PropertyTaxAmountFieldProps> = ({
         <Field className={className}>
             {showLabel && labelComponent}
             {renderField()}
-            <FieldDescription className="text-xs text-muted-foreground">
-                Annual property tax paid to municipality
-            </FieldDescription>
+            {showDescription && (
+                <FieldDescription className="text-xs text-muted-foreground">
+                    Annual property tax paid to municipality
+                </FieldDescription>
+            )}
         </Field>
     );
 };

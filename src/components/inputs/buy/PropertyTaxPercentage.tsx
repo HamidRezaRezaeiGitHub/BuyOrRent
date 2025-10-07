@@ -17,6 +17,7 @@ export interface PropertyTaxPercentageFieldProps {
     maxValue?: number; // Default: 5
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
+    showDescription?: boolean; // Default: true
 }
 
 export const PropertyTaxPercentageField: FC<PropertyTaxPercentageFieldProps> = ({
@@ -30,7 +31,8 @@ export const PropertyTaxPercentageField: FC<PropertyTaxPercentageFieldProps> = (
     minValue = 0,
     maxValue = 5,
     onLabelSet,
-    showLabel = true
+    showLabel = true,
+    showDescription = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -281,9 +283,11 @@ export const PropertyTaxPercentageField: FC<PropertyTaxPercentageFieldProps> = (
         <Field className={className}>
             {showLabel && labelComponent}
             {renderField()}
-            <FieldDescription className="text-xs text-muted-foreground">
-                Annual tax rate as percentage of property value
-            </FieldDescription>
+            {showDescription && (
+                <FieldDescription className="text-xs text-muted-foreground">
+                    Annual tax rate as percentage of property value
+                </FieldDescription>
+            )}
         </Field>
     );
 };
