@@ -334,4 +334,70 @@ describe('MortgageLengthField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(1);
         });
     });
+    // Label Props Tests
+    describe('Label Props', () => {
+        test('MortgageLengthField_shouldCallOnLabelSetWithLabelElement', () => {
+            const mockOnChange = jest.fn();
+            const mockOnLabelSet = jest.fn();
+
+            render(
+                <MortgageLengthField
+                    value={20}
+                    onChange={mockOnChange}
+                    onLabelSet={mockOnLabelSet}
+                />
+            );
+
+            // onLabelSet should be called with a React element
+            expect(mockOnLabelSet).toHaveBeenCalledTimes(1);
+            expect(mockOnLabelSet).toHaveBeenCalledWith(expect.any(Object));
+        });
+
+        test('MortgageLengthField_shouldHideLabelWhenShowLabelIsFalse', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MortgageLengthField
+                    value={20}
+                    onChange={mockOnChange}
+                    showLabel={false}
+                />
+            );
+
+            // Label should not be visible
+            const label = screen.queryByText('Mortgage Length');
+            expect(label).not.toBeInTheDocument();
+        });
+
+        test('MortgageLengthField_shouldShowLabelByDefault', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MortgageLengthField
+                    value={20}
+                    onChange={mockOnChange}
+                />
+            );
+
+            // Label should be visible by default
+            const label = screen.getByText('Mortgage Length');
+            expect(label).toBeInTheDocument();
+        });
+
+        test('MortgageLengthField_shouldShowLabelWhenShowLabelIsTrue', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MortgageLengthField
+                    value={20}
+                    onChange={mockOnChange}
+                    showLabel={true}
+                />
+            );
+
+            // Label should be visible
+            const label = screen.getByText('Mortgage Length');
+            expect(label).toBeInTheDocument();
+        });
+    });
 });

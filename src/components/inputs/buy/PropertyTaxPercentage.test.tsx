@@ -15,4 +15,70 @@ describe('PropertyTaxPercentageField', () => {
         fireEvent.keyDown(slider, { key: 'ArrowRight' });
         expect(mockOnChange).toHaveBeenCalled();
     });
+    // Label Props Tests
+    describe('Label Props', () => {
+        test('PropertyTaxPercentageField_shouldCallOnLabelSetWithLabelElement', () => {
+            const mockOnChange = jest.fn();
+            const mockOnLabelSet = jest.fn();
+
+            render(
+                <PropertyTaxPercentageField
+                    value={20}
+                    onChange={mockOnChange}
+                    onLabelSet={mockOnLabelSet}
+                />
+            );
+
+            // onLabelSet should be called with a React element
+            expect(mockOnLabelSet).toHaveBeenCalledTimes(1);
+            expect(mockOnLabelSet).toHaveBeenCalledWith(expect.any(Object));
+        });
+
+        test('PropertyTaxPercentageField_shouldHideLabelWhenShowLabelIsFalse', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <PropertyTaxPercentageField
+                    value={20}
+                    onChange={mockOnChange}
+                    showLabel={false}
+                />
+            );
+
+            // Label should not be visible
+            const label = screen.queryByText('Property Tax');
+            expect(label).not.toBeInTheDocument();
+        });
+
+        test('PropertyTaxPercentageField_shouldShowLabelByDefault', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <PropertyTaxPercentageField
+                    value={20}
+                    onChange={mockOnChange}
+                />
+            );
+
+            // Label should be visible by default
+            const label = screen.getByText('Property Tax');
+            expect(label).toBeInTheDocument();
+        });
+
+        test('PropertyTaxPercentageField_shouldShowLabelWhenShowLabelIsTrue', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <PropertyTaxPercentageField
+                    value={20}
+                    onChange={mockOnChange}
+                    showLabel={true}
+                />
+            );
+
+            // Label should be visible
+            const label = screen.getByText('Property Tax');
+            expect(label).toBeInTheDocument();
+        });
+    });
 });

@@ -15,6 +15,8 @@ export interface PropertyTaxPercentageFieldProps {
     defaultValue?: number; // Default: 0.75
     minValue?: number; // Default: 0
     maxValue?: number; // Default: 5
+    onLabelSet?: (label: React.ReactElement) => void;
+    showLabel?: boolean; // Default: true
 }
 
 export const PropertyTaxPercentageField: FC<PropertyTaxPercentageFieldProps> = ({
@@ -26,7 +28,9 @@ export const PropertyTaxPercentageField: FC<PropertyTaxPercentageFieldProps> = (
     displayMode = 'combined',
     defaultValue = 0.75,
     minValue = 0,
-    maxValue = 5
+    maxValue = 5,
+    onLabelSet,
+    showLabel = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -72,6 +76,7 @@ export const PropertyTaxPercentageField: FC<PropertyTaxPercentageFieldProps> = (
             onChange(validatedValue);
         }
     }, [validatedValue, value, onChange]);
+
 
     // Handle slider change
     const handleSliderChange = (values: number[]) => {
@@ -148,8 +153,8 @@ export const PropertyTaxPercentageField: FC<PropertyTaxPercentageFieldProps> = (
         }
     };
 
-    // Label component with icon and tooltip
-    const labelComponent = (
+    // Label component with icon and tooltip (memoized)
+    const labelComponent = useMemo(() => (
         <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <Percent className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
             Property Tax
@@ -177,7 +182,14 @@ export const PropertyTaxPercentageField: FC<PropertyTaxPercentageFieldProps> = (
                 </Tooltip>
             </TooltipProvider>
         </FieldLabel>
-    );
+    ), [id, tooltipOpen]);
+
+    // Notify parent about label if onLabelSet is provided
+    useEffect(() => {
+        if (onLabelSet) {
+            onLabelSet(labelComponent);
+        }
+    }, [onLabelSet, labelComponent]);
 
     // Slider component
     const sliderComponent = (
@@ -267,7 +279,7 @@ export const PropertyTaxPercentageField: FC<PropertyTaxPercentageFieldProps> = (
 
     return (
         <Field className={className}>
-            {labelComponent}
+            {showLabel && labelComponent}
             {renderField()}
             <FieldDescription className="text-xs text-muted-foreground">
                 Annual tax rate as percentage of property value

@@ -15,6 +15,8 @@ export interface DownPaymentPercentageFieldProps {
     defaultValue?: number; // Default: 20
     minValue?: number; // Default: 0
     maxValue?: number; // Default: 100
+    onLabelSet?: (label: React.ReactElement) => void;
+    showLabel?: boolean; // Default: true
 }
 
 export const DownPaymentPercentageField: FC<DownPaymentPercentageFieldProps> = ({
@@ -26,7 +28,9 @@ export const DownPaymentPercentageField: FC<DownPaymentPercentageFieldProps> = (
     displayMode = 'combined',
     defaultValue = 20,
     minValue = 0,
-    maxValue = 100
+    maxValue = 100,
+    onLabelSet,
+    showLabel = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -72,6 +76,7 @@ export const DownPaymentPercentageField: FC<DownPaymentPercentageFieldProps> = (
             onChange(validatedValue);
         }
     }, [validatedValue, value, onChange]);
+
 
     // Handle slider change
     const handleSliderChange = (values: number[]) => {
@@ -152,8 +157,8 @@ export const DownPaymentPercentageField: FC<DownPaymentPercentageFieldProps> = (
         }
     };
 
-    // Label component with icon and tooltip
-    const labelComponent = (
+    // Label component with icon and tooltip (memoized)
+    const labelComponent = useMemo(() => (
         <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <Percent className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
             Down Payment
@@ -181,7 +186,14 @@ export const DownPaymentPercentageField: FC<DownPaymentPercentageFieldProps> = (
                 </Tooltip>
             </TooltipProvider>
         </FieldLabel>
-    );
+    ), [id, tooltipOpen]);
+
+    // Notify parent about label if onLabelSet is provided
+    useEffect(() => {
+        if (onLabelSet) {
+            onLabelSet(labelComponent);
+        }
+    }, [onLabelSet, labelComponent]);
 
     // Slider component
     const sliderComponent = (
@@ -270,7 +282,7 @@ export const DownPaymentPercentageField: FC<DownPaymentPercentageFieldProps> = (
 
     return (
         <Field className={className}>
-            {labelComponent}
+            {showLabel && labelComponent}
             {renderField()}
             <FieldDescription className="text-xs text-muted-foreground">
                 Upfront payment percentage to reduce mortgage amount

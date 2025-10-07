@@ -16,6 +16,8 @@ export interface MortgageLengthFieldProps {
     defaultValue?: number; // Default: 25 (most common in Canada)
     minValue?: number; // Default: 1
     maxValue?: number; // Default: 40
+    onLabelSet?: (label: React.ReactElement) => void;
+    showLabel?: boolean; // Default: true
 }
 
 export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
@@ -27,7 +29,9 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
     displayMode = 'combined',
     defaultValue = 25,
     minValue = 1,
-    maxValue = 40
+    maxValue = 40,
+    onLabelSet,
+    showLabel = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -73,6 +77,7 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
             onChange(validatedValue);
         }
     }, [validatedValue, value, onChange]);
+
 
     // Handle slider change
     const handleSliderChange = (values: number[]) => {
@@ -131,8 +136,8 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
         setIsFocused(false);
     };
 
-    // Label component with icon and tooltip
-    const labelComponent = (
+    // Label component with icon and tooltip (memoized)
+    const labelComponent = useMemo(() => (
         <div className="flex items-center gap-1">
             <Calendar className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
             <Label htmlFor={id} className="text-xs">
@@ -162,7 +167,14 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
                 </Tooltip>
             </TooltipProvider>
         </div>
-    );
+    ), [id, tooltipOpen]);
+
+    // Notify parent about label if onLabelSet is provided
+    useEffect(() => {
+        if (onLabelSet) {
+            onLabelSet(labelComponent);
+        }
+    }, [onLabelSet, labelComponent]);
 
     // Slider component
     const sliderComponent = (
@@ -266,7 +278,7 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
 
     return (
         <div className={`space-y-2 ${className}`}>
-            {labelComponent}
+            {showLabel && labelComponent}
             {renderField()}
         </div>
     );

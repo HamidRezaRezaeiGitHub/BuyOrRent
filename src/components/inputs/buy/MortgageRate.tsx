@@ -15,6 +15,8 @@ export interface MortgageRateFieldProps {
     defaultValue?: number; // Default: 5.5 (most common Canadian rate in 2025)
     minValue?: number; // Default: 0
     maxValue?: number; // Default: 15
+    onLabelSet?: (label: React.ReactElement) => void;
+    showLabel?: boolean; // Default: true
 }
 
 export const MortgageRateField: FC<MortgageRateFieldProps> = ({
@@ -26,7 +28,9 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
     displayMode = 'combined',
     defaultValue = 5.5,
     minValue = 0,
-    maxValue = 15
+    maxValue = 15,
+    onLabelSet,
+    showLabel = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -72,6 +76,7 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
             onChange(validatedValue);
         }
     }, [validatedValue, value, onChange]);
+
 
     // Handle slider change
     const handleSliderChange = (values: number[]) => {
@@ -138,8 +143,8 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
         }
     };
 
-    // Label component with icon and tooltip
-    const labelComponent = (
+    // Label component with icon and tooltip (memoized)
+    const labelComponent = useMemo(() => (
         <div className="flex items-center gap-1">
             <Percent className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
             <Label htmlFor={id} className="text-xs">
@@ -169,7 +174,14 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
                 </Tooltip>
             </TooltipProvider>
         </div>
-    );
+    ), [id, tooltipOpen]);
+
+    // Notify parent about label if onLabelSet is provided
+    useEffect(() => {
+        if (onLabelSet) {
+            onLabelSet(labelComponent);
+        }
+    }, [onLabelSet, labelComponent]);
 
     // Slider component
     const sliderComponent = (
@@ -274,7 +286,7 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
 
     return (
         <div className={`space-y-2 ${className}`}>
-            {labelComponent}
+            {showLabel && labelComponent}
             {renderField()}
         </div>
     );

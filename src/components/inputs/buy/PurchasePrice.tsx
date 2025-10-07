@@ -15,6 +15,8 @@ export interface PurchasePriceFieldProps {
     defaultValue?: number; // Default: 600000
     minValue?: number; // Default: 100000
     maxValue?: number; // Default: 3000000
+    onLabelSet?: (label: React.ReactElement) => void;
+    showLabel?: boolean; // Default: true
 }
 
 /**
@@ -36,7 +38,9 @@ export const PurchasePriceField: FC<PurchasePriceFieldProps> = ({
     displayMode = 'combined',
     defaultValue = 600000,
     minValue = 100000,
-    maxValue = 3000000
+    maxValue = 3000000,
+    onLabelSet,
+    showLabel = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -82,6 +86,7 @@ export const PurchasePriceField: FC<PurchasePriceFieldProps> = ({
             onChange(validatedValue);
         }
     }, [validatedValue, value, onChange]);
+
 
     // Handle slider change
     const handleSliderChange = (values: number[]) => {
@@ -164,8 +169,8 @@ export const PurchasePriceField: FC<PurchasePriceFieldProps> = ({
         }
     };
 
-    // Label component with icon and tooltip
-    const labelComponent = (
+    // Label component with icon and tooltip (memoized)
+    const labelComponent = useMemo(() => (
         <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <DollarSign className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
             Purchase Price
@@ -193,7 +198,14 @@ export const PurchasePriceField: FC<PurchasePriceFieldProps> = ({
                 </Tooltip>
             </TooltipProvider>
         </FieldLabel>
-    );
+    ), [id, tooltipOpen]);
+
+    // Notify parent about label if onLabelSet is provided
+    useEffect(() => {
+        if (onLabelSet) {
+            onLabelSet(labelComponent);
+        }
+    }, [onLabelSet, labelComponent]);
 
     // Slider component
     const sliderComponent = (
@@ -282,7 +294,7 @@ export const PurchasePriceField: FC<PurchasePriceFieldProps> = ({
 
     return (
         <Field className={className}>
-            {labelComponent}
+            {showLabel && labelComponent}
             {renderField()}
             <FieldDescription className="text-xs text-muted-foreground">
                 Total amount for property acquisition

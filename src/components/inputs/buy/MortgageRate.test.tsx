@@ -317,4 +317,70 @@ describe('MortgageRateField', () => {
             expect(mockOnChange).toHaveBeenCalledWith(6.75);
         });
     });
+    // Label Props Tests
+    describe('Label Props', () => {
+        test('MortgageRateField_shouldCallOnLabelSetWithLabelElement', () => {
+            const mockOnChange = jest.fn();
+            const mockOnLabelSet = jest.fn();
+
+            render(
+                <MortgageRateField
+                    value={20}
+                    onChange={mockOnChange}
+                    onLabelSet={mockOnLabelSet}
+                />
+            );
+
+            // onLabelSet should be called with a React element
+            expect(mockOnLabelSet).toHaveBeenCalledTimes(1);
+            expect(mockOnLabelSet).toHaveBeenCalledWith(expect.any(Object));
+        });
+
+        test('MortgageRateField_shouldHideLabelWhenShowLabelIsFalse', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MortgageRateField
+                    value={20}
+                    onChange={mockOnChange}
+                    showLabel={false}
+                />
+            );
+
+            // Label should not be visible
+            const label = screen.queryByText('Mortgage Rate');
+            expect(label).not.toBeInTheDocument();
+        });
+
+        test('MortgageRateField_shouldShowLabelByDefault', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MortgageRateField
+                    value={20}
+                    onChange={mockOnChange}
+                />
+            );
+
+            // Label should be visible by default
+            const label = screen.getByText('Mortgage Rate');
+            expect(label).toBeInTheDocument();
+        });
+
+        test('MortgageRateField_shouldShowLabelWhenShowLabelIsTrue', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <MortgageRateField
+                    value={20}
+                    onChange={mockOnChange}
+                    showLabel={true}
+                />
+            );
+
+            // Label should be visible
+            const label = screen.getByText('Mortgage Rate');
+            expect(label).toBeInTheDocument();
+        });
+    });
 });

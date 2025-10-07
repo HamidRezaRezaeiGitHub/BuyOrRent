@@ -1080,4 +1080,70 @@ describe('InvestmentReturnField', () => {
             expect(input).toHaveAttribute('placeholder', 'Enter percentage');
         });
     });
+    // Label Props Tests
+    describe('Label Props', () => {
+        test('InvestmentReturnField_shouldCallOnLabelSetWithLabelElement', () => {
+            const mockOnChange = jest.fn();
+            const mockOnLabelSet = jest.fn();
+
+            render(
+                <InvestmentReturnField
+                    value={20}
+                    onChange={mockOnChange}
+                    onLabelSet={mockOnLabelSet}
+                />
+            );
+
+            // onLabelSet should be called with a React element
+            expect(mockOnLabelSet).toHaveBeenCalledTimes(1);
+            expect(mockOnLabelSet).toHaveBeenCalledWith(expect.any(Object));
+        });
+
+        test('InvestmentReturnField_shouldHideLabelWhenShowLabelIsFalse', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <InvestmentReturnField
+                    value={20}
+                    onChange={mockOnChange}
+                    showLabel={false}
+                />
+            );
+
+            // Label should not be visible
+            const label = screen.queryByText('Expected Return');
+            expect(label).not.toBeInTheDocument();
+        });
+
+        test('InvestmentReturnField_shouldShowLabelByDefault', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <InvestmentReturnField
+                    value={20}
+                    onChange={mockOnChange}
+                />
+            );
+
+            // Label should be visible by default
+            const label = screen.getByText('Expected Return');
+            expect(label).toBeInTheDocument();
+        });
+
+        test('InvestmentReturnField_shouldShowLabelWhenShowLabelIsTrue', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <InvestmentReturnField
+                    value={20}
+                    onChange={mockOnChange}
+                    showLabel={true}
+                />
+            );
+
+            // Label should be visible
+            const label = screen.getByText('Expected Return');
+            expect(label).toBeInTheDocument();
+        });
+    });
 });

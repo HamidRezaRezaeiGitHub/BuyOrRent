@@ -18,6 +18,8 @@ export interface InvestmentReturnFieldProps {
     minValue?: number; // Default: -20
     maxValue?: number; // Default: 100
     showHelper?: boolean; // Default: false
+    onLabelSet?: (label: React.ReactElement) => void;
+    showLabel?: boolean; // Default: true
 }
 
 export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
@@ -30,7 +32,9 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
     defaultValue = 7.5,
     minValue = -20,
     maxValue = 100,
-    showHelper = false
+    showHelper = false,
+    onLabelSet,
+    showLabel = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -77,6 +81,7 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
             onChange(validatedValue);
         }
     }, [validatedValue, value, onChange]);
+
 
     // Handle slider change
     const handleSliderChange = (values: number[]) => {
@@ -156,8 +161,8 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
         }
     };
 
-    // Label component with icon and tooltip
-    const labelComponent = (
+    // Label component with icon and tooltip (memoized)
+    const labelComponent = useMemo(() => (
         <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <Percent className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
             Investment Return Rate
@@ -185,7 +190,14 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
                 </Tooltip>
             </TooltipProvider>
         </FieldLabel>
-    );
+    ), [id, tooltipOpen]);
+
+    // Notify parent about label if onLabelSet is provided
+    useEffect(() => {
+        if (onLabelSet) {
+            onLabelSet(labelComponent);
+        }
+    }, [onLabelSet, labelComponent]);
 
     // Input component
     const inputComponent = (
@@ -275,7 +287,7 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
 
     return (
         <Field className={className}>
-            {labelComponent}
+            {showLabel && labelComponent}
             {renderField()}
             <FieldDescription className="text-xs text-muted-foreground">
                 Expected yearly growth in investment value
