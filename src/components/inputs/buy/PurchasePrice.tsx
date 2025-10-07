@@ -17,6 +17,7 @@ export interface PurchasePriceFieldProps {
     maxValue?: number; // Default: 3000000
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
+    showDescription?: boolean; // Default: true
 }
 
 /**
@@ -40,7 +41,8 @@ export const PurchasePriceField: FC<PurchasePriceFieldProps> = ({
     minValue = 100000,
     maxValue = 3000000,
     onLabelSet,
-    showLabel = true
+    showLabel = true,
+    showDescription = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -296,9 +298,11 @@ export const PurchasePriceField: FC<PurchasePriceFieldProps> = ({
         <Field className={className}>
             {showLabel && labelComponent}
             {renderField()}
-            <FieldDescription className="text-xs text-muted-foreground">
-                Total amount for property acquisition
-            </FieldDescription>
+            {showDescription && (
+                <FieldDescription className="text-xs text-muted-foreground">
+                    Total amount for property acquisition
+                </FieldDescription>
+            )}
         </Field>
     );
 };

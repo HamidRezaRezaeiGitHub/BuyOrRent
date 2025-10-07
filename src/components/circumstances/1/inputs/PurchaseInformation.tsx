@@ -186,7 +186,8 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             defaultValue={defaultPropertyTaxPercentage}
             minValue={minPropertyTaxPercentage}
             maxValue={maxPropertyTaxPercentage}
-            displayMode='combined'
+            displayMode='input'
+            showDescription={false}
         />
     );
 
@@ -197,7 +198,8 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             defaultValue={defaultPropertyTaxPercentage / 100 * purchasePrice}
             minValue={minPropertyTaxPercentage / 100 * purchasePrice}
             maxValue={maxPropertyTaxPercentage / 100 * purchasePrice}
-            displayMode='combined'
+            displayMode='input'
+            showDescription={false}
         />
     );
 
@@ -224,7 +226,8 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             defaultValue={defaultMaintenancePercentage}
             minValue={minMaintenancePercentage}
             maxValue={maxMaintenancePercentage}
-            displayMode='combined'
+            displayMode='input'
+            showDescription={false}
         />
     );
 
@@ -235,7 +238,8 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             defaultValue={defaultMaintenancePercentage / 100 * purchasePrice}
             minValue={minMaintenancePercentage / 100 * purchasePrice}
             maxValue={maxMaintenancePercentage / 100 * purchasePrice}
-            displayMode='combined'
+            displayMode='input'
+            showDescription={false}
         />
     );
 
@@ -265,40 +269,48 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
                     {/* Purchase Price */}
                     {purchasePriceComponent}
 
-                    {/* Down Payment with Percentage/Amount Switch */}
-                    {downPaymentSwitchComponent}
+                    {purchasePrice > 0 && (
+                        <>
+                            {/* Down Payment with Percentage/Amount Switch */}
+                            {downPaymentSwitchComponent}
+                        </>
+                    )}
                 </div>
             </FieldGroup>
 
-            <FieldSeparator />
+            {purchasePrice > 0 && (
+                <>
+                    <FieldSeparator />
 
-            <FieldGroup>
-                <FieldDescription>
-                    Mortgage interest rate and amortization period
-                </FieldDescription>
-                <div className="grid gap-6">
-                    {/* Mortgage Rate */}
-                    {mortgageRateComponent}
+                    <FieldGroup>
+                        <FieldDescription>
+                            Mortgage interest rate and amortization period
+                        </FieldDescription>
+                        <div className="grid gap-6">
+                            {/* Mortgage Rate */}
+                            {mortgageRateComponent}
 
-                    {/* Mortgage Length */}
-                    {mortgageLengthComponent}
-                </div>
-            </FieldGroup>
+                            {/* Mortgage Length */}
+                            {mortgageLengthComponent}
+                        </div>
+                    </FieldGroup>
 
-            <FieldSeparator />
+                    <FieldSeparator />
 
-            <FieldGroup>
-                <FieldDescription>
-                    Ongoing property taxes and maintenance expenses
-                </FieldDescription>
-                <div className="grid gap-6">
-                    {/* Property Tax with Percentage/Amount Switch */}
-                    {propertyTaxSwitchComponent}
+                    <FieldGroup>
+                        <FieldDescription>
+                            Ongoing property taxes and maintenance expenses
+                        </FieldDescription>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            {/* Property Tax with Percentage/Amount Switch */}
+                            {propertyTaxSwitchComponent}
 
-                    {/* Annual Maintenance with Percentage/Amount Switch */}
-                    {maintenanceSwitchComponent}
-                </div>
-            </FieldGroup>
+                            {/* Annual Maintenance with Percentage/Amount Switch */}
+                            {maintenanceSwitchComponent}
+                        </div>
+                    </FieldGroup>
+                </>
+            )}
         </FieldSet>
     )
 }

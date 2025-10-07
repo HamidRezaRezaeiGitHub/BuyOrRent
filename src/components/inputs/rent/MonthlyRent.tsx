@@ -17,6 +17,7 @@ export interface MonthlyRentFieldProps {
     maxValue?: number; // Default: 10000
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
+    showDescription?: boolean; // Default: true
 }
 
 /**
@@ -40,7 +41,8 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
     minValue = 0,
     maxValue = 10000,
     onLabelSet,
-    showLabel = true
+    showLabel = true,
+    showDescription = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -297,9 +299,11 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
         <Field className={className}>
             {showLabel && labelComponent}
             {renderField()}
-            <FieldDescription className="text-xs text-muted-foreground">
-                Including parking and utilities (if applicable)
-            </FieldDescription>
+            {showDescription && (
+                <FieldDescription className="text-xs text-muted-foreground">
+                    Including parking and utilities (if applicable)
+                </FieldDescription>
+            )}
         </Field>
     );
 };

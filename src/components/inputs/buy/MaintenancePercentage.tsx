@@ -17,6 +17,7 @@ export interface MaintenancePercentageFieldProps {
     maxValue?: number;
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
+    showDescription?: boolean; // Default: true
 }
 
 export const MaintenancePercentageField: FC<MaintenancePercentageFieldProps> = ({
@@ -30,7 +31,8 @@ export const MaintenancePercentageField: FC<MaintenancePercentageFieldProps> = (
     minValue = 0,
     maxValue = 10,
     onLabelSet,
-    showLabel = true
+    showLabel = true,
+    showDescription = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -264,9 +266,11 @@ export const MaintenancePercentageField: FC<MaintenancePercentageFieldProps> = (
         <Field className={className}>
             {showLabel && labelComponent}
             {renderField()}
-            <FieldDescription className="text-xs text-muted-foreground">
-                Annual maintenance costs as percentage of property value
-            </FieldDescription>
+            {showDescription && (
+                <FieldDescription className="text-xs text-muted-foreground">
+                    Annual maintenance costs as percentage of property value
+                </FieldDescription>
+            )}
         </Field>
     );
 };

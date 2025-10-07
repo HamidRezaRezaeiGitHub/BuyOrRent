@@ -45,15 +45,20 @@ export const RentalInformation: React.FC<RentalInformationProps> = ({
                         minValue={minMonthlyRent}
                         maxValue={maxMonthlyRent}
                         displayMode='combined'
+                        showDescription={true}
                     />
-                    <RentIncreaseField
-                        value={rentIncrease}
-                        onChange={setRentIncrease}
-                        defaultValue={defaultRentIncrease}
-                        minValue={minRentIncrease}
-                        maxValue={maxRentIncrease}
-                        displayMode='combined'
-                    />
+                    {monthlyRent > 0 && (
+                        <RentIncreaseField
+                            value={rentIncrease}
+                            onChange={setRentIncrease}
+                            defaultValue={defaultRentIncrease}
+                            minValue={minRentIncrease}
+                            maxValue={maxRentIncrease}
+                            displayMode='input'
+                            showDescription={false}
+                            className="sm:col-span-1"
+                        />
+                    )}
                 </div>
             </FieldGroup>
         </FieldSet>
