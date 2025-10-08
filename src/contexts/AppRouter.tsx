@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ThemeShowcase } from '../components/theme/ThemeShowcase';
 import { QuestionnairePage } from '../pages';
-import { Circumstance1 } from '../components/circumstances';
+import { Situation1 } from '../components/situations';
 
 export const AppRouter: React.FC = () => {
     return (
@@ -11,7 +11,7 @@ export const AppRouter: React.FC = () => {
             <Route path="/" element={<QuestionnairePage />} />
 
             {/* Situation routes */}
-            <Route path="/situation/1" element={<Circumstance1 />} />
+            <Route path="/situation/1" element={<Situation1 />} />
 
             {/* Temporary component showcase routes */}
             <Route path="/temp/theme" element={<ThemeShowcase />} />
