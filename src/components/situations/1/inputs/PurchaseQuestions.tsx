@@ -168,7 +168,7 @@ export const PurchaseQuestions: FC = () => {
                             <div className="flex justify-end">
                                 <Button
                                     onClick={handleNext}
-                                    disabled={purchasePrice === 0}
+                                    disabled={purchasePrice <= 0}
                                 >
                                     Next
                                 </Button>
