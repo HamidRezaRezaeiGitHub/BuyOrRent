@@ -1,13 +1,17 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ThemeShowcase } from '../components/theme/ThemeShowcase';
-import { MainAppPage } from '../pages';
+import { QuestionnairePage } from '../pages';
+import { Circumstance1 } from '../components/circumstances';
 
 export const AppRouter: React.FC = () => {
     return (
         <Routes>
-            {/* Home route - Main Application */}
-            <Route path="/" element={<MainAppPage />} />
+            {/* Home route - Questionnaire Page */}
+            <Route path="/" element={<QuestionnairePage />} />
+
+            {/* Situation routes */}
+            <Route path="/situation/1" element={<Circumstance1 />} />
 
             {/* Temporary component showcase routes */}
             <Route path="/temp/theme" element={<ThemeShowcase />} />
