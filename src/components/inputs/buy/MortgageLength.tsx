@@ -2,7 +2,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { formatToInteger } from '@/services/formatting/FormattingService';
 import { Calendar, Info } from 'lucide-react';
 import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -39,7 +38,9 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
 
     // Reusable function to clamp and round values within valid range
     const clampValue = useCallback((inputValue: number): number => {
-        return Math.max(minValue, Math.min(maxValue, Math.round(inputValue)));
+        // Round to nearest 2.5 year increment
+        const rounded = Math.round(inputValue / 2.5) * 2.5;
+        return Math.max(minValue, Math.min(maxValue, rounded));
     }, [minValue, maxValue]);
 
     // Validate and clamp the initial value with comprehensive error handling
@@ -57,7 +58,8 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
         if (isFocused) {
             return inputValue;
         }
-        return formatToInteger(validatedValue);
+        // Format to show decimals only when needed (e.g., 25.5 but 25 for whole numbers)
+        return validatedValue % 1 === 0 ? validatedValue.toString() : validatedValue.toFixed(1);
     }, [isFocused, inputValue, validatedValue]);
 
     // Sync inputValue when value changes externally (but not when focused)
@@ -95,7 +97,7 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
 
         // Provide immediate feedback for valid numeric values
         try {
-            const numericValue = parseInt(newValue, 10);
+            const numericValue = parseFloat(newValue);
             if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= minValue && numericValue <= maxValue) {
                 const clampedValue = clampValue(numericValue);
                 onChange(clampedValue);
@@ -182,7 +184,7 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
             id={displayMode === 'slider' ? id : `${id}-slider`}
             min={minValue}
             max={maxValue}
-            step={1}
+            step={2.5}
             value={[validatedValue]}
             onValueChange={handleSliderChange}
             disabled={disabled}

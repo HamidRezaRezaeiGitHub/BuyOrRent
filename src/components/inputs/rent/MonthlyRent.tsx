@@ -50,6 +50,10 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
 
     // Reusable function to clamp and round values within valid range
     const clampValue = useCallback((inputValue: number): number => {
+        // Allow 0 as a special case (meaning "not set")
+        if (inputValue === 0) {
+            return 0;
+        }
         return Math.max(minValue, Math.min(maxValue, Math.round(inputValue)));
     }, [minValue, maxValue]);
 
@@ -213,7 +217,7 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
             min={minValue}
             max={maxValue}
             step={50} // $50 increments for reasonable granularity
-            value={[validatedValue]}
+            value={[validatedValue === 0 ? minValue : validatedValue]}
             onValueChange={handleSliderChange}
             disabled={disabled}
             className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
