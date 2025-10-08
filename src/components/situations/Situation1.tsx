@@ -12,7 +12,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
 import { BuyAnalysis, ComparisonAnalysis, InvestmentInformation, PurchaseInformation, RentalInformation, RentAnalysis } from './1'
 
-export const Circumstance1: React.FC = () => {
+export const Situation1: React.FC = () => {
     const defaultAnalysisYears = 25
     const minAnalysisYears = 1
     const maxAnalysisYears = 50
@@ -357,4 +357,4 @@ export const Circumstance1: React.FC = () => {
     )
 }
 
-export default Circumstance1;
+export default Situation1;

@@ -151,7 +151,7 @@ src/components/
 │   │   └── *.test.tsx     # Tests for output components
 │   ├── buy/               # Purchase/mortgage-related outputs
 │   └── invest/            # Investment-related outputs
-├── circumstances/         # Full page implementations for different scenarios
+├── situations/         # Full page implementations for different scenarios
 ├── common/                # Shared components (e.g., YearsField)
 ├── navbar/                # Navigation components
 ├── theme/                 # Theme-related components
@@ -280,43 +280,43 @@ All field components should have comprehensive test coverage:
 npm install @radix-ui/react-tooltip  # For tooltip functionality
 ```
 
-## Circumstance-Specific Development
+## Situation-Specific Development
 
-The application supports multiple circumstances (scenarios) that users can choose from, with each circumstance having its own unique UI and logic.
+The application supports multiple situations (scenarios) that users can choose from, with each situation having its own unique UI and logic.
 
-### Circumstance Structure
-- **Location**: `src/components/circumstances/`
-- **Naming Convention**: `Circumstance<Number>.tsx` (e.g., `Circumstance1.tsx`, `Circumstance2.tsx`)
-- **Purpose**: Each circumstance file contains a complete page implementation for a specific user scenario
+### Situation Structure
+- **Location**: `src/components/situations/`
+- **Naming Convention**: `Situation<Number>.tsx` (e.g., `Situation1.tsx`, `Situation2.tsx`)
+- **Purpose**: Each situation file contains a complete page implementation for a specific user scenario
 
-### Working with Circumstances
+### Working with Situations
 
-When a task mentions a circumstance by name or number (e.g., "Circumstance 1", "Circumstance1", or just "1"), apply changes to the corresponding file:
-- **Circumstance 1** → `src/components/circumstances/Circumstance1.tsx`
-- **Circumstance 2** → `src/components/circumstances/Circumstance2.tsx`
+When a task mentions a situation by name or number (e.g., "Situation 1", "Situation1", or just "1"), apply changes to the corresponding file:
+- **Situation 1** → `src/components/situations/Situation1.tsx`
+- **Situation 2** → `src/components/situations/Situation2.tsx`
 - And so on...
 
-### Current Circumstances
-- **Circumstance1**: The default scenario containing the full BuyOrRent analysis page with rental and purchase information, tables, and graphs
+### Current Situations
+- **Situation1**: The default scenario containing the full BuyOrRent analysis page with rental and purchase information, tables, and graphs
 
-### Creating New Circumstances
-1. Create a new file: `src/components/circumstances/Circumstance<N>.tsx`
-2. Export the component in `src/components/circumstances/index.ts`
+### Creating New Situations
+1. Create a new file: `src/components/situations/Situation<N>.tsx`
+2. Export the component in `src/components/situations/index.ts`
 3. Import and use in `MainAppPage.tsx` or router as needed
-4. Follow the same structure and patterns as existing circumstances
+4. Follow the same structure and patterns as existing situations
 
 ### Integration Point
-The `MainAppPage` component (in `src/pages/MainAppPage.tsx`) serves as the entry point that imports and renders the appropriate circumstance component based on user selection or routing logic.
+The `MainAppPage` component (in `src/pages/MainAppPage.tsx`) serves as the entry point that imports and renders the appropriate situation component based on user selection or routing logic.
 
 ## Issues Terminology
 
 This section defines standard terminology used in issues and development discussions to ensure clear communication.
 
-### Default Circumstance
-- Up until further notice, when no circumstance number is mentioned in an issue, we're talking about **Circumstance 1**.
+### Default Situation
+- Up until further notice, when no situation number is mentioned in an issue, we're talking about **Situation 1**.
 
 ### Page Section Terminology
-Any page or content (e.g., `Circumstance1.tsx`) has 2 main sections, both collapsible, and in separate cards:
+Any page or content (e.g., `Situation1.tsx`) has 2 main sections, both collapsible, and in separate cards:
 
 **Upper Section** - referred to as:
 - "input"
