@@ -33,8 +33,8 @@ export const RentQuestions: FC = () => {
                 setStep(2)
             }
         } else if (step === 2) {
-            // Navigate to the panel with URL parameters
-            navigate(`/situation/1/panel?monthlyRent=${monthlyRent}&rentIncrease=${rentIncrease}`)
+            // Navigate to purchase questions with URL parameters
+            navigate(`/situation/1/question/purchase?monthlyRent=${monthlyRent}&rentIncrease=${rentIncrease}`)
         }
     }
     

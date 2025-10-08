@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { ThemeShowcase } from '../components/theme/ThemeShowcase';
 import { QuestionnairePage } from '../pages';
 import { Situation1 } from '../components/situations';
-import { RentQuestions } from '../components/situations/1/inputs';
+import { RentQuestions, PurchaseQuestions } from '../components/situations/1/inputs';
 
 export const AppRouter: React.FC = () => {
     return (
@@ -13,6 +13,7 @@ export const AppRouter: React.FC = () => {
 
             {/* Situation 1 routes */}
             <Route path="/situation/1/question/rent" element={<RentQuestions />} />
+            <Route path="/situation/1/question/purchase" element={<PurchaseQuestions />} />
             <Route path="/situation/1/panel" element={<Situation1 />} />
             <Route path="/situation/1" element={<Situation1 />} />
 
