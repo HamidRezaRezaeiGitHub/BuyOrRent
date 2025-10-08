@@ -1,6 +1,7 @@
 import { calculateMonthlyRentData, MonthlyRentData } from '@/services/MonthlyRentCalculator'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { YearsField } from '../common/Years'
 import { FlexibleNavbar } from '../navbar'
 import { MonthlyRentGraph } from '../outputs/rent/MonthlyRentGraph'
@@ -13,6 +14,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
 import { BuyAnalysis, ComparisonAnalysis, InvestmentInformation, PurchaseInformation, RentalInformation, RentAnalysis } from './1'
 
 export const Situation1: React.FC = () => {
+    const [searchParams] = useSearchParams()
+    
     const defaultAnalysisYears = 30
     const minAnalysisYears = 1
     const maxAnalysisYears = 50
@@ -54,8 +57,17 @@ export const Situation1: React.FC = () => {
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
     const [analysisYears, setAnalysisYears] = useState<number>(defaultAnalysisYears)
-    const [monthlyRent, setMonthlyRent] = useState<number>(defaultMonthlyRent)
-    const [rentIncrease, setRentIncrease] = useState<number>(defaultRentIncrease)
+    
+    // Initialize monthlyRent and rentIncrease from URL params or use defaults
+    const initialMonthlyRent = searchParams.get('monthlyRent') 
+        ? parseFloat(searchParams.get('monthlyRent')!) 
+        : defaultMonthlyRent
+    const initialRentIncrease = searchParams.get('rentIncrease')
+        ? parseFloat(searchParams.get('rentIncrease')!)
+        : defaultRentIncrease
+        
+    const [monthlyRent, setMonthlyRent] = useState<number>(initialMonthlyRent)
+    const [rentIncrease, setRentIncrease] = useState<number>(initialRentIncrease)
     const [investmentReturn, setInvestmentReturn] = useState<number>(defaultInvestmentReturn)
 
     // Buy fields state

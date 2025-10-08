@@ -14,7 +14,7 @@ export const QuestionnairePage: React.FC = () => {
             title: 'I am renting now & thinking about purchasing',
             description: 'Compare the costs of continuing to rent versus buying a property',
             available: true,
-            route: '/situation/1'
+            route: '/situation/1/question/rent'
         },
         {
             id: 2,
