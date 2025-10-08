@@ -19,6 +19,9 @@ export interface MortgageLengthFieldProps {
     showLabel?: boolean; // Default: true
 }
 
+// Constant for the step increment value
+const STEP_INCREMENT = 2.5;
+
 export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
     id = 'mortgageLength',
     value,
@@ -38,8 +41,8 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
 
     // Reusable function to clamp and round values within valid range
     const clampValue = useCallback((inputValue: number): number => {
-        // Round to nearest 2.5 year increment
-        const rounded = Math.round(inputValue / 2.5) * 2.5;
+        // Round to nearest step increment
+        const rounded = Math.round(inputValue / STEP_INCREMENT) * STEP_INCREMENT;
         return Math.max(minValue, Math.min(maxValue, rounded));
     }, [minValue, maxValue]);
 
@@ -58,8 +61,13 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
         if (isFocused) {
             return inputValue;
         }
-        // Format to show decimals only when needed (e.g., 25.5 but 25 for whole numbers)
-        return validatedValue % 1 === 0 ? validatedValue.toString() : validatedValue.toFixed(1);
+        // Format to align with STEP_INCREMENT pattern
+        // Round to the nearest step increment and format accordingly
+        const roundedValue = Math.round(validatedValue / STEP_INCREMENT) * STEP_INCREMENT;
+        // Determine decimal places needed based on STEP_INCREMENT
+        const decimalPlaces = STEP_INCREMENT % 1 === 0 ? 0 : STEP_INCREMENT.toString().split('.')[1]?.length || 1;
+        // Only show decimal if the value has a fractional part
+        return roundedValue % 1 === 0 ? roundedValue.toString() : roundedValue.toFixed(decimalPlaces);
     }, [isFocused, inputValue, validatedValue]);
 
     // Sync inputValue when value changes externally (but not when focused)
@@ -184,7 +192,7 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
             id={displayMode === 'slider' ? id : `${id}-slider`}
             min={minValue}
             max={maxValue}
-            step={2.5}
+            step={STEP_INCREMENT}
             value={[validatedValue]}
             onValueChange={handleSliderChange}
             disabled={disabled}
