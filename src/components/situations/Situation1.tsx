@@ -13,23 +13,23 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog'
 import { BuyAnalysis, ComparisonAnalysis, InvestmentInformation, PurchaseInformation, RentalInformation, RentAnalysis } from './1'
 
 export const Situation1: React.FC = () => {
-    const defaultAnalysisYears = 25
+    const defaultAnalysisYears = 30
     const minAnalysisYears = 1
     const maxAnalysisYears = 50
 
     const defaultMonthlyRent = 0
-    const minMonthlyRent = 0
-    const maxMonthlyRent = 10000
+    const minMonthlyRent = 1000
+    const maxMonthlyRent = 5000
 
     const defaultRentIncrease = 2.5
     const minRentIncrease = 0
-    const maxRentIncrease = 20
+    const maxRentIncrease = 10
 
     const defaultInvestmentReturn = 7.5
 
     const defaultPurchasePrice = 0
-    const minPurchasePrice = 0
-    const maxPurchasePrice = 5000000
+    const minPurchasePrice = 400000
+    const maxPurchasePrice = 4000000
 
     const defaultDownPaymentPercentage = 20
     const minDownPaymentPercentage = 0
@@ -103,30 +103,9 @@ export const Situation1: React.FC = () => {
         />
     )
 
-    // Welcome Header Component
-    const welcomeHeader = (
-        <div className="text-center py-6 sm:py-8">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Welcome to BuyOrRent</h1>
-            <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                Analyze properties and make informed decisions
-            </p>
-        </div>
-    )
-
     // Input Section Content
     const inputSectionContent = (
         <>
-            {/* Common field for both rent and buy - Analysis Period */}
-            <div className="mb-4">
-                <YearsField
-                    value={analysisYears}
-                    onChange={setAnalysisYears}
-                    defaultValue={defaultAnalysisYears}
-                    minValue={minAnalysisYears}
-                    maxValue={maxAnalysisYears}
-                />
-            </div>
-
             <Accordion type="single" collapsible className="w-full">
                 {/* Rental Information Accordion Item */}
                 <AccordionItem value="rent">
@@ -244,7 +223,19 @@ export const Situation1: React.FC = () => {
 
     // Results Section Content
     const resultsSectionContent = (
-        <Accordion type="single" collapsible className="w-full">
+        <>
+            {/* Analysis Period */}
+            <div className="mb-4">
+                <YearsField
+                    value={analysisYears}
+                    onChange={setAnalysisYears}
+                    defaultValue={defaultAnalysisYears}
+                    minValue={minAnalysisYears}
+                    maxValue={maxAnalysisYears}
+                />
+            </div>
+
+            <Accordion type="single" collapsible className="w-full">
             {/* Rent Analysis Accordion Item */}
             <AccordionItem value="rent">
                 <AccordionTrigger>If you rent</AccordionTrigger>
@@ -273,6 +264,7 @@ export const Situation1: React.FC = () => {
                 </AccordionContent>
             </AccordionItem>
         </Accordion>
+        </>
     )
 
     // Decision Analysis Card Component
@@ -340,9 +332,6 @@ export const Situation1: React.FC = () => {
 
             {/* Main Content */}
             <main className="w-full max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8 space-y-6">
-                {/* Welcome Header */}
-                {welcomeHeader}
-
                 {/* Property & Financial Information */}
                 {propertyInformationCard}
 

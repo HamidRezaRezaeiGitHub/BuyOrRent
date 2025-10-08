@@ -2,7 +2,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { formatToInteger } from '@/services/formatting/FormattingService';
 import { Calendar, Info } from 'lucide-react';
 import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -19,6 +18,9 @@ export interface MortgageLengthFieldProps {
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
 }
+
+// Constant for the step increment value
+const STEP_INCREMENT = 2.5;
 
 export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
     id = 'mortgageLength',
@@ -39,7 +41,9 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
 
     // Reusable function to clamp and round values within valid range
     const clampValue = useCallback((inputValue: number): number => {
-        return Math.max(minValue, Math.min(maxValue, Math.round(inputValue)));
+        // Round to nearest step increment
+        const rounded = Math.round(inputValue / STEP_INCREMENT) * STEP_INCREMENT;
+        return Math.max(minValue, Math.min(maxValue, rounded));
     }, [minValue, maxValue]);
 
     // Validate and clamp the initial value with comprehensive error handling
@@ -57,7 +61,13 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
         if (isFocused) {
             return inputValue;
         }
-        return formatToInteger(validatedValue);
+        // Format to align with STEP_INCREMENT pattern
+        // Round to the nearest step increment and format accordingly
+        const roundedValue = Math.round(validatedValue / STEP_INCREMENT) * STEP_INCREMENT;
+        // Determine decimal places needed based on STEP_INCREMENT
+        const decimalPlaces = STEP_INCREMENT % 1 === 0 ? 0 : STEP_INCREMENT.toString().split('.')[1]?.length || 1;
+        // Only show decimal if the value has a fractional part
+        return roundedValue % 1 === 0 ? roundedValue.toString() : roundedValue.toFixed(decimalPlaces);
     }, [isFocused, inputValue, validatedValue]);
 
     // Sync inputValue when value changes externally (but not when focused)
@@ -95,7 +105,7 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
 
         // Provide immediate feedback for valid numeric values
         try {
-            const numericValue = parseInt(newValue, 10);
+            const numericValue = parseFloat(newValue);
             if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= minValue && numericValue <= maxValue) {
                 const clampedValue = clampValue(numericValue);
                 onChange(clampedValue);
@@ -182,7 +192,7 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
             id={displayMode === 'slider' ? id : `${id}-slider`}
             min={minValue}
             max={maxValue}
-            step={1}
+            step={STEP_INCREMENT}
             value={[validatedValue]}
             onValueChange={handleSliderChange}
             disabled={disabled}

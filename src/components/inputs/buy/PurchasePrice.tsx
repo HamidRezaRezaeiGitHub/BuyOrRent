@@ -50,6 +50,10 @@ export const PurchasePriceField: FC<PurchasePriceFieldProps> = ({
 
     // Reusable function to clamp and round values within valid range
     const clampValue = useCallback((inputValue: number): number => {
+        // Allow 0 as a special case (meaning "not set")
+        if (inputValue === 0) {
+            return 0;
+        }
         return Math.max(minValue, Math.min(maxValue, Math.round(inputValue)));
     }, [minValue, maxValue]);
 
@@ -216,7 +220,7 @@ export const PurchasePriceField: FC<PurchasePriceFieldProps> = ({
             min={minValue}
             max={maxValue}
             step={10000} // $10,000 increments for reasonable granularity
-            value={[validatedValue]}
+            value={[validatedValue === 0 ? minValue : validatedValue]}
             onValueChange={handleSliderChange}
             disabled={disabled}
             className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
