@@ -36,6 +36,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
     const maxInvestmentReturn = 100
     
     // State
+    const [step, _setStep] = useState<1>(1)
     const [investmentReturn, setInvestmentReturn] = useState<number>(defaultInvestmentReturn)
     
     // Handler to move to next step
@@ -174,7 +175,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
                 </div>
                 
                 {/* Investment Return */}
-                {investmentReturnStep}
+                {step === 1 && investmentReturnStep}
             </main>
         </div>
     )
