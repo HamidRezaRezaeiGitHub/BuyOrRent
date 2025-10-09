@@ -67,6 +67,153 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
         handleNext()
     }
     
+    // Define each step JSX separately
+    const monthlyRentStep = (
+        <Card className="w-full">
+            <CardHeader>
+                <CardTitle>How much rent are you paying now?</CardTitle>
+                <CardDescription>
+                    Enter the total monthly rent amount you currently pay
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <MonthlyRentField
+                    value={monthlyRent}
+                    onChange={setMonthlyRent}
+                    defaultValue={defaultMonthlyRent}
+                    minValue={minMonthlyRent}
+                    maxValue={maxMonthlyRent}
+                    displayMode="combined"
+                    showDescription={true}
+                />
+                
+                <div className="flex justify-between gap-3">
+                    {previousUrl && (
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        onClick={handlePrevious}
+                                        variant="outline"
+                                        size="icon"
+                                    >
+                                        <ArrowLeft className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Previous question</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    )}
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    onClick={handleNext}
+                                    disabled={monthlyRent === 0}
+                                    className={previousUrl ? '' : 'ml-auto'}
+                                    size="icon"
+                                >
+                                    <ArrowRight className="h-4 w-4" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Next question</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
+            </CardContent>
+        </Card>
+    )
+    
+    const rentIncreaseStep = (
+        <Card className="w-full">
+            <CardHeader>
+                <CardTitle>What is your expected average rent increase rate per year?</CardTitle>
+                <CardDescription>
+                    The annual percentage by which your rent is expected to increase
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                {/* Information about Canadian rent control */}
+                <div className="flex gap-3 p-4 bg-muted/50 rounded-lg border border-border">
+                    <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                    <div className="text-sm">
+                        <p className="font-medium mb-1">Canadian Rent Control Information</p>
+                        <p className="text-muted-foreground">
+                            In Canada, for properties built before November 2018, the maximum rate of rent increase 
+                            is typically 2.5% per year (varies by province). This is why 2.5% is the default value. 
+                            You can adjust this based on your specific situation or local regulations.
+                        </p>
+                    </div>
+                </div>
+                
+                <RentIncreaseField
+                    value={rentIncrease}
+                    onChange={setRentIncrease}
+                    defaultValue={defaultRentIncrease}
+                    minValue={minRentIncrease}
+                    maxValue={maxRentIncrease}
+                    displayMode="combined"
+                    showDescription={true}
+                />
+                
+                <div className="flex justify-between gap-3">
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    onClick={handlePrevious}
+                                    variant="outline"
+                                    size="icon"
+                                >
+                                    <ArrowLeft className="h-4 w-4" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Previous question</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                    <div className="flex gap-3">
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        onClick={handleUseDefault}
+                                        variant="secondary"
+                                    >
+                                        Use default
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Use default value and continue</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        onClick={handleNext}
+                                        size="icon"
+                                    >
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Next question</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    )
+    
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
@@ -88,152 +235,10 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
                 </div>
                 
                 {/* Step 1: Monthly Rent */}
-                {step === 1 && (
-                    <Card className="w-full">
-                        <CardHeader>
-                            <CardTitle>How much rent are you paying now?</CardTitle>
-                            <CardDescription>
-                                Enter the total monthly rent amount you currently pay
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            <MonthlyRentField
-                                value={monthlyRent}
-                                onChange={setMonthlyRent}
-                                defaultValue={defaultMonthlyRent}
-                                minValue={minMonthlyRent}
-                                maxValue={maxMonthlyRent}
-                                displayMode="combined"
-                                showDescription={true}
-                            />
-                            
-                            <div className="flex justify-between gap-3">
-                                {previousUrl && (
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <Button
-                                                    onClick={handlePrevious}
-                                                    variant="outline"
-                                                    size="icon"
-                                                >
-                                                    <ArrowLeft className="h-4 w-4" />
-                                                </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>Previous question</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                )}
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                onClick={handleNext}
-                                                disabled={monthlyRent === 0}
-                                                className={previousUrl ? '' : 'ml-auto'}
-                                                size="icon"
-                                            >
-                                                <ArrowRight className="h-4 w-4" />
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Next question</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
+                {step === 1 && monthlyRentStep}
                 
                 {/* Step 2: Rent Increase Rate */}
-                {step === 2 && (
-                    <Card className="w-full">
-                        <CardHeader>
-                            <CardTitle>What is your expected average rent increase rate per year?</CardTitle>
-                            <CardDescription>
-                                The annual percentage by which your rent is expected to increase
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            {/* Information about Canadian rent control */}
-                            <div className="flex gap-3 p-4 bg-muted/50 rounded-lg border border-border">
-                                <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
-                                <div className="text-sm">
-                                    <p className="font-medium mb-1">Canadian Rent Control Information</p>
-                                    <p className="text-muted-foreground">
-                                        In Canada, for properties built before November 2018, the maximum rate of rent increase 
-                                        is typically 2.5% per year (varies by province). This is why 2.5% is the default value. 
-                                        You can adjust this based on your specific situation or local regulations.
-                                    </p>
-                                </div>
-                            </div>
-                            
-                            <RentIncreaseField
-                                value={rentIncrease}
-                                onChange={setRentIncrease}
-                                defaultValue={defaultRentIncrease}
-                                minValue={minRentIncrease}
-                                maxValue={maxRentIncrease}
-                                displayMode="combined"
-                                showDescription={true}
-                            />
-                            
-                            <div className="flex justify-between gap-3">
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                onClick={handlePrevious}
-                                                variant="outline"
-                                                size="icon"
-                                            >
-                                                <ArrowLeft className="h-4 w-4" />
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Previous question</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                                <div className="flex gap-3">
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <Button
-                                                    onClick={handleUseDefault}
-                                                    variant="secondary"
-                                                >
-                                                    Use default
-                                                </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>Use default value and continue</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <Button
-                                                    onClick={handleNext}
-                                                    size="icon"
-                                                >
-                                                    <ArrowRight className="h-4 w-4" />
-                                                </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>Next question</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
+                {step === 2 && rentIncreaseStep}
             </main>
         </div>
     )

@@ -36,6 +36,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
     const maxInvestmentReturn = 100
     
     // State
+    const [step, _setStep] = useState<1>(1)
     const [investmentReturn, setInvestmentReturn] = useState<number>(defaultInvestmentReturn)
     
     // Handler to move to next step
@@ -77,6 +78,82 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
         handleNext()
     }
     
+    // Define the investment return step JSX
+    const investmentReturnStep = (
+        <Card className="w-full">
+            <CardHeader>
+                <CardTitle>What is your expected annual investment return rate?</CardTitle>
+                <CardDescription>
+                    The average yearly percentage return you expect from alternative investments if you choose to rent instead of buying
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <InvestmentReturnField
+                    value={investmentReturn}
+                    onChange={setInvestmentReturn}
+                    defaultValue={defaultInvestmentReturn}
+                    minValue={minInvestmentReturn}
+                    maxValue={maxInvestmentReturn}
+                    displayMode="combined"
+                    showHelper={true}
+                />
+                
+                <div className="flex justify-between gap-3">
+                    {previousUrl && (
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        onClick={handlePrevious}
+                                        variant="outline"
+                                        size="icon"
+                                    >
+                                        <ArrowLeft className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Previous question</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    )}
+                    <div className="flex gap-3 ml-auto">
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        onClick={handleUseDefault}
+                                        variant="secondary"
+                                    >
+                                        Use default
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Use default value and continue</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        onClick={handleNext}
+                                        size="icon"
+                                    >
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Next question</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    )
+    
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
@@ -98,78 +175,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
                 </div>
                 
                 {/* Investment Return */}
-                <Card className="w-full">
-                    <CardHeader>
-                        <CardTitle>What is your expected annual investment return rate?</CardTitle>
-                        <CardDescription>
-                            The average yearly percentage return you expect from alternative investments if you choose to rent instead of buying
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                        <InvestmentReturnField
-                            value={investmentReturn}
-                            onChange={setInvestmentReturn}
-                            defaultValue={defaultInvestmentReturn}
-                            minValue={minInvestmentReturn}
-                            maxValue={maxInvestmentReturn}
-                            displayMode="combined"
-                            showHelper={true}
-                        />
-                        
-                        <div className="flex justify-between gap-3">
-                            {previousUrl && (
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                onClick={handlePrevious}
-                                                variant="outline"
-                                                size="icon"
-                                            >
-                                                <ArrowLeft className="h-4 w-4" />
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Previous question</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            )}
-                            <div className="flex gap-3 ml-auto">
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                onClick={handleUseDefault}
-                                                variant="secondary"
-                                            >
-                                                Use default
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Use default value and continue</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                onClick={handleNext}
-                                                size="icon"
-                                            >
-                                                <ArrowRight className="h-4 w-4" />
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Next question</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                {step === 1 && investmentReturnStep}
             </main>
         </div>
     )
