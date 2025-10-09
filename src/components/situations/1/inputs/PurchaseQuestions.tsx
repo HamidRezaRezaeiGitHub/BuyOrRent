@@ -8,7 +8,8 @@ import { FlexibleNavbar } from '@/components/navbar'
 import { CompactThemeToggle } from '@/components/theme'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Info } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { ArrowLeft, ArrowRight, Info } from 'lucide-react'
 import { FC, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
@@ -117,26 +118,36 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     // Handler to use default value for down payment
     const handleUseDefaultDownPayment = () => {
         setDownPaymentPercentage(defaultDownPaymentPercentage)
+        // Automatically proceed to next after setting default
+        handleNext()
     }
     
     // Handler to use default value for mortgage rate
     const handleUseDefaultMortgageRate = () => {
         setMortgageRate(defaultMortgageRate)
+        // Automatically proceed to next after setting default
+        handleNext()
     }
     
     // Handler to use default value for mortgage length
     const handleUseDefaultMortgageLength = () => {
         setMortgageLength(defaultMortgageLength)
+        // Automatically proceed to next after setting default
+        handleNext()
     }
     
     // Handler to use default value for property tax
     const handleUseDefaultPropertyTax = () => {
         setPropertyTaxPercentage(defaultPropertyTaxPercentage)
+        // Automatically proceed to next after setting default
+        handleNext()
     }
     
     // Handler to use default value for maintenance
     const handleUseDefaultMaintenance = () => {
         setMaintenancePercentage(defaultMaintenancePercentage)
+        // Automatically proceed to next after setting default
+        handleNext()
     }
     
     return (
@@ -181,20 +192,40 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                             
                             <div className="flex justify-between gap-3">
                                 {previousUrl && (
-                                    <Button
-                                        onClick={handlePrevious}
-                                        variant="outline"
-                                    >
-                                        Previous
-                                    </Button>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    onClick={handlePrevious}
+                                                    variant="outline"
+                                                    size="icon"
+                                                >
+                                                    <ArrowLeft className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Previous question</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 )}
-                                <Button
-                                    onClick={handleNext}
-                                    disabled={purchasePrice <= 0}
-                                    className={previousUrl ? '' : 'ml-auto'}
-                                >
-                                    Next
-                                </Button>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                onClick={handleNext}
+                                                disabled={purchasePrice <= 0}
+                                                className={previousUrl ? '' : 'ml-auto'}
+                                                size="icon"
+                                            >
+                                                <ArrowRight className="h-4 w-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Next question</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                             </div>
                         </CardContent>
                     </Card>
@@ -234,24 +265,53 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                             />
                             
                             <div className="flex justify-between gap-3">
-                                <Button
-                                    onClick={handlePrevious}
-                                    variant="outline"
-                                >
-                                    Previous
-                                </Button>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                onClick={handlePrevious}
+                                                variant="outline"
+                                                size="icon"
+                                            >
+                                                <ArrowLeft className="h-4 w-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Previous question</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                                 <div className="flex gap-3">
-                                    <Button
-                                        onClick={handleUseDefaultDownPayment}
-                                        variant="secondary"
-                                    >
-                                        Use Default (20%)
-                                    </Button>
-                                    <Button
-                                        onClick={handleNext}
-                                    >
-                                        Next
-                                    </Button>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    onClick={handleUseDefaultDownPayment}
+                                                    variant="secondary"
+                                                >
+                                                    Use default
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Use default value and continue</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    onClick={handleNext}
+                                                    size="icon"
+                                                >
+                                                    <ArrowRight className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Next question</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </div>
                             </div>
                         </CardContent>
@@ -292,24 +352,53 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                             />
                             
                             <div className="flex justify-between gap-3">
-                                <Button
-                                    onClick={handlePrevious}
-                                    variant="outline"
-                                >
-                                    Previous
-                                </Button>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                onClick={handlePrevious}
+                                                variant="outline"
+                                                size="icon"
+                                            >
+                                                <ArrowLeft className="h-4 w-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Previous question</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                                 <div className="flex gap-3">
-                                    <Button
-                                        onClick={handleUseDefaultMortgageRate}
-                                        variant="secondary"
-                                    >
-                                        Use Default (5.5%)
-                                    </Button>
-                                    <Button
-                                        onClick={handleNext}
-                                    >
-                                        Next
-                                    </Button>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    onClick={handleUseDefaultMortgageRate}
+                                                    variant="secondary"
+                                                >
+                                                    Use default
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Use default value and continue</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    onClick={handleNext}
+                                                    size="icon"
+                                                >
+                                                    <ArrowRight className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Next question</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </div>
                             </div>
                         </CardContent>
@@ -350,24 +439,53 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                             />
                             
                             <div className="flex justify-between gap-3">
-                                <Button
-                                    onClick={handlePrevious}
-                                    variant="outline"
-                                >
-                                    Previous
-                                </Button>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                onClick={handlePrevious}
+                                                variant="outline"
+                                                size="icon"
+                                            >
+                                                <ArrowLeft className="h-4 w-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Previous question</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                                 <div className="flex gap-3">
-                                    <Button
-                                        onClick={handleUseDefaultMortgageLength}
-                                        variant="secondary"
-                                    >
-                                        Use Default (25 years)
-                                    </Button>
-                                    <Button
-                                        onClick={handleNext}
-                                    >
-                                        Next
-                                    </Button>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    onClick={handleUseDefaultMortgageLength}
+                                                    variant="secondary"
+                                                >
+                                                    Use default
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Use default value and continue</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    onClick={handleNext}
+                                                    size="icon"
+                                                >
+                                                    <ArrowRight className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Next question</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </div>
                             </div>
                         </CardContent>
@@ -408,24 +526,53 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                             />
                             
                             <div className="flex justify-between gap-3">
-                                <Button
-                                    onClick={handlePrevious}
-                                    variant="outline"
-                                >
-                                    Previous
-                                </Button>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                onClick={handlePrevious}
+                                                variant="outline"
+                                                size="icon"
+                                            >
+                                                <ArrowLeft className="h-4 w-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Previous question</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                                 <div className="flex gap-3">
-                                    <Button
-                                        onClick={handleUseDefaultPropertyTax}
-                                        variant="secondary"
-                                    >
-                                        Use Default (0.75%)
-                                    </Button>
-                                    <Button
-                                        onClick={handleNext}
-                                    >
-                                        Next
-                                    </Button>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    onClick={handleUseDefaultPropertyTax}
+                                                    variant="secondary"
+                                                >
+                                                    Use default
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Use default value and continue</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    onClick={handleNext}
+                                                    size="icon"
+                                                >
+                                                    <ArrowRight className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Next question</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </div>
                             </div>
                         </CardContent>
@@ -467,24 +614,53 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                             />
                             
                             <div className="flex justify-between gap-3">
-                                <Button
-                                    onClick={handlePrevious}
-                                    variant="outline"
-                                >
-                                    Previous
-                                </Button>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                onClick={handlePrevious}
+                                                variant="outline"
+                                                size="icon"
+                                            >
+                                                <ArrowLeft className="h-4 w-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Previous question</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                                 <div className="flex gap-3">
-                                    <Button
-                                        onClick={handleUseDefaultMaintenance}
-                                        variant="secondary"
-                                    >
-                                        Use Default (2%)
-                                    </Button>
-                                    <Button
-                                        onClick={handleNext}
-                                    >
-                                        Next
-                                    </Button>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    onClick={handleUseDefaultMaintenance}
+                                                    variant="secondary"
+                                                >
+                                                    Use default
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Use default value and continue</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    onClick={handleNext}
+                                                    size="icon"
+                                                >
+                                                    <ArrowRight className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Next question</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </div>
                             </div>
                         </CardContent>
