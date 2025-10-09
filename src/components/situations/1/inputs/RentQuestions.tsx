@@ -8,7 +8,15 @@ import { Info } from 'lucide-react'
 import { FC, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export const RentQuestions: FC = () => {
+export interface RentQuestionsProps {
+    previousUrl?: string
+    nextUrl?: string
+}
+
+export const RentQuestions: FC<RentQuestionsProps> = ({
+    previousUrl,
+    nextUrl
+}) => {
     const navigate = useNavigate()
     
     // Default values
@@ -33,8 +41,12 @@ export const RentQuestions: FC = () => {
                 setStep(2)
             }
         } else if (step === 2) {
-            // Navigate to purchase questions with URL parameters
-            navigate(`/situation/1/question/purchase?monthlyRent=${monthlyRent}&rentIncrease=${rentIncrease}`)
+            // Navigate using nextUrl if provided, otherwise use default
+            if (nextUrl) {
+                navigate(`${nextUrl}?monthlyRent=${monthlyRent}&rentIncrease=${rentIncrease}`)
+            } else {
+                navigate(`/situation/1/question/purchase?monthlyRent=${monthlyRent}&rentIncrease=${rentIncrease}`)
+            }
         }
     }
     
@@ -42,6 +54,8 @@ export const RentQuestions: FC = () => {
     const handlePrevious = () => {
         if (step === 2) {
             setStep(1)
+        } else if (step === 1 && previousUrl) {
+            navigate(previousUrl)
         }
     }
     
@@ -90,10 +104,19 @@ export const RentQuestions: FC = () => {
                                 showDescription={true}
                             />
                             
-                            <div className="flex justify-end">
+                            <div className="flex justify-between gap-3">
+                                {previousUrl && (
+                                    <Button
+                                        onClick={handlePrevious}
+                                        variant="outline"
+                                    >
+                                        Previous
+                                    </Button>
+                                )}
                                 <Button
                                     onClick={handleNext}
                                     disabled={monthlyRent === 0}
+                                    className={previousUrl ? '' : 'ml-auto'}
                                 >
                                     Next
                                 </Button>

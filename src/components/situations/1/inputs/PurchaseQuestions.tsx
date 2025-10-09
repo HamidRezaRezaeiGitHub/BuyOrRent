@@ -12,7 +12,15 @@ import { Info } from 'lucide-react'
 import { FC, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
-export const PurchaseQuestions: FC = () => {
+export interface PurchaseQuestionsProps {
+    previousUrl?: string
+    nextUrl?: string
+}
+
+export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
+    previousUrl,
+    nextUrl
+}) => {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
     
@@ -70,7 +78,7 @@ export const PurchaseQuestions: FC = () => {
         } else if (step === 5) {
             setStep(6)
         } else if (step === 6) {
-            // Navigate to the panel with all URL parameters
+            // Navigate using nextUrl if provided, otherwise navigate to panel
             const params = new URLSearchParams({
                 monthlyRent,
                 rentIncrease,
@@ -81,7 +89,11 @@ export const PurchaseQuestions: FC = () => {
                 propertyTaxPercentage: propertyTaxPercentage.toString(),
                 maintenancePercentage: maintenancePercentage.toString()
             })
-            navigate(`/situation/1/panel?${params.toString()}`)
+            if (nextUrl) {
+                navigate(`${nextUrl}?${params.toString()}`)
+            } else {
+                navigate(`/situation/1/panel?${params.toString()}`)
+            }
         }
     }
     
@@ -97,6 +109,8 @@ export const PurchaseQuestions: FC = () => {
             setStep(4)
         } else if (step === 6) {
             setStep(5)
+        } else if (step === 1 && previousUrl) {
+            navigate(`${previousUrl}?monthlyRent=${monthlyRent}&rentIncrease=${rentIncrease}`)
         }
     }
     
@@ -165,10 +179,19 @@ export const PurchaseQuestions: FC = () => {
                                 showDescription={true}
                             />
                             
-                            <div className="flex justify-end">
+                            <div className="flex justify-between gap-3">
+                                {previousUrl && (
+                                    <Button
+                                        onClick={handlePrevious}
+                                        variant="outline"
+                                    >
+                                        Previous
+                                    </Button>
+                                )}
                                 <Button
                                     onClick={handleNext}
                                     disabled={purchasePrice <= 0}
+                                    className={previousUrl ? '' : 'ml-auto'}
                                 >
                                     Next
                                 </Button>
