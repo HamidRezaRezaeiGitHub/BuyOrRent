@@ -65,23 +65,46 @@ export const Situation1: React.FC = () => {
     const initialRentIncrease = searchParams.get('rentIncrease')
         ? parseFloat(searchParams.get('rentIncrease')!)
         : defaultRentIncrease
+    const initialInvestmentReturn = searchParams.get('investmentReturn')
+        ? parseFloat(searchParams.get('investmentReturn')!)
+        : defaultInvestmentReturn
         
     const [monthlyRent, setMonthlyRent] = useState<number>(initialMonthlyRent)
     const [rentIncrease, setRentIncrease] = useState<number>(initialRentIncrease)
-    const [investmentReturn, setInvestmentReturn] = useState<number>(defaultInvestmentReturn)
+    const [investmentReturn, setInvestmentReturn] = useState<number>(initialInvestmentReturn)
+
+    // Initialize purchase fields from URL params or use defaults
+    const initialPurchasePrice = searchParams.get('purchasePrice')
+        ? parseFloat(searchParams.get('purchasePrice')!)
+        : defaultPurchasePrice
+    const initialDownPaymentPercentage = searchParams.get('downPaymentPercentage')
+        ? parseFloat(searchParams.get('downPaymentPercentage')!)
+        : defaultDownPaymentPercentage
+    const initialMortgageRate = searchParams.get('mortgageRate')
+        ? parseFloat(searchParams.get('mortgageRate')!)
+        : defaultMortgageRate
+    const initialMortgageLength = searchParams.get('mortgageLength')
+        ? parseFloat(searchParams.get('mortgageLength')!)
+        : defaultMortgageLength
+    const initialPropertyTaxPercentage = searchParams.get('propertyTaxPercentage')
+        ? parseFloat(searchParams.get('propertyTaxPercentage')!)
+        : defaultPropertyTaxPercentage
+    const initialMaintenancePercentage = searchParams.get('maintenancePercentage')
+        ? parseFloat(searchParams.get('maintenancePercentage')!)
+        : defaultMaintenancePercentage
 
     // Buy fields state
-    const [purchasePrice, setPurchasePrice] = useState<number>(defaultPurchasePrice)
-    const [downPaymentPercentage, setDownPaymentPercentage] = useState<number>(defaultDownPaymentPercentage)
-    const [downPaymentAmount, setDownPaymentAmount] = useState<number>(defaultDownPaymentPercentage / 100 * purchasePrice)
+    const [purchasePrice, setPurchasePrice] = useState<number>(initialPurchasePrice)
+    const [downPaymentPercentage, setDownPaymentPercentage] = useState<number>(initialDownPaymentPercentage)
+    const [downPaymentAmount, setDownPaymentAmount] = useState<number>(initialDownPaymentPercentage / 100 * initialPurchasePrice)
     const [downPaymentMode, setDownPaymentMode] = useState<'percentage' | 'amount'>('percentage')
-    const [mortgageRate, setMortgageRate] = useState<number>(defaultMortgageRate)
-    const [mortgageLength, setMortgageLength] = useState<number>(defaultMortgageLength)
-    const [propertyTaxPercentage, setPropertyTaxPercentage] = useState<number>(defaultPropertyTaxPercentage)
-    const [propertyTaxAmount, setPropertyTaxAmount] = useState<number>(defaultPropertyTaxPercentage / 100 * purchasePrice)
+    const [mortgageRate, setMortgageRate] = useState<number>(initialMortgageRate)
+    const [mortgageLength, setMortgageLength] = useState<number>(initialMortgageLength)
+    const [propertyTaxPercentage, setPropertyTaxPercentage] = useState<number>(initialPropertyTaxPercentage)
+    const [propertyTaxAmount, setPropertyTaxAmount] = useState<number>(initialPropertyTaxPercentage / 100 * initialPurchasePrice)
     const [propertyTaxMode, setPropertyTaxMode] = useState<'percentage' | 'amount'>('percentage')
-    const [maintenancePercentage, setMaintenancePercentage] = useState<number>(defaultMaintenancePercentage)
-    const [maintenanceAmount, setMaintenanceAmount] = useState<number>(defaultMaintenancePercentage / 100 * purchasePrice)
+    const [maintenancePercentage, setMaintenancePercentage] = useState<number>(initialMaintenancePercentage)
+    const [maintenanceAmount, setMaintenanceAmount] = useState<number>(initialMaintenancePercentage / 100 * initialPurchasePrice)
     const [maintenanceMode, setMaintenanceMode] = useState<'percentage' | 'amount'>('percentage')
 
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
