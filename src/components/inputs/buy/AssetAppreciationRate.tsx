@@ -1,5 +1,5 @@
-import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
-import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Info, TrendingUp } from 'lucide-react';
@@ -17,7 +17,6 @@ export interface AssetAppreciationRateFieldProps {
     maxValue?: number; // Default: 20
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
-    showDescription?: boolean; // Default: true
 }
 
 export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = ({
@@ -31,8 +30,7 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
     minValue = -5,
     maxValue = 20,
     onLabelSet,
-    showLabel = true,
-    showDescription = true
+    showLabel = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -79,10 +77,6 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
         }
     }, [validatedValue, value, onChange]);
 
-    // Determine the main control ID based on displayMode
-    const getMainControlId = useCallback(() => {
-        return displayMode === 'input' ? id : `${id}-slider`;
-    }, [displayMode, id]);
 
     // Handle slider change
     const handleSliderChange = (values: number[]) => {
@@ -151,9 +145,11 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
 
     // Label component with icon and tooltip (memoized)
     const labelComponent = useMemo(() => (
-        <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1">
+        <div className="flex items-center gap-1">
             <TrendingUp className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
-            <span className="text-xs">Property Appreciation</span>
+            <Label htmlFor={id} className="text-xs">
+                Property Appreciation
+            </Label>
             <TooltipProvider>
                 <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
                     <TooltipTrigger asChild>
@@ -179,8 +175,8 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
-        </FieldLabel>
-    ), [id, tooltipOpen, getMainControlId]);
+        </div>
+    ), [id, tooltipOpen]);
 
     // Notify parent about label if onLabelSet is provided
     useEffect(() => {
@@ -210,8 +206,8 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
 
     // Input component
     const inputComponent = (
-        <InputGroup>
-            <InputGroupInput
+        <div className="relative">
+            <Input
                 id={displayMode === 'input' ? id : `${id}-input`}
                 type="number"
                 inputMode="decimal"
@@ -224,14 +220,18 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 disabled={disabled}
-                className={`${displayMode === 'combined' ? 'w-32' : 'w-full'}`}
+                className={`${displayMode === 'combined' ? 'w-32 pr-12' : 'w-full pr-12'}`}
                 aria-label={`Property appreciation rate, current value: ${validatedValue}%`}
                 aria-describedby={`${id}-suffix ${id}-tooltip`}
             />
-            <InputGroupAddon align="inline-end">
-                <InputGroupText id={`${id}-suffix`}>%</InputGroupText>
-            </InputGroupAddon>
-        </InputGroup>
+            <div
+                id={`${id}-suffix`}
+                className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                aria-hidden="true"
+            >
+                <span className="text-sm text-muted-foreground">%</span>
+            </div>
+        </div>
     );
 
     const valueDisplay = (
@@ -248,43 +248,48 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
         switch (displayMode) {
             case 'slider':
                 return (
-                    <div className="flex items-center gap-3">
-                        {sliderComponent}
-                        {valueDisplay}
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                            {sliderComponent}
+                            {valueDisplay}
+                        </div>
                     </div>
                 );
 
             case 'input':
-                return inputComponent;
+                return (
+                    <div className="space-y-2">
+                        {inputComponent}
+                    </div>
+                );
 
             case 'combined':
                 return (
-                    <div className="flex items-center gap-3">
-                        {sliderComponent}
-                        {inputComponent}
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                            {sliderComponent}
+                            {inputComponent}
+                        </div>
                     </div>
                 );
 
             default:
                 return (
-                    <div className="flex items-center gap-3">
-                        {sliderComponent}
-                        {valueDisplay}
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                            {sliderComponent}
+                            {valueDisplay}
+                        </div>
                     </div>
                 );
         }
     };
 
     return (
-        <Field className={className}>
+        <div className={`space-y-2 ${className}`}>
             {showLabel && labelComponent}
             {renderField()}
-            {showDescription && (
-                <FieldDescription className="text-xs text-muted-foreground">
-                    Annual property value appreciation rate
-                </FieldDescription>
-            )}
-        </Field>
+        </div>
     );
 };
 

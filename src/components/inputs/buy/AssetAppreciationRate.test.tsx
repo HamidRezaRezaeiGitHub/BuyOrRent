@@ -34,19 +34,8 @@ describe('AssetAppreciationRateField', () => {
             expect(screen.getByRole('slider')).toBeInTheDocument();
             expect(screen.getByRole('spinbutton')).toBeInTheDocument();
         });
-
-        test('AssetAppreciationRateField_shouldHideLabel_whenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
-            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} showLabel={false} />);
-            expect(screen.queryByText('Property Appreciation')).not.toBeInTheDocument();
-        });
-
-        test('AssetAppreciationRateField_shouldHideDescription_whenShowDescriptionIsFalse', () => {
-            const mockOnChange = jest.fn();
-            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} showDescription={false} />);
-            expect(screen.queryByText('Annual property value appreciation rate')).not.toBeInTheDocument();
-        });
     });
+
 
     // Value Validation Tests
     describe('Value Validation', () => {
@@ -79,13 +68,8 @@ describe('AssetAppreciationRateField', () => {
             render(<AssetAppreciationRateField value={3.555} onChange={mockOnChange} />);
             expect(mockOnChange).toHaveBeenCalledWith(3.56);
         });
-
-        test('AssetAppreciationRateField_shouldAcceptNegativeValues', () => {
-            const mockOnChange = jest.fn();
-            render(<AssetAppreciationRateField value={-2.5} onChange={mockOnChange} minValue={-5} />);
-            expect(mockOnChange).not.toHaveBeenCalled(); // Value is valid
-        });
     });
+
 
     // Slider Interaction Tests
     describe('Slider Interactions', () => {
@@ -111,166 +95,299 @@ describe('AssetAppreciationRateField', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             const slider = screen.getByRole('slider');
+            // The step attribute is on the parent Slider component, not the thumb element
             expect(slider).toHaveAttribute('aria-valuenow', '3');
         });
     });
 
+
     // Input Interaction Tests
     describe('Input Interactions', () => {
-        test('AssetAppreciationRateField_shouldUpdateValue_whenInputChanged', async () => {
+        test('AssetAppreciationRateField_shouldUpdateValueOnValidInput', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
+            
             const input = screen.getByRole('spinbutton');
-            
-            await user.clear(input);
-            await user.type(input, '5');
-            
-            expect(mockOnChange).toHaveBeenCalled();
-        });
-
-        test('AssetAppreciationRateField_shouldFormatValue_onBlur', async () => {
-            const user = userEvent.setup();
-            const mockOnChange = jest.fn();
-            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
-            const input = screen.getByRole('spinbutton');
-            
-            await user.click(input);
             await user.clear(input);
             await user.type(input, '5.5');
-            await user.tab(); // Blur the input
             
-            // After blur, onChange should have been called with the new value
             expect(mockOnChange).toHaveBeenCalledWith(5.5);
         });
 
-        test('AssetAppreciationRateField_shouldClampValue_onBlur_whenBelowMin', async () => {
-            const user = userEvent.setup();
+        test('AssetAppreciationRateField_shouldShowFormattedValueWhenNotFocused', () => {
             const mockOnChange = jest.fn();
-            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} minValue={-5} />);
-            const input = screen.getByRole('spinbutton');
-            
-            await user.click(input);
-            await user.clear(input);
-            await user.type(input, '-10');
-            await user.tab(); // Blur the input
-            
-            expect(mockOnChange).toHaveBeenCalledWith(-5);
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
+            const input = screen.getByRole('spinbutton') as HTMLInputElement;
+            expect(input.value).toBe('3.00');
         });
 
-        test('AssetAppreciationRateField_shouldClampValue_onBlur_whenAboveMax', async () => {
+        test('AssetAppreciationRateField_shouldShowUnformattedValueWhenFocused', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} maxValue={20} />);
-            const input = screen.getByRole('spinbutton');
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             
+            const input = screen.getByRole('spinbutton') as HTMLInputElement;
             await user.click(input);
+            
+            expect(input.value).toBe('3');
+        });
+
+        test('AssetAppreciationRateField_shouldClampValueOnBlur', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} maxValue={15} />);
+            
+            const input = screen.getByRole('spinbutton');
             await user.clear(input);
             await user.type(input, '25');
             await user.tab(); // Blur the input
             
-            expect(mockOnChange).toHaveBeenCalledWith(20);
+            expect(mockOnChange).toHaveBeenCalledWith(15);
         });
 
-        test('AssetAppreciationRateField_shouldUseDefaultValue_onBlur_whenInvalid', async () => {
+        test('AssetAppreciationRateField_shouldHandleEmptyInputOnBlur', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} defaultValue={3.0} />);
-            const input = screen.getByRole('spinbutton');
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} defaultValue={4} />);
             
-            await user.click(input);
+            const input = screen.getByRole('spinbutton');
             await user.clear(input);
-            await user.tab(); // Blur with empty input
+            await user.tab(); // Blur the input
             
-            expect(mockOnChange).toHaveBeenCalledWith(3.0);
+            expect(mockOnChange).toHaveBeenCalledWith(4);
         });
 
-        test('AssetAppreciationRateField_shouldShowUnformattedValue_onFocus', async () => {
+        test('AssetAppreciationRateField_shouldHandleInvalidInputOnBlur', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            render(<AssetAppreciationRateField value={3.5} onChange={mockOnChange} />);
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} defaultValue={4} />);
+            
             const input = screen.getByRole('spinbutton');
+            await user.clear(input);
+            await user.type(input, 'abc');
+            await user.tab(); // Blur the input
             
-            await user.click(input);
-            
-            expect(input).toHaveValue(3.5);
+            expect(mockOnChange).toHaveBeenCalledWith(4);
         });
     });
+
 
     // Disabled State Tests
     describe('Disabled State', () => {
-        test('AssetAppreciationRateField_shouldDisableSlider_whenDisabled', () => {
+        test('AssetAppreciationRateField_shouldDisableAllInputsWhenDisabled', () => {
             const mockOnChange = jest.fn();
-            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} disabled />);
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} disabled={true} />);
+            
             const slider = screen.getByRole('slider');
-            // Check for the data-disabled attribute which is used by radix-ui
-            expect(slider).toHaveAttribute('data-disabled');
-        });
-
-        test('AssetAppreciationRateField_shouldDisableInput_whenDisabled', () => {
-            const mockOnChange = jest.fn();
-            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} disabled />);
             const input = screen.getByRole('spinbutton');
+            
+            expect(slider).toHaveAttribute('data-disabled', '');
             expect(input).toBeDisabled();
         });
+
+        test('AssetAppreciationRateField_shouldNotCallOnChangeWhenDisabled', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} disabled={true} />);
+            
+            const input = screen.getByRole('spinbutton');
+            await user.type(input, '5.5');
+            
+            expect(mockOnChange).not.toHaveBeenCalled();
+        });
     });
+
 
     // Accessibility Tests
     describe('Accessibility', () => {
         test('AssetAppreciationRateField_shouldHaveProperAriaLabels', () => {
             const mockOnChange = jest.fn();
-            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
-            const slider = screen.getByRole('slider');
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} id="test-rate" />);
+            
             const input = screen.getByRole('spinbutton');
             
-            // Check for proper aria attributes
-            expect(slider).toHaveAttribute('aria-valuenow');
-            expect(input).toHaveAttribute('aria-describedby');
+            expect(input).toHaveAttribute('aria-label', 'Property appreciation rate, current value: 3%');
+            expect(input).toHaveAttribute('aria-describedby', 'test-rate-suffix test-rate-tooltip');
         });
 
-        test('AssetAppreciationRateField_shouldHaveTooltip', async () => {
+        test('AssetAppreciationRateField_shouldHaveProperTooltipAccessibility', () => {
+            const mockOnChange = jest.fn();
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} id="test-rate" />);
+            
+            const tooltipTrigger = screen.getByRole('button', { name: /more information about property appreciation rate/i });
+            expect(tooltipTrigger).toHaveAttribute('aria-describedby', 'test-rate-tooltip');
+            expect(tooltipTrigger).toHaveAttribute('aria-expanded', 'false');
+        });
+
+        test('AssetAppreciationRateField_shouldToggleTooltip', async () => {
+            const user = userEvent.setup();
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             
-            const infoButton = screen.getByLabelText('More information about Property Appreciation Rate');
-            expect(infoButton).toBeInTheDocument();
+            const tooltipTrigger = screen.getByRole('button', { name: /more information about property appreciation rate/i });
+            await user.click(tooltipTrigger);
+            
+            expect(tooltipTrigger).toHaveAttribute('aria-expanded', 'true');
+            expect(screen.getAllByText(/expected annual percentage increase/i)).toHaveLength(2);
+        });
+
+        test('AssetAppreciationRateField_shouldHavePercentSuffix', () => {
+            const mockOnChange = jest.fn();
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} id="test-rate" />);
+            
+            const suffix = screen.getByText('%');
+            expect(suffix.parentElement).toHaveAttribute('id', 'test-rate-suffix');
+            expect(suffix.parentElement).toHaveAttribute('aria-hidden', 'true');
         });
     });
 
-    // Custom Range Tests
-    describe('Custom Range', () => {
-        test('AssetAppreciationRateField_shouldAcceptCustomMinMax', () => {
+
+    // Customization Tests
+    describe('Customization', () => {
+        test('AssetAppreciationRateField_shouldRespectCustomMinMaxValues', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={5} onChange={mockOnChange} minValue={0} maxValue={10} />);
+            
             const slider = screen.getByRole('slider');
+            const input = screen.getByRole('spinbutton');
             
             expect(slider).toHaveAttribute('aria-valuemin', '0');
             expect(slider).toHaveAttribute('aria-valuemax', '10');
+            expect(input).toHaveAttribute('min', '0');
+            expect(input).toHaveAttribute('max', '10');
+        });
+
+        test('AssetAppreciationRateField_shouldUseCustomId', () => {
+            const mockOnChange = jest.fn();
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} id="custom-rate" />);
+            
+            const label = screen.getByText('Property Appreciation');
+            expect(label).toHaveAttribute('for', 'custom-rate');
+        });
+
+        test('AssetAppreciationRateField_shouldUseCustomClassName', () => {
+            const mockOnChange = jest.fn();
+            const { container } = render(
+                <AssetAppreciationRateField value={3.0} onChange={mockOnChange} className="custom-class" />
+            );
+            
+            expect(container.firstChild).toHaveClass('custom-class');
         });
 
         test('AssetAppreciationRateField_shouldUseCustomDefaultValue', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={NaN} onChange={mockOnChange} defaultValue={5.0} />);
+            
             expect(mockOnChange).toHaveBeenCalledWith(5.0);
         });
     });
 
-    // Integration Tests
-    describe('Integration', () => {
-        test('AssetAppreciationRateField_shouldMaintainSync_betweenSliderAndInput', async () => {
+
+    // Edge Cases Tests
+    describe('Edge Cases', () => {
+        test('AssetAppreciationRateField_shouldHandleVeryLargeNumbers', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
-            const { rerender } = render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} maxValue={20} />);
             
             const input = screen.getByRole('spinbutton');
-            await user.click(input);
             await user.clear(input);
-            await user.type(input, '7');
+            await user.type(input, '999999');
+            await user.tab();
             
-            // Simulate parent component updating the value prop
-            rerender(<AssetAppreciationRateField value={7.0} onChange={mockOnChange} />);
+            expect(mockOnChange).toHaveBeenCalledWith(20);
+        });
+
+        test('AssetAppreciationRateField_shouldHandleNegativeValues', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} minValue={-5} />);
             
-            expect(input).toHaveValue(7);
+            const input = screen.getByRole('spinbutton');
+            await user.clear(input);
+            await user.type(input, '-10');
+            await user.tab();
+            
+            expect(mockOnChange).toHaveBeenCalledWith(-5);
+        });
+
+        test('AssetAppreciationRateField_shouldHandleDecimalInput', async () => {
+            const user = userEvent.setup();
+            const mockOnChange = jest.fn();
+            render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
+            
+            const input = screen.getByRole('spinbutton');
+            await user.clear(input);
+            await user.type(input, '4.75');
+            
+            expect(mockOnChange).toHaveBeenCalledWith(4.75);
+        });
+    });
+    // Label Props Tests
+    describe('Label Props', () => {
+        test('AssetAppreciationRateField_shouldCallOnLabelSetWithLabelElement', () => {
+            const mockOnChange = jest.fn();
+            const mockOnLabelSet = jest.fn();
+
+            render(
+                <AssetAppreciationRateField
+                    value={3}
+                    onChange={mockOnChange}
+                    onLabelSet={mockOnLabelSet}
+                />
+            );
+
+            // onLabelSet should be called with a React element
+            expect(mockOnLabelSet).toHaveBeenCalledTimes(1);
+            expect(mockOnLabelSet).toHaveBeenCalledWith(expect.any(Object));
+        });
+
+        test('AssetAppreciationRateField_shouldHideLabelWhenShowLabelIsFalse', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <AssetAppreciationRateField
+                    value={3}
+                    onChange={mockOnChange}
+                    showLabel={false}
+                />
+            );
+
+            // Label should not be visible
+            const label = screen.queryByText('Property Appreciation');
+            expect(label).not.toBeInTheDocument();
+        });
+
+        test('AssetAppreciationRateField_shouldShowLabelByDefault', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <AssetAppreciationRateField
+                    value={3}
+                    onChange={mockOnChange}
+                />
+            );
+
+            // Label should be visible by default
+            const label = screen.getByText('Property Appreciation');
+            expect(label).toBeInTheDocument();
+        });
+
+        test('AssetAppreciationRateField_shouldShowLabelWhenShowLabelIsTrue', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <AssetAppreciationRateField
+                    value={3}
+                    onChange={mockOnChange}
+                    showLabel={true}
+                />
+            );
+
+            // Label should be visible
+            const label = screen.getByText('Property Appreciation');
+            expect(label).toBeInTheDocument();
         });
     });
 });

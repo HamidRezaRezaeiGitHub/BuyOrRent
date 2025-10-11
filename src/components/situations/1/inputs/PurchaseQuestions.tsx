@@ -808,7 +808,6 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     minValue={minAssetAppreciationRate}
                     maxValue={maxAssetAppreciationRate}
                     displayMode="combined"
-                    showDescription={true}
                 />
                 
                 <div className="flex justify-between gap-3">
