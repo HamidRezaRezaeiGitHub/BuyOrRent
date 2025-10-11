@@ -1,4 +1,5 @@
 import { PercentageAmountSwitch } from '@/components/inputs/PercentageAmountSwitch'
+import { AssetAppreciationRateField } from '@/components/inputs/buy/AssetAppreciationRate'
 import { DownPaymentAmountField } from '@/components/inputs/buy/DownPaymentAmount'
 import { DownPaymentPercentageField } from '@/components/inputs/buy/DownPaymentPercentage'
 import { MaintenanceAmountField } from '@/components/inputs/buy/MaintenanceAmount'
@@ -58,6 +59,11 @@ interface PurchaseInformationProps {
     defaultMaintenancePercentage: number
     minMaintenancePercentage: number
     maxMaintenancePercentage: number
+    assetAppreciationRate: number
+    setAssetAppreciationRate: (value: number) => void
+    defaultAssetAppreciationRate: number
+    minAssetAppreciationRate: number
+    maxAssetAppreciationRate: number
 }
 
 export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
@@ -103,6 +109,11 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
     defaultMaintenancePercentage,
     minMaintenancePercentage,
     maxMaintenancePercentage,
+    assetAppreciationRate,
+    setAssetAppreciationRate,
+    defaultAssetAppreciationRate,
+    minAssetAppreciationRate,
+    maxAssetAppreciationRate,
 }) => {
     // Purchase Price Component
     const purchasePriceComponent = (
@@ -258,6 +269,18 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
         />
     );
 
+    // Asset Appreciation Rate Component
+    const assetAppreciationRateComponent = (
+        <AssetAppreciationRateField
+            value={assetAppreciationRate}
+            onChange={setAssetAppreciationRate}
+            defaultValue={defaultAssetAppreciationRate}
+            minValue={minAssetAppreciationRate}
+            maxValue={maxAssetAppreciationRate}
+            displayMode='combined'
+        />
+    );
+
     return (
         <FieldSet>
             <FieldDescription>
@@ -307,6 +330,18 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
 
                             {/* Annual Maintenance with Percentage/Amount Switch */}
                             {maintenanceSwitchComponent}
+                        </div>
+                    </FieldGroup>
+
+                    <FieldSeparator />
+
+                    <FieldGroup>
+                        <FieldDescription>
+                            Expected property value appreciation
+                        </FieldDescription>
+                        <div className="grid gap-6">
+                            {/* Asset Appreciation Rate */}
+                            {assetAppreciationRateComponent}
                         </div>
                     </FieldGroup>
                 </>

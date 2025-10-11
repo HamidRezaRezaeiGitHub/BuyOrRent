@@ -2,34 +2,34 @@ import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Info, Percent } from 'lucide-react';
+import { Info, TrendingUp } from 'lucide-react';
 import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-export interface MortgageRateFieldProps {
+export interface AssetAppreciationRateFieldProps {
     id?: string;
     value: number;
     onChange: (value: number) => void;
     disabled?: boolean;
     className?: string;
     displayMode?: 'slider' | 'input' | 'combined'; // Default: 'combined'
-    defaultValue?: number; // Default: 5.5 (most common Canadian rate in 2025)
-    minValue?: number; // Default: 0
-    maxValue?: number; // Default: 15
+    defaultValue?: number; // Default: 3.0 (typical Canadian property appreciation rate)
+    minValue?: number; // Default: -5
+    maxValue?: number; // Default: 20
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
     showDescription?: boolean; // Default: true
 }
 
-export const MortgageRateField: FC<MortgageRateFieldProps> = ({
-    id = 'mortgageRate',
+export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = ({
+    id = 'assetAppreciationRate',
     value,
     onChange,
     disabled = false,
     className = '',
     displayMode = 'combined',
-    defaultValue = 5.5,
-    minValue = 0,
-    maxValue = 15,
+    defaultValue = 3.0,
+    minValue = -5,
+    maxValue = 20,
     onLabelSet,
     showLabel = true,
     showDescription = true
@@ -152,15 +152,15 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
     // Label component with icon and tooltip (memoized)
     const labelComponent = useMemo(() => (
         <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1">
-            <Percent className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
-            <span className="text-xs">Mortgage Rate</span>
+            <TrendingUp className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
+            <span className="text-xs">Property Appreciation</span>
             <TooltipProvider>
                 <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
                     <TooltipTrigger asChild>
                         <button
                             type="button"
                             className="ml-1"
-                            aria-label="More information about Mortgage Rate"
+                            aria-label="More information about Property Appreciation Rate"
                             aria-describedby={`${id}-tooltip`}
                             aria-expanded={tooltipOpen}
                             onClick={() => setTooltipOpen(!tooltipOpen)}
@@ -171,7 +171,9 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
                     <TooltipContent side="right" className="max-w-xs" id={`${id}-tooltip`}>
                         <div className="text-xs">
                             <p>
-                                The annual interest rate charged by your lender on the mortgage. This significantly affects your monthly payment and total cost over time.
+                                The expected annual percentage increase in the property's value. 
+                                This reflects how much your home's market value is likely to grow 
+                                each year based on market conditions and location.
                             </p>
                         </div>
                     </TooltipContent>
@@ -198,7 +200,7 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
             onValueChange={handleSliderChange}
             disabled={disabled}
             className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
-            aria-label={`Mortgage rate: ${validatedValue}%`}
+            aria-label={`Property appreciation rate: ${validatedValue}%`}
             aria-valuemin={minValue}
             aria-valuemax={maxValue}
             aria-valuenow={validatedValue}
@@ -223,7 +225,7 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
                 onBlur={handleInputBlur}
                 disabled={disabled}
                 className={`${displayMode === 'combined' ? 'w-32' : 'w-full'}`}
-                aria-label={`Mortgage rate, current value: ${validatedValue}%`}
+                aria-label={`Property appreciation rate, current value: ${validatedValue}%`}
                 aria-describedby={`${id}-suffix ${id}-tooltip`}
             />
             <InputGroupAddon align="inline-end">
@@ -232,7 +234,6 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
         </InputGroup>
     );
 
-    // Value display (for slider and combined modes)
     const valueDisplay = (
         <div className="min-w-[5rem] text-center" aria-live="polite">
             <span className="text-sm font-medium" aria-label={`Current value: ${validatedValue} percent`}>
@@ -280,11 +281,11 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
             {renderField()}
             {showDescription && (
                 <FieldDescription className="text-xs text-muted-foreground">
-                    Annual mortgage interest rate
+                    Annual property value appreciation rate
                 </FieldDescription>
             )}
         </Field>
     );
 };
 
-export default MortgageRateField;
+export default AssetAppreciationRateField;
