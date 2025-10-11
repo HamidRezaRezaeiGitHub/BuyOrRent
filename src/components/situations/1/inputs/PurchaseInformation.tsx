@@ -162,6 +162,7 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             onPercentageChange={setDownPaymentPercentage}
             onAmountChange={setDownPaymentAmount}
             totalAmount={purchasePrice}
+            className="sm:col-span-1"
         />
     );
 
@@ -174,6 +175,7 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             minValue={minMortgageRate}
             maxValue={maxMortgageRate}
             displayMode='combined'
+            className="sm:col-span-1"
         />
     );
 
@@ -186,6 +188,7 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             minValue={minMortgageLength}
             maxValue={maxMortgageLength}
             displayMode='combined'
+            className="sm:col-span-1"
         />
     );
 
@@ -226,6 +229,7 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             onPercentageChange={setPropertyTaxPercentage}
             onAmountChange={setPropertyTaxAmount}
             totalAmount={purchasePrice}
+            className="sm:col-span-1"
         />
     );
 
@@ -266,6 +270,7 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             onPercentageChange={setMaintenancePercentage}
             onAmountChange={setMaintenanceAmount}
             totalAmount={purchasePrice}
+            className="sm:col-span-1"
         />
     );
 
@@ -278,6 +283,7 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             minValue={minAssetAppreciationRate}
             maxValue={maxAssetAppreciationRate}
             displayMode='combined'
+            className="sm:col-span-1"
         />
     );
 
@@ -288,7 +294,7 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             </FieldDescription>
 
             <FieldGroup>
-                <div className="grid gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {/* Purchase Price */}
                     {purchasePriceComponent}
 
@@ -309,7 +315,7 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
                         <FieldDescription>
                             Mortgage interest rate and amortization period
                         </FieldDescription>
-                        <div className="grid gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {/* Mortgage Rate */}
                             {mortgageRateComponent}
 
@@ -339,7 +345,7 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
                         <FieldDescription>
                             Expected property value appreciation
                         </FieldDescription>
-                        <div className="grid gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {/* Asset Appreciation Rate */}
                             {assetAppreciationRateComponent}
                         </div>

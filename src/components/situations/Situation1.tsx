@@ -15,8 +15,8 @@ import { BuyAnalysis, ComparisonAnalysis, InvestmentInformation, PurchaseInforma
 
 export const Situation1: React.FC = () => {
     const [searchParams] = useSearchParams()
-    
-    const defaultAnalysisYears = 30
+
+    const defaultAnalysisYears = 40
     const minAnalysisYears = 1
     const maxAnalysisYears = 50
 
@@ -61,10 +61,10 @@ export const Situation1: React.FC = () => {
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
     const [analysisYears, setAnalysisYears] = useState<number>(defaultAnalysisYears)
-    
+
     // Initialize monthlyRent and rentIncrease from URL params or use defaults
-    const initialMonthlyRent = searchParams.get('monthlyRent') 
-        ? parseFloat(searchParams.get('monthlyRent')!) 
+    const initialMonthlyRent = searchParams.get('monthlyRent')
+        ? parseFloat(searchParams.get('monthlyRent')!)
         : defaultMonthlyRent
     const initialRentIncrease = searchParams.get('rentIncrease')
         ? parseFloat(searchParams.get('rentIncrease')!)
@@ -72,7 +72,7 @@ export const Situation1: React.FC = () => {
     const initialInvestmentReturn = searchParams.get('investmentReturn')
         ? parseFloat(searchParams.get('investmentReturn')!)
         : defaultInvestmentReturn
-        
+
     const [monthlyRent, setMonthlyRent] = useState<number>(initialMonthlyRent)
     const [rentIncrease, setRentIncrease] = useState<number>(initialRentIncrease)
     const [investmentReturn, setInvestmentReturn] = useState<number>(initialInvestmentReturn)
@@ -273,7 +273,7 @@ export const Situation1: React.FC = () => {
     const resultsSectionContent = (
         <>
             {/* Analysis Period */}
-            <div className="mb-4">
+            {false && <div className="mb-4">
                 <YearsField
                     value={analysisYears}
                     onChange={setAnalysisYears}
@@ -281,37 +281,37 @@ export const Situation1: React.FC = () => {
                     minValue={minAnalysisYears}
                     maxValue={maxAnalysisYears}
                 />
-            </div>
+            </div>}
 
             <Accordion type="single" collapsible className="w-full">
-            {/* Rent Analysis Accordion Item */}
-            <AccordionItem value="rent">
-                <AccordionTrigger>If you rent</AccordionTrigger>
-                <AccordionContent>
-                    <RentAnalysis
-                        rentData={rentData}
-                        setTableDialogOpen={setTableDialogOpen}
-                        setGraphDialogOpen={setGraphDialogOpen}
-                    />
-                </AccordionContent>
-            </AccordionItem>
+                {/* Rent Analysis Accordion Item */}
+                <AccordionItem value="rent">
+                    <AccordionTrigger>If you rent</AccordionTrigger>
+                    <AccordionContent>
+                        <RentAnalysis
+                            rentData={rentData}
+                            setTableDialogOpen={setTableDialogOpen}
+                            setGraphDialogOpen={setGraphDialogOpen}
+                        />
+                    </AccordionContent>
+                </AccordionItem>
 
-            {/* Buy Analysis Accordion Item */}
-            <AccordionItem value="buy">
-                <AccordionTrigger>If you buy</AccordionTrigger>
-                <AccordionContent>
-                    <BuyAnalysis />
-                </AccordionContent>
-            </AccordionItem>
+                {/* Buy Analysis Accordion Item */}
+                <AccordionItem value="buy">
+                    <AccordionTrigger>If you buy</AccordionTrigger>
+                    <AccordionContent>
+                        <BuyAnalysis />
+                    </AccordionContent>
+                </AccordionItem>
 
-            {/* Comparison Accordion Item */}
-            <AccordionItem value="comparison">
-                <AccordionTrigger>Comparison</AccordionTrigger>
-                <AccordionContent>
-                    <ComparisonAnalysis />
-                </AccordionContent>
-            </AccordionItem>
-        </Accordion>
+                {/* Comparison Accordion Item */}
+                <AccordionItem value="comparison">
+                    <AccordionTrigger>Comparison</AccordionTrigger>
+                    <AccordionContent>
+                        <ComparisonAnalysis />
+                    </AccordionContent>
+                </AccordionItem>
+            </Accordion>
         </>
     )
 
