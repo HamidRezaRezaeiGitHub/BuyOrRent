@@ -151,9 +151,9 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
 
     // Label component with icon and tooltip (memoized)
     const labelComponent = useMemo(() => (
-        <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1">
+        <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <Percent className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
-            <span className="text-xs">Mortgage Rate</span>
+            Mortgage Rate
             <TooltipProvider>
                 <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
                     <TooltipTrigger asChild>
@@ -208,11 +208,11 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
 
     // Input component
     const inputComponent = (
-        <InputGroup>
+        <InputGroup className={displayMode === 'combined' ? 'w-32' : 'w-full'}>
             <InputGroupInput
                 id={displayMode === 'input' ? id : `${id}-input`}
-                type="number"
-                inputMode="decimal"
+                type={isFocused ? 'number' : 'text'}
+                inputMode={isFocused ? 'decimal' : 'text'}
                 min={minValue}
                 max={maxValue}
                 step={0.1}
@@ -222,7 +222,6 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 disabled={disabled}
-                className={`${displayMode === 'combined' ? 'w-32' : 'w-full'}`}
                 aria-label={`Mortgage rate, current value: ${validatedValue}%`}
                 aria-describedby={`${id}-suffix ${id}-tooltip`}
             />

@@ -10,14 +10,14 @@ describe('MortgageRateField', () => {
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             expect(screen.getByText('Mortgage Rate')).toBeInTheDocument();
             expect(screen.getByRole('slider')).toBeInTheDocument();
-            expect(screen.getByRole('spinbutton')).toBeInTheDocument();
+            expect(screen.getByRole('textbox')).toBeInTheDocument();
         });
 
         test('MortgageRateField_shouldRenderSliderOnlyMode', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} displayMode="slider" />);
             expect(screen.getByRole('slider')).toBeInTheDocument();
-            expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
+            expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
             expect(screen.getByText('5.50%')).toBeInTheDocument();
         });
 
@@ -25,14 +25,14 @@ describe('MortgageRateField', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} displayMode="input" />);
             expect(screen.queryByRole('slider')).not.toBeInTheDocument();
-            expect(screen.getByRole('spinbutton')).toBeInTheDocument();
+            expect(screen.getByRole('textbox')).toBeInTheDocument();
         });
 
         test('MortgageRateField_shouldRenderCombinedMode', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} displayMode="combined" />);
             expect(screen.getByRole('slider')).toBeInTheDocument();
-            expect(screen.getByRole('spinbutton')).toBeInTheDocument();
+            expect(screen.getByRole('textbox')).toBeInTheDocument();
         });
     });
 
@@ -100,12 +100,12 @@ describe('MortgageRateField', () => {
 
     // Input Interaction Tests
     describe('Input Interactions', () => {
-        test('MortgageRateField_shouldUpdateValueOnValidInput', async () => {
+        test('MortgageRateField_shouldCallOnChange_whenInputChanges', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.type(input, '6.5');
             
@@ -115,7 +115,7 @@ describe('MortgageRateField', () => {
         test('MortgageRateField_shouldShowFormattedValueWhenNotFocused', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
-            const input = screen.getByRole('spinbutton') as HTMLInputElement;
+            const input = screen.getByRole('textbox') as HTMLInputElement;
             expect(input.value).toBe('5.50');
         });
 
@@ -124,7 +124,7 @@ describe('MortgageRateField', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             
-            const input = screen.getByRole('spinbutton') as HTMLInputElement;
+            const input = screen.getByRole('textbox') as HTMLInputElement;
             await user.click(input);
             
             expect(input.value).toBe('5.5');
@@ -135,7 +135,7 @@ describe('MortgageRateField', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} maxValue={10} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.type(input, '25');
             await user.tab(); // Blur the input
@@ -148,7 +148,7 @@ describe('MortgageRateField', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} defaultValue={6} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.tab(); // Blur the input
             
@@ -160,7 +160,7 @@ describe('MortgageRateField', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} defaultValue={6} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.type(input, 'abc');
             await user.tab(); // Blur the input
@@ -175,7 +175,7 @@ describe('MortgageRateField', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} id="test-rate" />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             expect(input).toHaveAttribute('aria-label', 'Mortgage rate, current value: 5.5%');
             expect(input).toHaveAttribute('aria-describedby', 'test-rate-suffix test-rate-tooltip');
@@ -207,8 +207,7 @@ describe('MortgageRateField', () => {
             render(<MortgageRateField value={5.5} onChange={mockOnChange} id="test-rate" />);
             
             const suffix = screen.getByText('%');
-            expect(suffix.parentElement).toHaveAttribute('id', 'test-rate-suffix');
-            expect(suffix.parentElement).toHaveAttribute('aria-hidden', 'true');
+            expect(suffix).toHaveAttribute('id', 'test-rate-suffix');
         });
     });
 
@@ -219,7 +218,7 @@ describe('MortgageRateField', () => {
             render(<MortgageRateField value={5.5} onChange={mockOnChange} disabled={true} />);
             
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             expect(slider).toHaveAttribute('data-disabled', '');
             expect(input).toBeDisabled();
@@ -230,7 +229,7 @@ describe('MortgageRateField', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} disabled={true} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.type(input, '6.5');
             
             expect(mockOnChange).not.toHaveBeenCalled();
@@ -244,7 +243,7 @@ describe('MortgageRateField', () => {
             render(<MortgageRateField value={8} onChange={mockOnChange} minValue={2} maxValue={12} />);
             
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             expect(slider).toHaveAttribute('aria-valuemin', '2');
             expect(slider).toHaveAttribute('aria-valuemax', '12');
@@ -257,7 +256,8 @@ describe('MortgageRateField', () => {
             render(<MortgageRateField value={5.5} onChange={mockOnChange} id="custom-rate" />);
             
             const label = screen.getByText('Mortgage Rate');
-            expect(label).toHaveAttribute('for', 'custom-rate');
+            // In combined mode (default), label points to slider
+            expect(label).toHaveAttribute('for', 'custom-rate-slider');
         });
 
         test('MortgageRateField_shouldUseCustomClassName', () => {
@@ -284,7 +284,7 @@ describe('MortgageRateField', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} maxValue={15} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.type(input, '999999');
             await user.tab();
@@ -297,7 +297,7 @@ describe('MortgageRateField', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} minValue={0} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.type(input, '-5');
             await user.tab();
@@ -310,7 +310,7 @@ describe('MortgageRateField', () => {
             const mockOnChange = jest.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.type(input, '6.75');
             

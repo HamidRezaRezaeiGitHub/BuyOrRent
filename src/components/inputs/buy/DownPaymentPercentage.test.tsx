@@ -226,5 +226,52 @@ describe('DownPaymentPercentageField', () => {
             const label = screen.getByText('Down Payment');
             expect(label).toBeInTheDocument();
         });
+
+        test('DownPaymentPercentageField_shouldShowDescriptionByDefault', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <DownPaymentPercentageField
+                    value={20}
+                    onChange={mockOnChange}
+                />
+            );
+
+            // Description should be visible by default
+            const description = screen.getByText('Upfront payment percentage to reduce mortgage amount');
+            expect(description).toBeInTheDocument();
+        });
+
+        test('DownPaymentPercentageField_shouldHideDescriptionWhenShowDescriptionIsFalse', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <DownPaymentPercentageField
+                    value={20}
+                    onChange={mockOnChange}
+                    showDescription={false}
+                />
+            );
+
+            // Description should not be visible
+            const description = screen.queryByText('Upfront payment percentage to reduce mortgage amount');
+            expect(description).not.toBeInTheDocument();
+        });
+
+        test('DownPaymentPercentageField_shouldShowDescriptionWhenShowDescriptionIsTrue', () => {
+            const mockOnChange = jest.fn();
+
+            render(
+                <DownPaymentPercentageField
+                    value={20}
+                    onChange={mockOnChange}
+                    showDescription={true}
+                />
+            );
+
+            // Description should be visible
+            const description = screen.getByText('Upfront payment percentage to reduce mortgage amount');
+            expect(description).toBeInTheDocument();
+        });
     });
 });

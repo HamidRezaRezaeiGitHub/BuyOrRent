@@ -79,9 +79,18 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
         }
     }, [validatedValue, value, onChange]);
 
-    // Determine the main control ID based on displayMode
+    // Determine the correct htmlFor based on display mode
     const getMainControlId = useCallback(() => {
-        return displayMode === 'input' ? id : `${id}-slider`;
+        switch (displayMode) {
+            case 'slider':
+                return id;
+            case 'input':
+                return id;
+            case 'combined':
+                return `${id}-slider`; // Point to slider as primary control in combined mode
+            default:
+                return id;
+        }
     }, [displayMode, id]);
 
     // Handle slider change
@@ -151,9 +160,9 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
 
     // Label component with icon and tooltip (memoized)
     const labelComponent = useMemo(() => (
-        <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1">
+        <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1 text-xs">
             <TrendingUp className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
-            <span className="text-xs">Property Appreciation</span>
+            Property Appreciation
             <TooltipProvider>
                 <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
                     <TooltipTrigger asChild>
@@ -210,11 +219,11 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
 
     // Input component
     const inputComponent = (
-        <InputGroup>
+        <InputGroup className={displayMode === 'combined' ? 'w-32' : 'w-full'}>
             <InputGroupInput
                 id={displayMode === 'input' ? id : `${id}-input`}
-                type="number"
-                inputMode="decimal"
+                type={isFocused ? 'number' : 'text'}
+                inputMode={isFocused ? 'decimal' : 'text'}
                 min={minValue}
                 max={maxValue}
                 step={0.1}
@@ -224,7 +233,6 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 disabled={disabled}
-                className={`${displayMode === 'combined' ? 'w-32' : 'w-full'}`}
                 aria-label={`Property appreciation rate, current value: ${validatedValue}%`}
                 aria-describedby={`${id}-suffix ${id}-tooltip`}
             />

@@ -17,6 +17,7 @@ export interface DownPaymentPercentageFieldProps {
     maxValue?: number; // Default: 100
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
+    showDescription?: boolean; // Default: true
 }
 
 export const DownPaymentPercentageField: FC<DownPaymentPercentageFieldProps> = ({
@@ -30,7 +31,8 @@ export const DownPaymentPercentageField: FC<DownPaymentPercentageFieldProps> = (
     minValue = 0,
     maxValue = 100,
     onLabelSet,
-    showLabel = true
+    showLabel = true,
+    showDescription = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -284,9 +286,11 @@ export const DownPaymentPercentageField: FC<DownPaymentPercentageFieldProps> = (
         <Field className={className}>
             {showLabel && labelComponent}
             {renderField()}
-            <FieldDescription className="text-xs text-muted-foreground">
-                Upfront payment percentage to reduce mortgage amount
-            </FieldDescription>
+            {showDescription && (
+                <FieldDescription className="text-xs text-muted-foreground">
+                    Upfront payment percentage to reduce mortgage amount
+                </FieldDescription>
+            )}
         </Field>
     );
 };

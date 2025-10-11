@@ -1126,7 +1126,7 @@ describe('InvestmentReturnField', () => {
             );
 
             // Label should be visible by default
-            const label = screen.getByText('Expected Return');
+            const label = screen.getByText('Investment Return Rate');
             expect(label).toBeInTheDocument();
         });
 
@@ -1142,7 +1142,7 @@ describe('InvestmentReturnField', () => {
             );
 
             // Label should be visible
-            const label = screen.getByText('Expected Return');
+            const label = screen.getByText('Investment Return Rate');
             expect(label).toBeInTheDocument();
         });
     });

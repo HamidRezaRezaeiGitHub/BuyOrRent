@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { useEffect, useMemo } from 'react';
 import { PercentageAmountSwitch } from './PercentageAmountSwitch';
 
 describe('PercentageAmountSwitch', () => {
@@ -453,14 +454,18 @@ describe('PercentageAmountSwitch', () => {
 
             // Create components with onLabelSet support
             const PercentageComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
-                const label = <div data-testid="percentage-label">Percentage Label</div>;
-                onLabelSet?.(label);
+                const label = useMemo(() => <div data-testid="percentage-label">Percentage Label</div>, []);
+                useEffect(() => {
+                    onLabelSet?.(label);
+                }, [onLabelSet, label]);
                 return showLabel !== false ? label : null;
             };
 
             const AmountComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
-                const label = <div data-testid="amount-label">Amount Label</div>;
-                onLabelSet?.(label);
+                const label = useMemo(() => <div data-testid="amount-label">Amount Label</div>, []);
+                useEffect(() => {
+                    onLabelSet?.(label);
+                }, [onLabelSet, label]);
                 return showLabel !== false ? label : null;
             };
 
@@ -493,14 +498,18 @@ describe('PercentageAmountSwitch', () => {
 
             // Create components with onLabelSet support
             const PercentageComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
-                const label = <div data-testid="percentage-label">Percentage Label</div>;
-                onLabelSet?.(label);
+                const label = useMemo(() => <div data-testid="percentage-label">Percentage Label</div>, []);
+                useEffect(() => {
+                    onLabelSet?.(label);
+                }, [onLabelSet, label]);
                 return showLabel !== false ? label : null;
             };
 
             const AmountComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
-                const label = <div data-testid="amount-label">Amount Label</div>;
-                onLabelSet?.(label);
+                const label = useMemo(() => <div data-testid="amount-label">Amount Label</div>, []);
+                useEffect(() => {
+                    onLabelSet?.(label);
+                }, [onLabelSet, label]);
                 return showLabel !== false ? label : null;
             };
 
@@ -554,15 +563,19 @@ describe('PercentageAmountSwitch', () => {
 
             // Create components that track if showLabel prop is false
             const PercentageComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
-                const label = <div data-testid="percentage-label">Percentage Label</div>;
-                onLabelSet?.(label);
+                const label = useMemo(() => <div data-testid="percentage-label">Percentage Label</div>, []);
+                useEffect(() => {
+                    onLabelSet?.(label);
+                }, [onLabelSet, label]);
                 percentageLabelSetCalled(showLabel);
                 return showLabel !== false ? label : <div data-testid="percentage-hidden">Hidden</div>;
             };
 
             const AmountComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
-                const label = <div data-testid="amount-label">Amount Label</div>;
-                onLabelSet?.(label);
+                const label = useMemo(() => <div data-testid="amount-label">Amount Label</div>, []);
+                useEffect(() => {
+                    onLabelSet?.(label);
+                }, [onLabelSet, label]);
                 amountLabelSetCalled(showLabel);
                 return showLabel !== false ? label : <div data-testid="amount-hidden">Hidden</div>;
             };

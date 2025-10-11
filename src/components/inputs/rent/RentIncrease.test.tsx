@@ -475,7 +475,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHaveProperTooltipAccessibility', () => {
             const mockOnChange = jest.fn();
-            
+
             render(
                 <RentIncreaseField
                     id="test-rent-increase"
@@ -488,7 +488,7 @@ describe('RentIncreaseField', () => {
 
             expect(tooltipTrigger).toHaveAttribute('aria-describedby', 'test-rent-increase-tooltip');
             expect(tooltipTrigger).toHaveAttribute('aria-expanded', 'false');
-        });        test('RentIncreaseField_shouldToggleTooltip', async () => {
+        }); test('RentIncreaseField_shouldToggleTooltip', async () => {
             const user = userEvent.setup();
             const mockOnChange = jest.fn();
 
@@ -931,7 +931,7 @@ describe('RentIncreaseField', () => {
             );
 
             // Label should be visible by default
-            const label = screen.getByText('Rent Increase');
+            const label = screen.getByText('Rent Increase Rate');
             expect(label).toBeInTheDocument();
         });
 
@@ -947,7 +947,7 @@ describe('RentIncreaseField', () => {
             );
 
             // Label should be visible
-            const label = screen.getByText('Rent Increase');
+            const label = screen.getByText('Rent Increase Rate');
             expect(label).toBeInTheDocument();
         });
     });

@@ -19,7 +19,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
 }) => {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
-    
+
     // Get all values from URL params (passed from PurchaseQuestions)
     const monthlyRent = searchParams.get('monthlyRent') || '0'
     const rentIncrease = searchParams.get('rentIncrease') || '2.5'
@@ -29,16 +29,16 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
     const mortgageLength = searchParams.get('mortgageLength') || '25'
     const propertyTaxPercentage = searchParams.get('propertyTaxPercentage') || '0.75'
     const maintenancePercentage = searchParams.get('maintenancePercentage') || '2.0'
-    
+
     // Default values
     const defaultInvestmentReturn = 7.5
     const minInvestmentReturn = -20
     const maxInvestmentReturn = 100
-    
+
     // State
     const [step, _setStep] = useState<1>(1)
     const [investmentReturn, setInvestmentReturn] = useState<number>(defaultInvestmentReturn)
-    
+
     // Handler to move to next step
     const handleNext = () => {
         // Navigate using nextUrl if provided, otherwise navigate to panel
@@ -59,7 +59,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
             navigate(`/situation/1/panel?${params.toString()}`)
         }
     }
-    
+
     // Handler to go to previous step
     const handlePrevious = () => {
         if (previousUrl) {
@@ -70,14 +70,14 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
             navigate(`${previousUrl}?${params.toString()}`)
         }
     }
-    
+
     // Handler to use default value
     const handleUseDefault = () => {
         setInvestmentReturn(defaultInvestmentReturn)
         // Automatically proceed to next after setting default
         handleNext()
     }
-    
+
     // Define the investment return step JSX
     const investmentReturnStep = (
         <Card className="w-full">
@@ -97,7 +97,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
                     displayMode="combined"
                     showHelper={true}
                 />
-                
+
                 <div className="flex justify-between gap-3">
                     {previousUrl && (
                         <TooltipProvider>
@@ -153,7 +153,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
             </CardContent>
         </Card>
     )
-    
+
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
@@ -163,7 +163,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
                 showThemeToggle={true}
                 ThemeToggleComponent={CompactThemeToggle}
             />
-            
+
             {/* Main Content */}
             <main className="w-full max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8 space-y-6">
                 {/* Header */}
@@ -173,7 +173,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
                         Let's understand your expected investment returns
                     </p>
                 </div>
-                
+
                 {/* Investment Return */}
                 {step === 1 && investmentReturnStep}
             </main>

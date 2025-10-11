@@ -19,21 +19,21 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
     nextUrl
 }) => {
     const navigate = useNavigate()
-    
+
     // Default values
     const defaultMonthlyRent = 0
     const minMonthlyRent = 1000
     const maxMonthlyRent = 5000
-    
+
     const defaultRentIncrease = 2.5
     const minRentIncrease = 0
     const maxRentIncrease = 10
-    
+
     // State
     const [step, setStep] = useState<1 | 2>(1)
     const [monthlyRent, setMonthlyRent] = useState<number>(defaultMonthlyRent)
     const [rentIncrease, setRentIncrease] = useState<number>(defaultRentIncrease)
-    
+
     // Handler to move to next step
     const handleNext = () => {
         if (step === 1) {
@@ -50,7 +50,7 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
             }
         }
     }
-    
+
     // Handler to go to previous step
     const handlePrevious = () => {
         if (step === 2) {
@@ -59,14 +59,14 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
             navigate(previousUrl)
         }
     }
-    
+
     // Handler to use default value for rent increase
     const handleUseDefault = () => {
         setRentIncrease(defaultRentIncrease)
         // Automatically proceed to next after setting default
         handleNext()
     }
-    
+
     // Define each step JSX separately
     const monthlyRentStep = (
         <Card className="w-full">
@@ -86,7 +86,7 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
                     displayMode="combined"
                     showDescription={true}
                 />
-                
+
                 <div className="flex justify-between gap-3">
                     {previousUrl && (
                         <TooltipProvider>
@@ -127,7 +127,7 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
             </CardContent>
         </Card>
     )
-    
+
     const rentIncreaseStep = (
         <Card className="w-full">
             <CardHeader>
@@ -143,13 +143,13 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
                     <div className="text-sm">
                         <p className="font-medium mb-1">Canadian Rent Control Information</p>
                         <p className="text-muted-foreground">
-                            In Canada, for properties built before November 2018, the maximum rate of rent increase 
-                            is typically 2.5% per year (varies by province). This is why 2.5% is the default value. 
+                            In Canada, for properties built before November 2018, the maximum rate of rent increase
+                            is typically 2.5% per year (varies by province). This is why 2.5% is the default value.
                             You can adjust this based on your specific situation or local regulations.
                         </p>
                     </div>
                 </div>
-                
+
                 <RentIncreaseField
                     value={rentIncrease}
                     onChange={setRentIncrease}
@@ -159,7 +159,7 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
                     displayMode="combined"
                     showDescription={true}
                 />
-                
+
                 <div className="flex justify-between gap-3">
                     <TooltipProvider>
                         <Tooltip>
@@ -213,7 +213,7 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
             </CardContent>
         </Card>
     )
-    
+
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
@@ -223,7 +223,7 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
                 showThemeToggle={true}
                 ThemeToggleComponent={CompactThemeToggle}
             />
-            
+
             {/* Main Content */}
             <main className="w-full max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8 space-y-6">
                 {/* Header */}
@@ -233,10 +233,10 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
                         Let's gather some information about your rental situation
                     </p>
                 </div>
-                
+
                 {/* Step 1: Monthly Rent */}
                 {step === 1 && monthlyRentStep}
-                
+
                 {/* Step 2: Rent Increase Rate */}
                 {step === 2 && rentIncreaseStep}
             </main>

@@ -10,14 +10,14 @@ describe('AssetAppreciationRateField', () => {
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             expect(screen.getByText('Property Appreciation')).toBeInTheDocument();
             expect(screen.getByRole('slider')).toBeInTheDocument();
-            expect(screen.getByRole('spinbutton')).toBeInTheDocument();
+            expect(screen.getByRole('textbox')).toBeInTheDocument();
         });
 
         test('AssetAppreciationRateField_shouldRenderSliderOnlyMode', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} displayMode="slider" />);
             expect(screen.getByRole('slider')).toBeInTheDocument();
-            expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
+            expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
             expect(screen.getByText('3.00%')).toBeInTheDocument();
         });
 
@@ -25,14 +25,14 @@ describe('AssetAppreciationRateField', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} displayMode="input" />);
             expect(screen.queryByRole('slider')).not.toBeInTheDocument();
-            expect(screen.getByRole('spinbutton')).toBeInTheDocument();
+            expect(screen.getByRole('textbox')).toBeInTheDocument();
         });
 
         test('AssetAppreciationRateField_shouldRenderCombinedMode', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} displayMode="combined" />);
             expect(screen.getByRole('slider')).toBeInTheDocument();
-            expect(screen.getByRole('spinbutton')).toBeInTheDocument();
+            expect(screen.getByRole('textbox')).toBeInTheDocument();
         });
 
         test('AssetAppreciationRateField_shouldHideLabel_whenShowLabelIsFalse', () => {
@@ -120,7 +120,7 @@ describe('AssetAppreciationRateField', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.type(input, '5.5');
             
@@ -130,7 +130,7 @@ describe('AssetAppreciationRateField', () => {
         test('AssetAppreciationRateField_shouldShowFormattedValueWhenNotFocused', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
-            const input = screen.getByRole('spinbutton') as HTMLInputElement;
+            const input = screen.getByRole('textbox') as HTMLInputElement;
             expect(input.value).toBe('3.00');
         });
 
@@ -139,7 +139,7 @@ describe('AssetAppreciationRateField', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             
-            const input = screen.getByRole('spinbutton') as HTMLInputElement;
+            const input = screen.getByRole('textbox') as HTMLInputElement;
             await user.click(input);
             
             expect(input.value).toBe('3');
@@ -150,7 +150,7 @@ describe('AssetAppreciationRateField', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} maxValue={15} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.type(input, '25');
             await user.tab(); // Blur the input
@@ -163,7 +163,7 @@ describe('AssetAppreciationRateField', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} defaultValue={4} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.tab(); // Blur the input
             
@@ -175,7 +175,7 @@ describe('AssetAppreciationRateField', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} defaultValue={4} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.type(input, 'abc');
             await user.tab(); // Blur the input
@@ -192,7 +192,7 @@ describe('AssetAppreciationRateField', () => {
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} disabled={true} />);
             
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             expect(slider).toHaveAttribute('data-disabled', '');
             expect(input).toBeDisabled();
@@ -203,7 +203,7 @@ describe('AssetAppreciationRateField', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} disabled={true} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.type(input, '5.5');
             
             expect(mockOnChange).not.toHaveBeenCalled();
@@ -217,7 +217,7 @@ describe('AssetAppreciationRateField', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} id="test-rate" />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             expect(input).toHaveAttribute('aria-label', 'Property appreciation rate, current value: 3%');
             expect(input).toHaveAttribute('aria-describedby', 'test-rate-suffix test-rate-tooltip');
@@ -262,7 +262,7 @@ describe('AssetAppreciationRateField', () => {
             render(<AssetAppreciationRateField value={5} onChange={mockOnChange} minValue={0} maxValue={10} />);
             
             const slider = screen.getByRole('slider');
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             
             expect(slider).toHaveAttribute('aria-valuemin', '0');
             expect(slider).toHaveAttribute('aria-valuemax', '10');
@@ -275,7 +275,7 @@ describe('AssetAppreciationRateField', () => {
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} id="custom-rate" displayMode="input" />);
             
             // With input mode, the input gets the custom ID directly
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             expect(input).toHaveAttribute('id', 'custom-rate');
         });
 
@@ -304,7 +304,7 @@ describe('AssetAppreciationRateField', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} maxValue={20} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.type(input, '999999');
             await user.tab();
@@ -317,7 +317,7 @@ describe('AssetAppreciationRateField', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} minValue={-5} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.type(input, '-10');
             await user.tab();
@@ -330,7 +330,7 @@ describe('AssetAppreciationRateField', () => {
             const mockOnChange = jest.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             
-            const input = screen.getByRole('spinbutton');
+            const input = screen.getByRole('textbox');
             await user.clear(input);
             await user.type(input, '4.75');
             

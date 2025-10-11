@@ -1,5 +1,5 @@
-import { DownPaymentPercentageField } from '@/components/inputs/buy/DownPaymentPercentage'
 import { AssetAppreciationRateField } from '@/components/inputs/buy/AssetAppreciationRate'
+import { DownPaymentPercentageField } from '@/components/inputs/buy/DownPaymentPercentage'
 import { MaintenancePercentageField } from '@/components/inputs/buy/MaintenancePercentage'
 import { MortgageLengthField } from '@/components/inputs/buy/MortgageLength'
 import { MortgageRateField } from '@/components/inputs/buy/MortgageRate'
@@ -25,40 +25,40 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
 }) => {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
-    
+
     // Get rent values from URL params (passed from RentQuestions)
     const monthlyRent = searchParams.get('monthlyRent') || '0'
     const rentIncrease = searchParams.get('rentIncrease') || '2.5'
-    
+
     // Default values
     const defaultPurchasePrice = 0
     const minPurchasePrice = 400000
     const maxPurchasePrice = 4000000
-    
+
     const defaultDownPaymentPercentage = 20
     const minDownPaymentPercentage = 0
     const maxDownPaymentPercentage = 100
-    
+
     const defaultMortgageRate = 5.5
     const minMortgageRate = 0
     const maxMortgageRate = 15
-    
+
     const defaultMortgageLength = 25
     const minMortgageLength = 1
     const maxMortgageLength = 40
-    
+
     const defaultPropertyTaxPercentage = 0.75
     const minPropertyTaxPercentage = 0
     const maxPropertyTaxPercentage = 5.0
-    
+
     const defaultMaintenancePercentage = 2.0
     const minMaintenancePercentage = 0
     const maxMaintenancePercentage = 10
-    
+
     const defaultAssetAppreciationRate = 3.0
     const minAssetAppreciationRate = -5
     const maxAssetAppreciationRate = 20
-    
+
     // State
     const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8>(1)
     const [purchasePrice, setPurchasePrice] = useState<number>(defaultPurchasePrice)
@@ -68,7 +68,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const [propertyTaxPercentage, setPropertyTaxPercentage] = useState<number>(defaultPropertyTaxPercentage)
     const [maintenancePercentage, setMaintenancePercentage] = useState<number>(defaultMaintenancePercentage)
     const [assetAppreciationRate, setAssetAppreciationRate] = useState<number>(defaultAssetAppreciationRate)
-    
+
     // Navigate to next section with all parameters
     const navigateToNext = () => {
         const params = new URLSearchParams({
@@ -88,7 +88,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             navigate(`/situation/1/question/investment?${params.toString()}`)
         }
     }
-    
+
     // Handler to move to next step
     const handleNext = () => {
         if (step === 1) {
@@ -112,7 +112,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             navigateToNext()
         }
     }
-    
+
     // Handler to use all defaults and skip to next section
     const handleUseAllDefaults = () => {
         setDownPaymentPercentage(defaultDownPaymentPercentage)
@@ -123,7 +123,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
         setAssetAppreciationRate(defaultAssetAppreciationRate)
         navigateToNext()
     }
-    
+
     // Handler to go to previous step
     const handlePrevious = () => {
         if (step === 2) {
@@ -144,49 +144,49 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             navigate(`${previousUrl}?monthlyRent=${monthlyRent}&rentIncrease=${rentIncrease}`)
         }
     }
-    
+
     // Handler to use default value for down payment
     const handleUseDefaultDownPayment = () => {
         setDownPaymentPercentage(defaultDownPaymentPercentage)
         // Automatically proceed to next after setting default
         handleNext()
     }
-    
+
     // Handler to use default value for mortgage rate
     const handleUseDefaultMortgageRate = () => {
         setMortgageRate(defaultMortgageRate)
         // Automatically proceed to next after setting default
         handleNext()
     }
-    
+
     // Handler to use default value for mortgage length
     const handleUseDefaultMortgageLength = () => {
         setMortgageLength(defaultMortgageLength)
         // Automatically proceed to next after setting default
         handleNext()
     }
-    
+
     // Handler to use default value for property tax
     const handleUseDefaultPropertyTax = () => {
         setPropertyTaxPercentage(defaultPropertyTaxPercentage)
         // Automatically proceed to next after setting default
         handleNext()
     }
-    
+
     // Handler to use default value for maintenance
     const handleUseDefaultMaintenance = () => {
         setMaintenancePercentage(defaultMaintenancePercentage)
         // Automatically proceed to next after setting default
         handleNext()
     }
-    
+
     // Handler to use default value for asset appreciation rate
     const handleUseDefaultAssetAppreciationRate = () => {
         setAssetAppreciationRate(defaultAssetAppreciationRate)
         // Automatically proceed to next after setting default
         handleNext()
     }
-    
+
     // Define each step JSX separately
     const purchasePriceStep = (
         <Card className="w-full">
@@ -206,7 +206,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     displayMode="combined"
                     showDescription={true}
                 />
-                
+
                 <div className="flex justify-between gap-3">
                     {previousUrl && (
                         <TooltipProvider>
@@ -247,7 +247,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             </CardContent>
         </Card>
     )
-    
+
     const defaultsOverviewStep = (
         <Card className="w-full">
             <CardHeader>
@@ -291,7 +291,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                         Don't worry, you'll be able to modify these parameters later if needed.
                     </p>
                 </div>
-                
+
                 <div className="flex justify-between gap-3">
                     <TooltipProvider>
                         <Tooltip>
@@ -345,7 +345,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             </CardContent>
         </Card>
     )
-    
+
     const downPaymentStep = (
         <Card className="w-full">
             <CardHeader>
@@ -361,14 +361,14 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     <div className="text-sm">
                         <p className="font-medium mb-1">Canadian Down Payment Requirements</p>
                         <p className="text-muted-foreground">
-                            In Canada, the minimum down payment is 5% for properties under $500,000, 
-                            and increases for higher-priced properties. A 20% down payment allows you 
-                            to avoid mortgage default insurance (CMHC insurance). The default value is 
+                            In Canada, the minimum down payment is 5% for properties under $500,000,
+                            and increases for higher-priced properties. A 20% down payment allows you
+                            to avoid mortgage default insurance (CMHC insurance). The default value is
                             set to 20% for this reason.
                         </p>
                     </div>
                 </div>
-                
+
                 <DownPaymentPercentageField
                     value={downPaymentPercentage}
                     onChange={setDownPaymentPercentage}
@@ -377,7 +377,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     maxValue={maxDownPaymentPercentage}
                     displayMode="combined"
                 />
-                
+
                 <div className="flex justify-between gap-3">
                     <TooltipProvider>
                         <Tooltip>
@@ -431,7 +431,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             </CardContent>
         </Card>
     )
-    
+
     const mortgageRateStep = (
         <Card className="w-full">
             <CardHeader>
@@ -447,13 +447,13 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     <div className="text-sm">
                         <p className="font-medium mb-1">Canadian Mortgage Rates</p>
                         <p className="text-muted-foreground">
-                            As of 2025, typical Canadian mortgage rates range from 4% to 7% depending 
-                            on the term length and whether it's a fixed or variable rate. The default 
+                            As of 2025, typical Canadian mortgage rates range from 4% to 7% depending
+                            on the term length and whether it's a fixed or variable rate. The default
                             value of 5.5% represents a typical 5-year fixed rate mortgage.
                         </p>
                     </div>
                 </div>
-                
+
                 <MortgageRateField
                     value={mortgageRate}
                     onChange={setMortgageRate}
@@ -463,7 +463,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     displayMode="combined"
                     showLabel={true}
                 />
-                
+
                 <div className="flex justify-between gap-3">
                     <TooltipProvider>
                         <Tooltip>
@@ -517,7 +517,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             </CardContent>
         </Card>
     )
-    
+
     const mortgageLengthStep = (
         <Card className="w-full">
             <CardHeader>
@@ -533,13 +533,13 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     <div className="text-sm">
                         <p className="font-medium mb-1">Canadian Amortization Periods</p>
                         <p className="text-muted-foreground">
-                            In Canada, the most common amortization period is 25 years. If you have 
-                            at least a 20% down payment, you can extend the amortization up to 30 years. 
+                            In Canada, the most common amortization period is 25 years. If you have
+                            at least a 20% down payment, you can extend the amortization up to 30 years.
                             Longer periods mean lower monthly payments but more interest paid over time.
                         </p>
                     </div>
                 </div>
-                
+
                 <MortgageLengthField
                     value={mortgageLength}
                     onChange={setMortgageLength}
@@ -549,7 +549,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     displayMode="combined"
                     showLabel={true}
                 />
-                
+
                 <div className="flex justify-between gap-3">
                     <TooltipProvider>
                         <Tooltip>
@@ -603,7 +603,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             </CardContent>
         </Card>
     )
-    
+
     const propertyTaxStep = (
         <Card className="w-full">
             <CardHeader>
@@ -619,13 +619,13 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     <div className="text-sm">
                         <p className="font-medium mb-1">Canadian Property Taxes</p>
                         <p className="text-muted-foreground">
-                            Property tax rates in Canada vary by municipality. They typically range from 
-                            0.5% to 2.5% of the property value annually. The default value of 0.75% 
+                            Property tax rates in Canada vary by municipality. They typically range from
+                            0.5% to 2.5% of the property value annually. The default value of 0.75%
                             represents a common rate in many Canadian cities.
                         </p>
                     </div>
                 </div>
-                
+
                 <PropertyTaxPercentageField
                     value={propertyTaxPercentage}
                     onChange={setPropertyTaxPercentage}
@@ -635,7 +635,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     displayMode="combined"
                     showDescription={true}
                 />
-                
+
                 <div className="flex justify-between gap-3">
                     <TooltipProvider>
                         <Tooltip>
@@ -689,7 +689,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             </CardContent>
         </Card>
     )
-    
+
     const maintenanceStep = (
         <Card className="w-full">
             <CardHeader>
@@ -705,14 +705,14 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     <div className="text-sm">
                         <p className="font-medium mb-1">Property Maintenance Costs</p>
                         <p className="text-muted-foreground">
-                            Financial experts typically recommend budgeting 1% to 3% of your home's value 
-                            annually for maintenance and repairs. This includes routine upkeep, 
-                            unexpected repairs, and replacing major systems. The default value of 2% 
+                            Financial experts typically recommend budgeting 1% to 3% of your home's value
+                            annually for maintenance and repairs. This includes routine upkeep,
+                            unexpected repairs, and replacing major systems. The default value of 2%
                             represents a balanced estimate for most properties.
                         </p>
                     </div>
                 </div>
-                
+
                 <MaintenancePercentageField
                     value={maintenancePercentage}
                     onChange={setMaintenancePercentage}
@@ -722,7 +722,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     displayMode="combined"
                     showDescription={true}
                 />
-                
+
                 <div className="flex justify-between gap-3">
                     <TooltipProvider>
                         <Tooltip>
@@ -776,7 +776,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             </CardContent>
         </Card>
     )
-    
+
     const assetAppreciationRateStep = (
         <Card className="w-full">
             <CardHeader>
@@ -792,15 +792,15 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     <div className="text-sm">
                         <p className="font-medium mb-1">Canadian Property Appreciation</p>
                         <p className="text-muted-foreground">
-                            Historically, Canadian real estate has appreciated at an average rate of 
-                            3-5% annually, though this varies significantly by location and market 
-                            conditions. Major cities like Toronto and Vancouver have seen higher rates, 
-                            while other areas may experience slower growth. The default value of 3% 
+                            Historically, Canadian real estate has appreciated at an average rate of
+                            3-5% annually, though this varies significantly by location and market
+                            conditions. Major cities like Toronto and Vancouver have seen higher rates,
+                            while other areas may experience slower growth. The default value of 3%
                             represents a conservative long-term estimate.
                         </p>
                     </div>
                 </div>
-                
+
                 <AssetAppreciationRateField
                     value={assetAppreciationRate}
                     onChange={setAssetAppreciationRate}
@@ -810,7 +810,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     displayMode="combined"
                     showDescription={true}
                 />
-                
+
                 <div className="flex justify-between gap-3">
                     <TooltipProvider>
                         <Tooltip>
@@ -864,7 +864,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             </CardContent>
         </Card>
     )
-    
+
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
@@ -874,7 +874,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                 showThemeToggle={true}
                 ThemeToggleComponent={CompactThemeToggle}
             />
-            
+
             {/* Main Content */}
             <main className="w-full max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8 space-y-6">
                 {/* Header */}
@@ -884,28 +884,28 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                         Let's gather some information about the property you're considering
                     </p>
                 </div>
-                
+
                 {/* Step 1: Purchase Price */}
                 {step === 1 && purchasePriceStep}
-                
+
                 {/* Step 2: Intermediary question */}
                 {step === 2 && defaultsOverviewStep}
-                
+
                 {/* Step 3: Down Payment */}
                 {step === 3 && downPaymentStep}
-                
+
                 {/* Step 4: Mortgage Rate */}
                 {step === 4 && mortgageRateStep}
-                
+
                 {/* Step 5: Mortgage Length */}
                 {step === 5 && mortgageLengthStep}
-                
+
                 {/* Step 6: Property Tax */}
                 {step === 6 && propertyTaxStep}
-                
+
                 {/* Step 7: Maintenance */}
                 {step === 7 && maintenanceStep}
-                
+
                 {/* Step 8: Asset Appreciation Rate */}
                 {step === 8 && assetAppreciationRateStep}
             </main>
