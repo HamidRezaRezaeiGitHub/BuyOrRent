@@ -69,8 +69,8 @@ export const CompactMonthlyRentGraph: FC<CompactMonthlyRentGraphProps> = ({ data
                                 dataKey="cumulative"
                                 stroke="var(--color-cumulative)"
                                 strokeWidth={1.5}
-                                dot={{ fill: 'var(--color-cumulative)', r: 1 }}
-                                activeDot={{ r: 2 }}
+                                dot={{ fill: "currentColor", r: 1 }}
+                                activeDot={{ fill: "currentColor", r: 2 }}
                             />
                         </LineChart>
                     </ChartContainer>
