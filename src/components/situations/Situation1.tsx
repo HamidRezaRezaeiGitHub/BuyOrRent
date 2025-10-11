@@ -59,7 +59,7 @@ export const Situation1: React.FC = () => {
     const maxAssetAppreciationRate = 20
 
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
-    const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
+    const [resultsSectionOpen, setResultsSectionOpen] = useState(true)
     const [analysisYears, setAnalysisYears] = useState<number>(defaultAnalysisYears)
 
     // Initialize monthlyRent and rentIncrease from URL params or use defaults
@@ -363,9 +363,6 @@ export const Situation1: React.FC = () => {
     const graphDialog = (
         <Dialog open={graphDialogOpen} onOpenChange={setGraphDialogOpen}>
             <DialogContent className="max-w-[95vw] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl max-h-[90vh] overflow-auto">
-                <DialogHeader>
-                    <DialogTitle>Monthly Rent Graph - Full View</DialogTitle>
-                </DialogHeader>
                 <div className="overflow-x-auto">
                     <MonthlyRentGraph data={rentData} />
                 </div>

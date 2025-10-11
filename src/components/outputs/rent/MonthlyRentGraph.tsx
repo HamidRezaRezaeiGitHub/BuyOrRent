@@ -39,43 +39,49 @@ export const MonthlyRentGraph: FC<MonthlyRentGraphProps> = ({ data }) => {
     };
 
     return (
-        <div className="w-full h-[400px] p-4">
-            <h3 className="text-lg font-semibold mb-4 text-center">
+        <div className="w-full h-[400px] p-1 flex flex-col">
+            <h3 className="text-lg font-semibold mb-4 text-center flex-shrink-0">
                 Cumulative Rent Paid Over Time
             </h3>
-            <ChartContainer config={chartConfig} className="h-full w-full">
-                <LineChart
-                    data={chartData}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                        dataKey="year"
-                        label={{ value: 'Year', position: 'insideBottom', offset: -5 }}
-                    />
-                    <YAxis
-                        tickFormatter={formatShortCurrency}
-                        label={{ value: 'Cumulative Rent Paid', angle: -90, position: 'insideLeft' }}
-                    />
-                    <ChartTooltip
-                        content={
-                            <ChartTooltipContent
-                                labelFormatter={(label: any) => `Year ${label}`}
-                                formatter={(value: any) => [formatCurrency(value as number), 'Total Paid']}
-                            />
-                        }
-                    />
-                    <Line
-                        type="monotone"
-                        dataKey="cumulative"
-                        stroke="var(--color-cumulative)"
-                        strokeWidth={2}
-                        dot={{ fill: 'var(--color-cumulative)', r: 4 }}
-                        activeDot={{ r: 6 }}
-                    />
-                </LineChart>
-            </ChartContainer>
-            <div className="text-center mt-4 text-sm text-muted-foreground">
+            <div className="flex-1 min-h-0">
+                <ChartContainer config={chartConfig} className="h-full w-full">
+                    <LineChart
+                        data={chartData}
+                        margin={{ top: 5, right: 0, left: 0, bottom: 5 }}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis
+                            dataKey="year"
+                            label={{ value: 'Year', position: 'insideBottom', offset: -5 }}
+                            axisLine={true}
+                            tickLine={true}
+                        />
+                        <YAxis
+                            tickFormatter={formatShortCurrency}
+                            label={{ value: 'Cumulative Rent Paid', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle' } }}
+                            axisLine={true}
+                            tickLine={true}
+                        />
+                        <ChartTooltip
+                            content={
+                                <ChartTooltipContent
+                                    labelFormatter={(label: any) => `Year ${label}`}
+                                    formatter={(value: any) => [formatCurrency(value as number), 'Total Paid']}
+                                />
+                            }
+                        />
+                        <Line
+                            type="monotone"
+                            dataKey="cumulative"
+                            stroke="var(--color-cumulative)"
+                            strokeWidth={2}
+                            dot={{ fill: 'var(--color-cumulative)', r: 2 }}
+                            activeDot={{ r: 4 }}
+                        />
+                    </LineChart>
+                </ChartContainer>
+            </div>
+            <div className="text-center mt-4 text-sm text-muted-foreground flex-shrink-0">
                 <p>
                     Total rent paid over {data.years.length} years:{' '}
                     <span className="font-semibold text-foreground">

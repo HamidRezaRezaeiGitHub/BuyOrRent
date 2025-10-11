@@ -46,14 +46,14 @@ export const CompactMonthlyRentGraph: FC<CompactMonthlyRentGraphProps> = ({ data
                             <XAxis
                                 dataKey="year"
                                 tick={{ fontSize: 8 }}
-                                tickLine={false}
-                                axisLine={false}
+                                tickLine={true}
+                                axisLine={true}
                             />
                             <YAxis
                                 tickFormatter={formatShortCurrency}
                                 tick={{ fontSize: 8 }}
-                                tickLine={false}
-                                axisLine={false}
+                                tickLine={true}
+                                axisLine={true}
                                 width={35}
                             />
                             <ChartTooltip
@@ -69,8 +69,8 @@ export const CompactMonthlyRentGraph: FC<CompactMonthlyRentGraphProps> = ({ data
                                 dataKey="cumulative"
                                 stroke="var(--color-cumulative)"
                                 strokeWidth={1.5}
-                                dot={false}
-                                activeDot={false}
+                                dot={{ fill: 'var(--color-cumulative)', r: 1 }}
+                                activeDot={{ r: 2 }}
                             />
                         </LineChart>
                     </ChartContainer>
