@@ -1,5 +1,5 @@
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Info, Percent } from 'lucide-react';
@@ -17,6 +17,7 @@ export interface MortgageRateFieldProps {
     maxValue?: number; // Default: 15
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
+    showDescription?: boolean; // Default: true
 }
 
 export const MortgageRateField: FC<MortgageRateFieldProps> = ({
@@ -30,7 +31,8 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
     minValue = 0,
     maxValue = 15,
     onLabelSet,
-    showLabel = true
+    showLabel = true,
+    showDescription = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -77,6 +79,10 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
         }
     }, [validatedValue, value, onChange]);
 
+    // Determine the main control ID based on displayMode
+    const getMainControlId = useCallback(() => {
+        return displayMode === 'input' ? id : `${id}-slider`;
+    }, [displayMode, id]);
 
     // Handle slider change
     const handleSliderChange = (values: number[]) => {
@@ -145,11 +151,9 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
 
     // Label component with icon and tooltip (memoized)
     const labelComponent = useMemo(() => (
-        <div className="flex items-center gap-1">
+        <FieldLabel htmlFor={getMainControlId()} className="flex items-center gap-1">
             <Percent className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
-            <Label htmlFor={id} className="text-xs">
-                Mortgage Rate
-            </Label>
+            <span className="text-xs">Mortgage Rate</span>
             <TooltipProvider>
                 <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
                     <TooltipTrigger asChild>
@@ -173,8 +177,8 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
-        </div>
-    ), [id, tooltipOpen]);
+        </FieldLabel>
+    ), [id, tooltipOpen, getMainControlId]);
 
     // Notify parent about label if onLabelSet is provided
     useEffect(() => {
@@ -204,8 +208,8 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
 
     // Input component
     const inputComponent = (
-        <div className="relative">
-            <Input
+        <InputGroup>
+            <InputGroupInput
                 id={displayMode === 'input' ? id : `${id}-input`}
                 type="number"
                 inputMode="decimal"
@@ -218,18 +222,14 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 disabled={disabled}
-                className={`${displayMode === 'combined' ? 'w-32 pr-12' : 'w-full pr-12'}`}
+                className={`${displayMode === 'combined' ? 'w-32' : 'w-full'}`}
                 aria-label={`Mortgage rate, current value: ${validatedValue}%`}
                 aria-describedby={`${id}-suffix ${id}-tooltip`}
             />
-            <div
-                id={`${id}-suffix`}
-                className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                aria-hidden="true"
-            >
-                <span className="text-sm text-muted-foreground">%</span>
-            </div>
-        </div>
+            <InputGroupAddon align="inline-end">
+                <InputGroupText id={`${id}-suffix`}>%</InputGroupText>
+            </InputGroupAddon>
+        </InputGroup>
     );
 
     // Value display (for slider and combined modes)
@@ -247,48 +247,43 @@ export const MortgageRateField: FC<MortgageRateFieldProps> = ({
         switch (displayMode) {
             case 'slider':
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {valueDisplay}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {valueDisplay}
                     </div>
                 );
 
             case 'input':
-                return (
-                    <div className="space-y-2">
-                        {inputComponent}
-                    </div>
-                );
+                return inputComponent;
 
             case 'combined':
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {inputComponent}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {inputComponent}
                     </div>
                 );
 
             default:
                 return (
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            {sliderComponent}
-                            {valueDisplay}
-                        </div>
+                    <div className="flex items-center gap-3">
+                        {sliderComponent}
+                        {valueDisplay}
                     </div>
                 );
         }
     };
 
     return (
-        <div className={`space-y-2 ${className}`}>
+        <Field className={className}>
             {showLabel && labelComponent}
             {renderField()}
-        </div>
+            {showDescription && (
+                <FieldDescription className="text-xs text-muted-foreground">
+                    Annual mortgage interest rate
+                </FieldDescription>
+            )}
+        </Field>
     );
 };
 
