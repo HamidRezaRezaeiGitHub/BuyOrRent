@@ -1,4 +1,5 @@
 import { DownPaymentPercentageField } from '@/components/inputs/buy/DownPaymentPercentage'
+import { AssetAppreciationRateField } from '@/components/inputs/buy/AssetAppreciationRate'
 import { MaintenancePercentageField } from '@/components/inputs/buy/MaintenancePercentage'
 import { MortgageLengthField } from '@/components/inputs/buy/MortgageLength'
 import { MortgageRateField } from '@/components/inputs/buy/MortgageRate'
@@ -54,14 +55,19 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const minMaintenancePercentage = 0
     const maxMaintenancePercentage = 10
     
+    const defaultAssetAppreciationRate = 3.0
+    const minAssetAppreciationRate = -5
+    const maxAssetAppreciationRate = 20
+    
     // State
-    const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6 | 7>(1)
+    const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8>(1)
     const [purchasePrice, setPurchasePrice] = useState<number>(defaultPurchasePrice)
     const [downPaymentPercentage, setDownPaymentPercentage] = useState<number>(defaultDownPaymentPercentage)
     const [mortgageRate, setMortgageRate] = useState<number>(defaultMortgageRate)
     const [mortgageLength, setMortgageLength] = useState<number>(defaultMortgageLength)
     const [propertyTaxPercentage, setPropertyTaxPercentage] = useState<number>(defaultPropertyTaxPercentage)
     const [maintenancePercentage, setMaintenancePercentage] = useState<number>(defaultMaintenancePercentage)
+    const [assetAppreciationRate, setAssetAppreciationRate] = useState<number>(defaultAssetAppreciationRate)
     
     // Navigate to next section with all parameters
     const navigateToNext = () => {
@@ -73,7 +79,8 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             mortgageRate: mortgageRate.toString(),
             mortgageLength: mortgageLength.toString(),
             propertyTaxPercentage: propertyTaxPercentage.toString(),
-            maintenancePercentage: maintenancePercentage.toString()
+            maintenancePercentage: maintenancePercentage.toString(),
+            assetAppreciationRate: assetAppreciationRate.toString()
         })
         if (nextUrl) {
             navigate(`${nextUrl}?${params.toString()}`)
@@ -100,6 +107,8 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
         } else if (step === 6) {
             setStep(7)
         } else if (step === 7) {
+            setStep(8)
+        } else if (step === 8) {
             navigateToNext()
         }
     }
@@ -111,6 +120,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
         setMortgageLength(defaultMortgageLength)
         setPropertyTaxPercentage(defaultPropertyTaxPercentage)
         setMaintenancePercentage(defaultMaintenancePercentage)
+        setAssetAppreciationRate(defaultAssetAppreciationRate)
         navigateToNext()
     }
     
@@ -128,6 +138,8 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             setStep(5)
         } else if (step === 7) {
             setStep(6)
+        } else if (step === 8) {
+            setStep(7)
         } else if (step === 1 && previousUrl) {
             navigate(`${previousUrl}?monthlyRent=${monthlyRent}&rentIncrease=${rentIncrease}`)
         }
@@ -164,6 +176,13 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     // Handler to use default value for maintenance
     const handleUseDefaultMaintenance = () => {
         setMaintenancePercentage(defaultMaintenancePercentage)
+        // Automatically proceed to next after setting default
+        handleNext()
+    }
+    
+    // Handler to use default value for asset appreciation rate
+    const handleUseDefaultAssetAppreciationRate = () => {
+        setAssetAppreciationRate(defaultAssetAppreciationRate)
         // Automatically proceed to next after setting default
         handleNext()
     }
@@ -262,6 +281,10 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                         <div className="flex justify-between text-sm">
                             <span className="font-medium">Maintenance:</span>
                             <span>{defaultMaintenancePercentage}%</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                            <span className="font-medium">Property Appreciation:</span>
+                            <span>{defaultAssetAppreciationRate}%</span>
                         </div>
                     </div>
                     <p className="text-sm text-muted-foreground italic">
@@ -754,6 +777,94 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
         </Card>
     )
     
+    const assetAppreciationRateStep = (
+        <Card className="w-full">
+            <CardHeader>
+                <CardTitle>What is the expected property appreciation rate?</CardTitle>
+                <CardDescription>
+                    The annual percentage increase you expect in the property's market value
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                {/* Information about Canadian property appreciation */}
+                <div className="flex gap-3 p-4 bg-muted/50 rounded-lg border border-border">
+                    <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                    <div className="text-sm">
+                        <p className="font-medium mb-1">Canadian Property Appreciation</p>
+                        <p className="text-muted-foreground">
+                            Historically, Canadian real estate has appreciated at an average rate of 
+                            3-5% annually, though this varies significantly by location and market 
+                            conditions. Major cities like Toronto and Vancouver have seen higher rates, 
+                            while other areas may experience slower growth. The default value of 3% 
+                            represents a conservative long-term estimate.
+                        </p>
+                    </div>
+                </div>
+                
+                <AssetAppreciationRateField
+                    value={assetAppreciationRate}
+                    onChange={setAssetAppreciationRate}
+                    defaultValue={defaultAssetAppreciationRate}
+                    minValue={minAssetAppreciationRate}
+                    maxValue={maxAssetAppreciationRate}
+                    displayMode="combined"
+                    showDescription={true}
+                />
+                
+                <div className="flex justify-between gap-3">
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    onClick={handlePrevious}
+                                    variant="outline"
+                                    size="icon"
+                                >
+                                    <ArrowLeft className="h-4 w-4" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Previous question</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                    <div className="flex gap-3">
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        onClick={handleUseDefaultAssetAppreciationRate}
+                                        variant="secondary"
+                                    >
+                                        Use default
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Use default value and continue</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        onClick={handleNext}
+                                        size="icon"
+                                    >
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Next question</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    )
+    
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
@@ -794,6 +905,9 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                 
                 {/* Step 7: Maintenance */}
                 {step === 7 && maintenanceStep}
+                
+                {/* Step 8: Asset Appreciation Rate */}
+                {step === 8 && assetAppreciationRateStep}
             </main>
         </div>
     )

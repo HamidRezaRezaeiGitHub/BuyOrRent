@@ -54,6 +54,10 @@ export const Situation1: React.FC = () => {
     const minMaintenancePercentage = 0
     const maxMaintenancePercentage = 10
 
+    const defaultAssetAppreciationRate = 3.0
+    const minAssetAppreciationRate = -5
+    const maxAssetAppreciationRate = 20
+
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
     const [resultsSectionOpen, setResultsSectionOpen] = useState(false)
     const [analysisYears, setAnalysisYears] = useState<number>(defaultAnalysisYears)
@@ -92,6 +96,9 @@ export const Situation1: React.FC = () => {
     const initialMaintenancePercentage = searchParams.get('maintenancePercentage')
         ? parseFloat(searchParams.get('maintenancePercentage')!)
         : defaultMaintenancePercentage
+    const initialAssetAppreciationRate = searchParams.get('assetAppreciationRate')
+        ? parseFloat(searchParams.get('assetAppreciationRate')!)
+        : defaultAssetAppreciationRate
 
     // Buy fields state
     const [purchasePrice, setPurchasePrice] = useState<number>(initialPurchasePrice)
@@ -106,6 +113,7 @@ export const Situation1: React.FC = () => {
     const [maintenancePercentage, setMaintenancePercentage] = useState<number>(initialMaintenancePercentage)
     const [maintenanceAmount, setMaintenanceAmount] = useState<number>(initialMaintenancePercentage / 100 * initialPurchasePrice)
     const [maintenanceMode, setMaintenanceMode] = useState<'percentage' | 'amount'>('percentage')
+    const [assetAppreciationRate, setAssetAppreciationRate] = useState<number>(initialAssetAppreciationRate)
 
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
     const [tableDialogOpen, setTableDialogOpen] = useState(false)
@@ -208,6 +216,11 @@ export const Situation1: React.FC = () => {
                             defaultMaintenancePercentage={defaultMaintenancePercentage}
                             minMaintenancePercentage={minMaintenancePercentage}
                             maxMaintenancePercentage={maxMaintenancePercentage}
+                            assetAppreciationRate={assetAppreciationRate}
+                            setAssetAppreciationRate={setAssetAppreciationRate}
+                            defaultAssetAppreciationRate={defaultAssetAppreciationRate}
+                            minAssetAppreciationRate={minAssetAppreciationRate}
+                            maxAssetAppreciationRate={maxAssetAppreciationRate}
                         />
                     </AccordionContent>
                 </AccordionItem>
