@@ -218,6 +218,8 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
         </Card>
     )
 
+    const progress = getProgressPercentage()
+
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
@@ -232,9 +234,9 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
             <main className="w-full max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8 space-y-6">
                 {/* Progress Bar */}
                 <div className="space-y-2">
-                    <Progress value={getProgressPercentage()} className="w-full" />
+                    <Progress value={progress} className="w-full" />
                     <div className="flex justify-end">
-                        <span className="text-xs text-muted-foreground">{getProgressPercentage()}% complete</span>
+                        <span className="text-xs text-muted-foreground">{progress}% complete</span>
                     </div>
                 </div>
 
