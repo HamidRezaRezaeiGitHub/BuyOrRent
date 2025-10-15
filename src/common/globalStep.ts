@@ -126,7 +126,7 @@ export function buildNavigationUrl(globalStep: number, dataParams?: URLSearchPar
     const route = getComponentRoute(stepInfo.component)
     if (!route) return null
     
-    const params = new URLSearchParams(dataParams)
+    const params = new URLSearchParams(dataParams?.toString())
     params.set('gs', globalStep.toString())
     
     return `${route}?${params.toString()}`
