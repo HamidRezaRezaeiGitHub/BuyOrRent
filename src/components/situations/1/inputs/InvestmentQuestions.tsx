@@ -8,6 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ArrowLeft, ArrowRight, Info } from 'lucide-react'
 import { FC, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { localToGlobalStep, buildNavigationUrl } from '@/common/globalStep'
 
 export interface InvestmentQuestionsProps {
     previousUrl?: string
@@ -46,17 +47,17 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
     // Handler to move to next step
     const handleNext = () => {
         // Navigate using nextUrl if provided, otherwise navigate to panel
-        const params = new URLSearchParams({
-            monthlyRent,
-            rentIncrease,
-            purchasePrice,
-            downPaymentPercentage,
-            mortgageRate,
-            mortgageLength,
-            propertyTaxPercentage,
-            maintenancePercentage,
-            investmentReturn: investmentReturn.toString()
-        })
+        const params = new URLSearchParams(searchParams)
+        params.set('monthlyRent', monthlyRent)
+        params.set('rentIncrease', rentIncrease)
+        params.set('purchasePrice', purchasePrice)
+        params.set('downPaymentPercentage', downPaymentPercentage)
+        params.set('mortgageRate', mortgageRate)
+        params.set('mortgageLength', mortgageLength)
+        params.set('propertyTaxPercentage', propertyTaxPercentage)
+        params.set('maintenancePercentage', maintenancePercentage)
+        params.set('investmentReturn', investmentReturn.toString())
+        
         if (nextUrl) {
             navigate(`${nextUrl}?${params.toString()}`)
         } else {
@@ -66,11 +67,21 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
 
     // Handler to go to previous step
     const handlePrevious = () => {
+        // Navigate to previous global step
+        const currentGlobalStep = localToGlobalStep('InvestmentQuestions', 1)
+        if (currentGlobalStep && currentGlobalStep > 1) {
+            const prevGlobalStep = currentGlobalStep - 1
+            const dataParams = new URLSearchParams(searchParams)
+            const navUrl = buildNavigationUrl(prevGlobalStep, dataParams)
+            if (navUrl) {
+                navigate(navUrl)
+                return
+            }
+        }
+        
+        // Fallback to previousUrl
         if (previousUrl) {
-            const params = new URLSearchParams({
-                monthlyRent,
-                rentIncrease
-            })
+            const params = new URLSearchParams(searchParams)
             navigate(`${previousUrl}?${params.toString()}`)
         }
     }

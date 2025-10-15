@@ -12,8 +12,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { ArrowLeft, ArrowRight, Info } from 'lucide-react'
-import { FC, useState } from 'react'
+import { FC, useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { localToGlobalStep, globalToLocalStep, buildNavigationUrl } from '@/common/globalStep'
 
 export interface PurchaseQuestionsProps {
     previousUrl?: string
@@ -73,6 +74,18 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const [propertyTaxPercentage, setPropertyTaxPercentage] = useState<number>(defaultPropertyTaxPercentage)
     const [maintenancePercentage, setMaintenancePercentage] = useState<number>(defaultMaintenancePercentage)
     const [assetAppreciationRate, setAssetAppreciationRate] = useState<number>(defaultAssetAppreciationRate)
+    
+    // Initialize step from gs parameter if present
+    useEffect(() => {
+        const gsParam = searchParams.get('gs')
+        if (gsParam) {
+            const globalStep = parseInt(gsParam, 10)
+            const stepInfo = globalToLocalStep(globalStep)
+            if (stepInfo && stepInfo.component === 'PurchaseQuestions') {
+                setStep(stepInfo.localStep as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)
+            }
+        }
+    }, [searchParams])
 
     // Calculate progress percentage based on step
     const getProgressPercentage = () => {
@@ -84,17 +97,29 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
 
     // Navigate to next section with all parameters
     const navigateToNext = () => {
-        const params = new URLSearchParams({
-            monthlyRent,
-            rentIncrease,
-            purchasePrice: purchasePrice.toString(),
-            downPaymentPercentage: downPaymentPercentage.toString(),
-            mortgageRate: mortgageRate.toString(),
-            mortgageLength: mortgageLength.toString(),
-            propertyTaxPercentage: propertyTaxPercentage.toString(),
-            maintenancePercentage: maintenancePercentage.toString(),
-            assetAppreciationRate: assetAppreciationRate.toString()
-        })
+        const params = new URLSearchParams(searchParams)
+        params.set('monthlyRent', monthlyRent)
+        params.set('rentIncrease', rentIncrease)
+        params.set('purchasePrice', purchasePrice.toString())
+        params.set('downPaymentPercentage', downPaymentPercentage.toString())
+        params.set('mortgageRate', mortgageRate.toString())
+        params.set('mortgageLength', mortgageLength.toString())
+        params.set('propertyTaxPercentage', propertyTaxPercentage.toString())
+        params.set('maintenancePercentage', maintenancePercentage.toString())
+        params.set('assetAppreciationRate', assetAppreciationRate.toString())
+        
+        // Calculate next global step
+        const currentGlobalStep = localToGlobalStep('PurchaseQuestions', step)
+        if (currentGlobalStep) {
+            const nextGlobalStep = currentGlobalStep + 1
+            const navUrl = buildNavigationUrl(nextGlobalStep, params)
+            if (navUrl) {
+                navigate(navUrl)
+                return
+            }
+        }
+        
+        // Fallback to legacy navigation
         if (nextUrl) {
             navigate(`${nextUrl}?${params.toString()}`)
         } else {
@@ -153,8 +178,23 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             setStep(6)
         } else if (step === 8) {
             setStep(7)
-        } else if (step === 1 && previousUrl) {
-            navigate(`${previousUrl}?monthlyRent=${monthlyRent}&rentIncrease=${rentIncrease}`)
+        } else if (step === 1) {
+            // Navigate to previous global step
+            const currentGlobalStep = localToGlobalStep('PurchaseQuestions', step)
+            if (currentGlobalStep && currentGlobalStep > 1) {
+                const prevGlobalStep = currentGlobalStep - 1
+                const dataParams = new URLSearchParams(searchParams)
+                const navUrl = buildNavigationUrl(prevGlobalStep, dataParams)
+                if (navUrl) {
+                    navigate(navUrl)
+                    return
+                }
+            }
+            
+            // Fallback to previousUrl
+            if (previousUrl) {
+                navigate(`${previousUrl}?monthlyRent=${monthlyRent}&rentIncrease=${rentIncrease}`)
+            }
         }
     }
 
