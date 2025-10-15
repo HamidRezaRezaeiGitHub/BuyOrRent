@@ -13,11 +13,15 @@ import { useNavigate } from 'react-router-dom'
 export interface RentQuestionsProps {
     previousUrl?: string
     nextUrl?: string
+    progressMin?: number
+    progressMax?: number
 }
 
 export const RentQuestions: FC<RentQuestionsProps> = ({
     previousUrl,
-    nextUrl
+    nextUrl,
+    progressMin = 0,
+    progressMax = 100
 }) => {
     const navigate = useNavigate()
 
@@ -37,7 +41,10 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
 
     // Calculate progress percentage based on step
     const getProgressPercentage = () => {
-        return step === 1 ? 20 : 100
+        // Interpolate between progressMin and progressMax based on current step
+        const progressPerStep = (progressMax - progressMin) / 2 // 2 steps total
+        const progress = progressMin + (progressPerStep * (step - 1))
+        return Math.round(progress)
     }
 
     // Handler to move to next step

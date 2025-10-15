@@ -18,11 +18,15 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 export interface PurchaseQuestionsProps {
     previousUrl?: string
     nextUrl?: string
+    progressMin?: number
+    progressMax?: number
 }
 
 export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     previousUrl,
-    nextUrl
+    nextUrl,
+    progressMin = 0,
+    progressMax = 100
 }) => {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
@@ -72,26 +76,10 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
 
     // Calculate progress percentage based on step
     const getProgressPercentage = () => {
-        switch (step) {
-            case 1:
-                return 55
-            case 2:
-                return 60
-            case 3:
-                return 65
-            case 4:
-                return 70
-            case 5:
-                return 75
-            case 6:
-                return 80
-            case 7:
-                return 85
-            case 8:
-                return 90
-            default:
-                return 55
-        }
+        // Interpolate between progressMin and progressMax based on current step
+        const progressPerStep = (progressMax - progressMin) / 8 // 8 steps total
+        const progress = progressMin + (progressPerStep * (step - 1))
+        return Math.round(progress)
     }
 
     // Navigate to next section with all parameters

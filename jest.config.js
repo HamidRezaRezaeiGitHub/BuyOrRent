@@ -12,6 +12,7 @@ export default {
       tsconfig: {
         jsx: 'react-jsx',
         esModuleInterop: true,
+        resolveJsonModule: true,
       },
       diagnostics: {
         ignoreCodes: [2339], // Ignore missing property errors (for jest-dom matchers)

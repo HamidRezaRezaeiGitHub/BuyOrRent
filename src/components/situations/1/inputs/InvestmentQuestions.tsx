@@ -12,11 +12,15 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 export interface InvestmentQuestionsProps {
     previousUrl?: string
     nextUrl?: string
+    progressMin?: number
+    progressMax?: number
 }
 
 export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
     previousUrl,
-    nextUrl
+    nextUrl,
+    progressMin = 0,
+    progressMax: _progressMax = 100
 }) => {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
@@ -181,9 +185,9 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
             <main className="w-full max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8 space-y-6">
                 {/* Progress Bar */}
                 <div className="space-y-2">
-                    <Progress value={100} className="w-full" />
+                    <Progress value={Math.round(progressMin)} className="w-full" />
                     <div className="flex justify-end">
-                        <span className="text-xs text-muted-foreground">100% complete</span>
+                        <span className="text-xs text-muted-foreground">{Math.round(progressMin)}% complete</span>
                     </div>
                 </div>
 
