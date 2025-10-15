@@ -1,369 +1,237 @@
-# BuyOrRent - React + Vite + Tailwind CSS Application
+# BuyOrRent - GitHub Copilot Instructions
 
-BuyOrRent is a modern web application built with React 19, Vite 7, and Tailwind CSS 4. The application is a single-page application (SPA) that provides users with tools to analyze whether to buy or rent a property based on various financial inputs.
+## 1) Project Summary
 
-### Field Components with Validation
-The application follows a consistent pattern for form field components with built-in validation and formatting:
+BuyOrRent is a React + Vite + Tailwind + shadcn/ui deployed to GitHub Pages. It helps Canadian users compare Rent + Invest vs Buy through a story-first questionnaire (Rent → Purchase → Investment), then shows results (tables/graphs). The default flow is Situation 1: currently renting, considering buying.
 
-1. **Base Structure**: All field components should have consistent prop interfaces
-2. **Shadcn UI Components**: Leverage `Input`, `Label`, `Tooltip` and other shadcn components
-3. **Lucide React Icons**: Use appropriate icons (e.g., `DollarSign` for currency, `Info` for tooltips)
-4. **Mobile-First Design**: Short labels with detailed tooltip content for comprehensive informationite.
+---
 
-Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
+## 2) Audience, UX Principles, and Story Flow
 
-## Working Effectively
+**Audience:** General public first; power users can fine-tune inputs later.
 
-### Prerequisites
-- Node.js 20.19.5+ (confirmed working)
-- npm 10.8.2+ (confirmed working)
+**UX:** One clear question per slide; defaults available; plain-language copy; mobile-first.
 
-### Bootstrap, Build, and Test the Repository
-Run these commands in sequence for a fresh setup:
+**Story order:** Rent → Purchase → Investment → Results.
 
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-   - Takes approximately 10 seconds
-   - Installs 215 packages
+**Required vs optional:** Current monthly rent & purchase price are required; others allow "Use default."
 
-2. **Build the application:**
-   ```bash
-   npm run build
-   ```
-   - Takes approximately 3 seconds
-   - NEVER CANCEL: Set timeout to 60+ seconds for safety
-   - Runs TypeScript compilation (`tsc -b`) followed by Vite build
-   - Outputs to `dist/` directory with optimized assets
+**Canadian defaults:** sensible, conservative placeholders (e.g., rent increase ~2.5%, amortization 25y, etc.).
 
-3. **Run linting:**
-   ```bash
-   npm run lint
-   ```
-   - Takes approximately 1 second
-   - Uses ESLint with TypeScript support
-   - Includes React hooks and React refresh plugins
-   - Must pass before committing changes
+---
 
-### Development Workflow
+## 3) Technical Stack & Conventions
 
-**Start development server:**
+- **Node & npm versions:** 20.x+ recommended (npm 8.0.0+)
+- **React ecosystem:** 
+  - React 19.1.1
+  - React DOM 19.1.1
+  - React Router 7.9.1
+- **Vite version:** 7.1.7
+- **Tailwind version:** 4.1.13
+- **shadcn/ui usage:** Present under `src/components/ui/` (accordion, avatar, badge, button, card, carousel, chart, dialog, drawer, dropdown-menu, field, input-group, input, label, navigation-menu, popover, progress, radio-group, separator, slider, switch, table, tabs, textarea, toggle, tooltip, etc.)
+- **ESLint config:** `eslint.config.js` using `@eslint/js`, `typescript-eslint`, `eslint-plugin-react-hooks`, `eslint-plugin-react-refresh`
+- **TypeScript config:** 
+  - Main: `tsconfig.json` (references `tsconfig.app.json` and `tsconfig.node.json`)
+  - App: `tsconfig.app.json` (target: ES2022, jsx: react-jsx, strict mode, path mapping `@/*` → `./src/*`)
+  - Node: `tsconfig.node.json` (for config files)
+- **Testing stack:** Jest 30.1.3 + React Testing Library 16.3.0 + ts-jest 29.4.4, jsdom environment
+- **Deployment target:** GitHub Pages (workflow: `.github/workflows/deploy.yml`, Node 18, base path: `/BuyOrRent/`)
+
+---
+
+## 4) File & Folder Anatomy
+
+```
+.
+├── public/
+│   └── vite.svg
+├── src/
+│   ├── assets/
+│   │   └── react.svg
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── FlexibleInputField.tsx
+│   │   │   ├── Years.tsx
+│   │   │   └── index.ts
+│   │   ├── inputs/
+│   │   │   ├── buy/
+│   │   │   ├── invest/
+│   │   │   ├── rent/
+│   │   │   └── PercentageAmountSwitch.tsx
+│   │   ├── navbar/
+│   │   │   ├── FlexibleNavbar.tsx
+│   │   │   ├── Logo.tsx, Avatar.tsx, LoginButton.tsx, SignUpButton.tsx
+│   │   │   └── README.md
+│   │   ├── outputs/
+│   │   │   └── rent/
+│   │   ├── situations/
+│   │   │   ├── 1/
+│   │   │   │   ├── inputs/
+│   │   │   │   └── outputs/
+│   │   │   ├── Situation1.tsx
+│   │   │   └── index.ts
+│   │   ├── theme/
+│   │   │   ├── ThemeShowcase.tsx
+│   │   │   ├── ThemeToggle.tsx
+│   │   │   └── index.ts
+│   │   └── ui/                    # shadcn/ui base components
+│   │       ├── accordion.tsx, avatar.tsx, badge.tsx, button.tsx, card.tsx
+│   │       ├── carousel.tsx, chart.tsx, dialog.tsx, drawer.tsx
+│   │       ├── dropdown-menu.tsx, field.tsx, input-group.tsx, input.tsx
+│   │       ├── label.tsx, navigation-menu.tsx, popover.tsx, progress.tsx
+│   │       ├── radio-group.tsx, separator.tsx, slider.tsx, switch.tsx
+│   │       ├── table.tsx, tabs.tsx, textarea.tsx, toggle.tsx, tooltip.tsx
+│   │       └── ... (more shadcn components)
+│   ├── contexts/
+│   │   ├── AppProviders.tsx
+│   │   ├── AppRouter.tsx
+│   │   ├── RouterProvider.tsx
+│   │   ├── ThemeContext.tsx
+│   │   └── index.ts
+│   ├── pages/
+│   │   ├── LandingPage.tsx
+│   │   ├── MainAppPage.tsx
+│   │   ├── QuestionnairePage.tsx
+│   │   └── index.ts
+│   ├── services/
+│   │   ├── formatting/
+│   │   │   ├── FormattingService.ts
+│   │   │   └── index.ts
+│   │   ├── validation/
+│   │   │   ├── ValidationService.ts
+│   │   │   ├── useSmartFieldValidation.ts
+│   │   │   ├── types.ts
+│   │   │   └── README.md
+│   │   └── MonthlyRentCalculator.ts
+│   ├── test/
+│   │   └── setupTests.ts
+│   ├── utils/
+│   │   └── utils.ts
+│   ├── App.tsx
+│   ├── index.css                 # Tailwind imports + CSS variables
+│   ├── main.tsx                  # React app entry
+│   └── vite-env.d.ts
+├── .github/
+│   ├── copilot-instructions.md   # This file
+│   └── workflows/
+│       └── deploy.yml
+├── components.json               # shadcn/ui configuration
+├── eslint.config.js
+├── index.html
+├── jest.config.js
+├── package.json
+├── postcss.config.js
+├── tailwind.config.js
+├── tsconfig.json
+├── tsconfig.app.json
+├── tsconfig.node.json
+└── vite.config.ts
+```
+
+---
+
+## 5) Routing & Situations Overview
+
+**Current router file:** `src/contexts/AppRouter.tsx`
+
+**Routes:**
+- `/` → `LandingPage`
+- `/questionnaire` → `QuestionnairePage`
+- `/situation/1/question/rent` → `RentQuestions` (previousUrl: `/`, nextUrl: `/situation/1/question/purchase`)
+- `/situation/1/question/purchase` → `PurchaseQuestions` (previousUrl: `/situation/1/question/rent`, nextUrl: `/situation/1/question/investment`)
+- `/situation/1/question/investment` → `InvestmentQuestions` (previousUrl: `/situation/1/question/purchase`, nextUrl: `/situation/1/panel`)
+- `/situation/1/panel` → `Situation1`
+- `/situation/1` → `Situation1`
+- `/temp/theme` → `ThemeShowcase` (temporary component showcase)
+- `*` → `Navigate to="/" replace` (catch-all redirect)
+
+**Situation 1 flow:** Rent → Purchase → Investment → Results panel.
+
+---
+
+## 6) Inputs & Outputs Patterns
+
+**Inputs** live under `src/components/inputs/{rent|buy|invest}` and are used by question pages; display modes: input | slider | combined.
+
+**Outputs** live under `src/components/outputs/**` and render tables/graphs for results.
+
+Each field has validation, CAD formatting as needed, and tests colocated (`*.test.tsx`).
+
+Mobile-first; short label + tooltip for depth.
+
+---
+
+## 7) Dev Workflow & Commands
+
+- **`npm run dev`** → Starts Vite dev server on port 5173; HMR enabled; ~200ms to start.
+- **`npm run build`** → `tsc -b && vite build`; outputs to `dist/`; ~3-6s; never cancel (set timeout 120s+).
+- **`npm run preview`** → Serves `dist/` on port 4173; must run `build` first.
+- **`npm run lint`** → ESLint with TypeScript support; ~1s; must pass before commit.
+- **`npm run test`** → Jest with React Testing Library; run specific tests with `npm test -- <ComponentName>.test`.
+- **`npm install`** → ~10s; installs ~661 packages.
+
+---
+
+## 8) Quality Gates
+
+**Pre-commit:** `npm run lint && npm run build` must pass.
+
+**Field components:** unit tests (render, interactions, formatting); fix discovered bugs before PR.
+
+**Accessibility:** labels, focus states, aria for toggles, keyboard nav.
+
+---
+
+## 9) Contribution Rules for Agents
+
+- Prefer shadcn/ui; keep Tailwind classes consistent with existing patterns.
+- Do not introduce new state managers without approval; keep step logic local.
+- When touching routes, update the **Routing & Situations Overview** section above.
+- Keep copy tone consistent (conversational, Canadian context, non-advice).
+- For any new input field: separate display value from actual value if formatting is needed (e.g., `"1,500.00"` display vs `1500` stored).
+- Write comprehensive tests for all new field components; colocate as `*.test.tsx`.
+- Mobile-first design: short labels + tooltips for detailed info.
+
+---
+
+## 10) Project Tree Refresh Procedure
+
+To regenerate the tree in section 4, run:
+
 ```bash
-npm run dev
+cd /path/to/BuyOrRent
+tree -L 4 -I 'node_modules|dist|coverage|.git' --dirsfirst
 ```
-- Starts Vite development server on http://localhost:5173/
-- Hot module replacement enabled
-- Ready in approximately 200ms
-- NEVER CANCEL: Server runs indefinitely until stopped
 
-**Preview production build:**
+Or use the find-based alternative:
+
 ```bash
-npm run preview
-```
-- Serves the built application from `dist/` directory
-- Runs on http://localhost:4173/
-- Must run `npm run build` first
-
-## Validation
-
-### Manual Testing Scenarios
-After making changes, ALWAYS perform these validation steps:
-
-1. **Basic functionality test:**
-   - Start development server with `npm run dev`
-   - Navigate to http://localhost:5173/
-   - Verify main page loads without errors
-
-2. **Build validation:**
-   - Run full build process: `npm run build`
-   - Verify no TypeScript errors
-   - Verify Vite build completes successfully
-   - Check `dist/` directory contains optimized assets
-
-3. **Code quality validation:**
-   - Run `npm run lint` and ensure no errors
-   - All linting rules must pass before committing
-
-### Required Pre-commit Checks
-ALWAYS run before committing changes:
-```bash
-npm run lint && npm run build
-```
-- Linting takes ~1 second
-- Build takes ~3 seconds
-- Both must succeed for CI compatibility
-
-## Project Structure
-
-### Key Directories and Files
-```
-/
-├── src/                    # Source code
-│   ├── App.tsx            # Main application component
-│   ├── App.css            # Component-specific styles
-│   ├── main.tsx           # React application entry point
-│   ├── index.css          # Global styles (Tailwind imports)
-│   ├── vite-env.d.ts      # Vite type definitions
-│   └── assets/            # Static assets (images, etc.)
-├── public/                # Public static files
-│   └── vite.svg           # Vite logo
-├── dist/                  # Build output (generated)
-├── index.html             # HTML entry point
-├── package.json           # Dependencies and scripts
-├── vite.config.ts         # Vite configuration
-├── tailwind.config.js     # Tailwind CSS configuration
-├── postcss.config.js      # PostCSS configuration
-├── eslint.config.js       # ESLint configuration
-├── tsconfig.json          # TypeScript configuration (references)
-├── tsconfig.app.json      # TypeScript app configuration
-└── tsconfig.node.json     # TypeScript Node.js configuration
+find . -type d -o -type f | grep -v node_modules | grep -v dist | grep -v coverage | grep -v ".git/" | sort
 ```
 
-### Important Files to Monitor
-When making changes, always check these files for consistency:
-- **src/App.tsx** - Main component logic
-- **src/index.css** - Contains Tailwind CSS imports
-- **package.json** - For script definitions and dependencies
-- **vite.config.ts** - Build and development server configuration
+Then manually format the output to match section 4's structure. No automation script is currently present; consider adding one at `docs/scripts/update-tree.mjs` if frequent updates are needed.
 
-### Component Organization
-Components are organized by type and function under `src/components/`:
+---
 
-```
-src/components/
-├── inputs/                 # Input components (user-facing form fields)
-│   ├── rent/              # Rent-related input fields
-│   │   ├── MonthlyRent.tsx
-│   │   ├── RentIncrease.tsx
-│   │   └── *.test.tsx     # Tests for input components
-│   ├── buy/               # Purchase/mortgage-related input fields
-│   └── invest/            # Investment-related input fields
-│       ├── InvestmentReturn.tsx
-│       ├── InvestmentReturnHelperDrawer.tsx
-│       └── *.test.tsx
-├── outputs/               # Output components (tables, graphs, reports)
-│   ├── rent/              # Rent-related outputs
-│   │   ├── MonthlyRentTable.tsx
-│   │   ├── MonthlyRentGraph.tsx
-│   │   ├── CompactMonthlyRentTable.tsx
-│   │   ├── CompactMonthlyRentGraph.tsx
-│   │   └── *.test.tsx     # Tests for output components
-│   ├── buy/               # Purchase/mortgage-related outputs
-│   └── invest/            # Investment-related outputs
-├── situations/         # Full page implementations for different scenarios
-├── common/                # Shared components (e.g., YearsField)
-├── navbar/                # Navigation components
-├── theme/                 # Theme-related components
-└── ui/                    # Base UI components (shadcn)
-```
+## 11) Post-Session Instruction Refresh Protocol
 
-**Organization Rules**:
-- **Input components**: User-facing form fields that collect data (sliders, text inputs, etc.)
-- **Output components**: Display components that show calculated results (tables, graphs, reports)
-- **Location pattern**: `inputs/{category}/` or `outputs/{category}/` where category is `rent`, `buy`, or `invest`
-- **Test files**: Always colocated with their corresponding component files
+After each session, the agent must evaluate whether this instructions file is still accurate. If any section is invalidated (e.g., routes changed, step counts updated, defaults adjusted), it should:
 
-## Common Tasks
+1. Notify the user in its PR/summary, and
+2. Propose a patch to this file (or auto-update if authorized).
 
-### Typical Development Workflow
-1. `npm install` (first time setup)
-2. `npm run dev` (start development)
-3. Make code changes
-4. Verify in browser at http://localhost:5173/
-5. `npm run lint` (check code quality)
-6. `npm run build` (verify production build)
-7. Commit changes
+---
 
-### Troubleshooting
-- **Build failures:** Check TypeScript errors first, then Vite configuration
-- **Styling issues:** Verify Tailwind classes and check `src/index.css` imports
-- **Linting errors:** Fix ESLint issues before committing
-- **Port conflicts:** Default dev server port is 5173, preview port is 4173
+## 12) Glossary
 
-### Performance Notes
-- **Development server:** Starts in ~200ms
-- **Hot reload:** Near-instant for most changes
-- **Production build:** Generates optimized bundles with tree-shaking
-- **Asset optimization:** Vite automatically handles CSS/JS minification
-
-## Timing Expectations
-
-All timing measurements based on validated testing:
-
-| Command | Expected Time | Timeout Setting |
-|---------|---------------|-----------------|
-| `npm install` | ~10 seconds | 300 seconds |
-| `npm run build` | ~3 seconds | 60 seconds |
-| `npm run lint` | ~1 second | 30 seconds |
-| `npm run dev` | ~200ms to start | N/A (runs indefinitely) |
-| `npm run preview` | ~immediate | N/A (runs indefinitely) |
-
-**NEVER CANCEL** any build or long-running commands. Always wait for completion.
-
-## Common Tasks Reference
-
-The following are outputs from frequently run commands. Reference them instead of viewing, searching, or running bash commands to save time.
-
-### Repository Root Directory Listing
-```bash
-ls -la
-```
-```
-.git/
-.gitignore
-.github/
-README.md
-dist/                      # Build output (after npm run build)
-eslint.config.js
-index.html
-node_modules/              # Dependencies (after npm install)
-package-lock.json          # Dependency lock file (after npm install)
-package.json
-postcss.config.js
-public/
-src/
-tailwind.config.js
-tsconfig.app.json
-tsconfig.json
-tsconfig.node.json
-vite.config.ts
-```
-
-### Key Package.json Scripts
-```json
-{
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  }
-}
-```
-
-### Build Output Structure (dist/)
-After running `npm run build`:
-```
-dist/
-├── assets/
-│   ├── index-[hash].css    # Compiled and minified CSS
-│   └── index-[hash].js     # Compiled and minified JavaScript
-├── index.html              # Main HTML entry point
-└── vite.svg               # Static assets
-```
-
-## Component Development Patterns
-
-### Example: MonthlyRent Component
-Located in `src/components/inputs/rent/MonthlyRent.tsx`:
-- **Currency Formatting**: Canadian dollar formatting with `Intl.NumberFormat`
-- **Dual Value Management**: Separate display value (formatted string) and actual value (number)
-- **Focus/Blur Behavior**: Unformatted during editing, formatted when blurred
-- **Tooltip**: Descriptive information accessible via info icon
-
-### Testing Pattern
-All field components should have comprehensive test coverage:
-- Basic rendering and props
-- User interaction (change, focus, blur)
-- Formatting (if applicable)
-- Integration tests combining multiple features
-
-**Test Configuration**:
-- Jest with ts-jest preset
-- React Testing Library
-- Type checking diagnostic code 2339 ignored for jest-dom matchers
-- Tests run with: `npm test -- <ComponentName>.test`
-
-### Dependencies for Field Components
-```bash
-npm install @radix-ui/react-tooltip  # For tooltip functionality
-```
-
-## Situation-Specific Development
-
-The application supports multiple situations (scenarios) that users can choose from, with each situation having its own unique UI and logic.
-
-### Situation Structure
-- **Location**: `src/components/situations/`
-- **Naming Convention**: `Situation<Number>.tsx` (e.g., `Situation1.tsx`, `Situation2.tsx`)
-- **Purpose**: Each situation file contains a complete page implementation for a specific user scenario
-
-### Working with Situations
-
-When a task mentions a situation by name or number (e.g., "Situation 1", "Situation1", or just "1"), apply changes to the corresponding file:
-- **Situation 1** → `src/components/situations/Situation1.tsx`
-- **Situation 2** → `src/components/situations/Situation2.tsx`
-- And so on...
-
-### Current Situations
-- **Situation1**: The default scenario containing the full BuyOrRent analysis page with rental and purchase information, tables, and graphs
-
-### Creating New Situations
-1. Create a new file: `src/components/situations/Situation<N>.tsx`
-2. Export the component in `src/components/situations/index.ts`
-3. Import and use in `MainAppPage.tsx` or router as needed
-4. Follow the same structure and patterns as existing situations
-
-### Integration Point
-The `MainAppPage` component (in `src/pages/MainAppPage.tsx`) serves as the entry point that imports and renders the appropriate situation component based on user selection or routing logic.
-
-## Issues Terminology
-
-This section defines standard terminology used in issues and development discussions to ensure clear communication.
-
-### Default Situation
-- Up until further notice, when no situation number is mentioned in an issue, we're talking about **Situation 1**.
-
-### Page Section Terminology
-Any page or content (e.g., `Situation1.tsx`) has 2 main sections, both collapsible, and in separate cards:
-
-**Upper Section** - referred to as:
-- "input"
-- "upper"
-- "questionnaire"
-
-**Lower Section** - referred to as:
-- "results"
-- "reports"
-- "lower"
-- "outputs"
-
-### Input Section Tabs
-The input section has 3 tabs (accordion), which will be referred to as:
-1. **Rent** or **rental**
-2. **Buy**, **purchase**, or **mortgage**
-3. **Investment**
-
-### Output Section Tabs
-The output section currently has tabs (accordion), which will be referred to as:
-1. **Rent** or **rental**
-2. **Buy**, **purchase**, or **mortgage**
-3. **Comparison**
-
-### Component Library Priority
-- For any new feature requests, the priority is the **Shadcn library**, even if not directly mentioned in the issue.
-- The theme and current setup of the app is based on Shadcn.
-- Any component that is needed but not available yet, feel free to install and add.
-
-### Input Field Requirements
-
-#### State Management for Formatting
-- For any new input field request, the displayed value might need formatting which should be stored (in the state) **separately from the actual value**.
-- Example: Display `"1,500.00"` while storing `1500` as the numeric value.
-
-#### Comprehensive Testing
-- For any new input field request, a **comprehensive test file needs to be created** after the field component creation.
-- When writing tests, try to be **unbiased** and catch the bugs.
-- If any bugs are found during testing, **fix the component**.
-- Follow the **best Jest practices** established in the codebase.
-
-#### Mobile-First Design
-- Since the app's design is **mobile-first**, the label of input fields should be **short**.
-- Fields can have a **tooltip with clear guidance** for more detailed information.
-
-### Pre-Finalization Requirements
-- Before finalizing any pull request, the app should be tested to ensure:
-  - All tests pass
-  - Code compiles successfully
-  - Build completes successfully
+- **Situation 1:** Renting now, considering buying.
+- **Inputs (upper):** Questionnaire; **Outputs (lower):** results.
+- **Assumed/default:** Value auto-applied when user accepts defaults.
+- **All-in rent:** Out-of-pocket monthly cost incl. anything the tenant pays separately.
+- **Rent tab:** Rent-related inputs or outputs.
+- **Buy/purchase/mortgage tab:** Purchase-related inputs or outputs.
+- **Investment tab:** Investment-related inputs or outputs.
+- **Comparison tab:** Comparison outputs (results panel).
+- **Upper section / questionnaire:** Input forms collecting user data.
+- **Lower section / results / reports / outputs:** Display of calculation results.
