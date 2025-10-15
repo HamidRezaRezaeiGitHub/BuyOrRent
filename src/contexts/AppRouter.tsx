@@ -1,15 +1,18 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ThemeShowcase } from '../components/theme/ThemeShowcase';
-import { QuestionnairePage } from '../pages';
+import { LandingPage, QuestionnairePage } from '../pages';
 import { Situation1 } from '../components/situations';
 import { RentQuestions, PurchaseQuestions, InvestmentQuestions } from '../components/situations/1/inputs';
 
 export const AppRouter: React.FC = () => {
     return (
         <Routes>
-            {/* Home route - Questionnaire Page */}
-            <Route path="/" element={<QuestionnairePage />} />
+            {/* Home route - Landing Page */}
+            <Route path="/" element={<LandingPage />} />
+
+            {/* Questionnaire selection page */}
+            <Route path="/questionnaire" element={<QuestionnairePage />} />
 
             {/* Situation 1 routes */}
             <Route 
