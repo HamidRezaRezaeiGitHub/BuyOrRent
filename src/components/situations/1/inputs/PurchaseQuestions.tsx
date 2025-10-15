@@ -9,6 +9,7 @@ import { FlexibleNavbar } from '@/components/navbar'
 import { CompactThemeToggle } from '@/components/theme'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { ArrowLeft, ArrowRight, Info } from 'lucide-react'
 import { FC, useState } from 'react'
@@ -30,34 +31,34 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const monthlyRent = searchParams.get('monthlyRent') || '0'
     const rentIncrease = searchParams.get('rentIncrease') || '2.5'
 
-    // Default values
+    // Default values - Canadian ranges and defaults
     const defaultPurchasePrice = 0
-    const minPurchasePrice = 400000
-    const maxPurchasePrice = 4000000
+    const minPurchasePrice = 300000
+    const maxPurchasePrice = 2500000
 
     const defaultDownPaymentPercentage = 20
-    const minDownPaymentPercentage = 0
+    const minDownPaymentPercentage = 5
     const maxDownPaymentPercentage = 100
 
-    const defaultMortgageRate = 5.5
+    const defaultMortgageRate = 5.25
     const minMortgageRate = 0
     const maxMortgageRate = 15
 
     const defaultMortgageLength = 25
-    const minMortgageLength = 1
-    const maxMortgageLength = 40
+    const minMortgageLength = 5
+    const maxMortgageLength = 35
 
     const defaultPropertyTaxPercentage = 0.75
     const minPropertyTaxPercentage = 0
-    const maxPropertyTaxPercentage = 5.0
+    const maxPropertyTaxPercentage = 3.0
 
-    const defaultMaintenancePercentage = 2.0
+    const defaultMaintenancePercentage = 1.0
     const minMaintenancePercentage = 0
-    const maxMaintenancePercentage = 10
+    const maxMaintenancePercentage = 5
 
     const defaultAssetAppreciationRate = 3.0
     const minAssetAppreciationRate = -5
-    const maxAssetAppreciationRate = 20
+    const maxAssetAppreciationRate = 10
 
     // State
     const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8>(1)
@@ -68,6 +69,30 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const [propertyTaxPercentage, setPropertyTaxPercentage] = useState<number>(defaultPropertyTaxPercentage)
     const [maintenancePercentage, setMaintenancePercentage] = useState<number>(defaultMaintenancePercentage)
     const [assetAppreciationRate, setAssetAppreciationRate] = useState<number>(defaultAssetAppreciationRate)
+
+    // Calculate progress percentage based on step
+    const getProgressPercentage = () => {
+        switch (step) {
+            case 1:
+                return 55
+            case 2:
+                return 60
+            case 3:
+                return 65
+            case 4:
+                return 70
+            case 5:
+                return 75
+            case 6:
+                return 80
+            case 7:
+                return 85
+            case 8:
+                return 90
+            default:
+                return 55
+        }
+    }
 
     // Navigate to next section with all parameters
     const navigateToNext = () => {
@@ -193,7 +218,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             <CardHeader>
                 <CardTitle>What is the purchase price of the property?</CardTitle>
                 <CardDescription>
-                    Enter the total price you would pay to purchase the property
+                    Enter the total price (CAD).
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -251,9 +276,9 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const defaultsOverviewStep = (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>Use Default Values?</CardTitle>
+                <CardTitle>Use default values?</CardTitle>
                 <CardDescription>
-                    We have default values for the remaining purchase-related questions. Would you like to use them or customize each one?
+                    We'll fill typical Canadian defaults. You can change them anytime.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -263,19 +288,19 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     </p>
                     <div className="space-y-2 p-4 bg-muted/50 rounded-lg border border-border">
                         <div className="flex justify-between text-sm">
-                            <span className="font-medium">Down Payment:</span>
+                            <span className="font-medium">Down payment:</span>
                             <span>{defaultDownPaymentPercentage}%</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                            <span className="font-medium">Mortgage Rate:</span>
+                            <span className="font-medium">Mortgage rate:</span>
                             <span>{defaultMortgageRate}%</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                            <span className="font-medium">Mortgage Length:</span>
+                            <span className="font-medium">Mortgage length:</span>
                             <span>{defaultMortgageLength} years</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                            <span className="font-medium">Property Tax:</span>
+                            <span className="font-medium">Property tax:</span>
                             <span>{defaultPropertyTaxPercentage}%</span>
                         </div>
                         <div className="flex justify-between text-sm">
@@ -283,12 +308,12 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                             <span>{defaultMaintenancePercentage}%</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                            <span className="font-medium">Property Appreciation:</span>
+                            <span className="font-medium">Appreciation:</span>
                             <span>{defaultAssetAppreciationRate}%</span>
                         </div>
                     </div>
                     <p className="text-sm text-muted-foreground italic">
-                        Don't worry, you'll be able to modify these parameters later if needed.
+                        You can modify these later.
                     </p>
                 </div>
 
@@ -359,12 +384,9 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                 <div className="flex gap-3 p-4 bg-muted/50 rounded-lg border border-border">
                     <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
                     <div className="text-sm">
-                        <p className="font-medium mb-1">Canadian Down Payment Requirements</p>
+                        <p className="font-medium mb-1">About down payments in Canada</p>
                         <p className="text-muted-foreground">
-                            In Canada, the minimum down payment is 5% for properties under $500,000,
-                            and increases for higher-priced properties. A 20% down payment allows you
-                            to avoid mortgage default insurance (CMHC insurance). The default value is
-                            set to 20% for this reason.
+                            Minimum is 5% up to $500k, higher tiers above that. 20% avoids mortgage default insurance.
                         </p>
                     </div>
                 </div>
@@ -445,11 +467,9 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                 <div className="flex gap-3 p-4 bg-muted/50 rounded-lg border border-border">
                     <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
                     <div className="text-sm">
-                        <p className="font-medium mb-1">Canadian Mortgage Rates</p>
+                        <p className="font-medium mb-1">Mortgage rates</p>
                         <p className="text-muted-foreground">
-                            As of 2025, typical Canadian mortgage rates range from 4% to 7% depending
-                            on the term length and whether it's a fixed or variable rate. The default
-                            value of 5.5% represents a typical 5-year fixed rate mortgage.
+                            Use your quoted rate if you have one. Otherwise 5.25% is a reasonable placeholder.
                         </p>
                     </div>
                 </div>
@@ -523,23 +543,10 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             <CardHeader>
                 <CardTitle>What is the amortization period?</CardTitle>
                 <CardDescription>
-                    The number of years to fully pay off the mortgage
+                    Total years to pay off your mortgage (not the fixed-rate term).
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                {/* Information about Canadian amortization periods */}
-                <div className="flex gap-3 p-4 bg-muted/50 rounded-lg border border-border">
-                    <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
-                    <div className="text-sm">
-                        <p className="font-medium mb-1">Canadian Amortization Periods</p>
-                        <p className="text-muted-foreground">
-                            In Canada, the most common amortization period is 25 years. If you have
-                            at least a 20% down payment, you can extend the amortization up to 30 years.
-                            Longer periods mean lower monthly payments but more interest paid over time.
-                        </p>
-                    </div>
-                </div>
-
                 <MortgageLengthField
                     value={mortgageLength}
                     onChange={setMortgageLength}
@@ -609,23 +616,10 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             <CardHeader>
                 <CardTitle>What is the annual property tax rate?</CardTitle>
                 <CardDescription>
-                    The percentage of the property value you'll pay in property taxes each year
+                    Annual property tax as a % of home value. Defaults vary by municipality; 0.75% is a reasonable estimate.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                {/* Information about Canadian property taxes */}
-                <div className="flex gap-3 p-4 bg-muted/50 rounded-lg border border-border">
-                    <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
-                    <div className="text-sm">
-                        <p className="font-medium mb-1">Canadian Property Taxes</p>
-                        <p className="text-muted-foreground">
-                            Property tax rates in Canada vary by municipality. They typically range from
-                            0.5% to 2.5% of the property value annually. The default value of 0.75%
-                            represents a common rate in many Canadian cities.
-                        </p>
-                    </div>
-                </div>
-
                 <PropertyTaxPercentageField
                     value={propertyTaxPercentage}
                     onChange={setPropertyTaxPercentage}
@@ -695,24 +689,10 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             <CardHeader>
                 <CardTitle>What is the annual maintenance cost rate?</CardTitle>
                 <CardDescription>
-                    The percentage of the property value you'll spend on maintenance and repairs each year
+                    Annual maintenance as a % of home value (rule of thumb ≈ 1%/yr). Condos may differ depending on fees.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                {/* Information about maintenance costs */}
-                <div className="flex gap-3 p-4 bg-muted/50 rounded-lg border border-border">
-                    <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
-                    <div className="text-sm">
-                        <p className="font-medium mb-1">Property Maintenance Costs</p>
-                        <p className="text-muted-foreground">
-                            Financial experts typically recommend budgeting 1% to 3% of your home's value
-                            annually for maintenance and repairs. This includes routine upkeep,
-                            unexpected repairs, and replacing major systems. The default value of 2%
-                            represents a balanced estimate for most properties.
-                        </p>
-                    </div>
-                </div>
-
                 <MaintenancePercentageField
                     value={maintenancePercentage}
                     onChange={setMaintenancePercentage}
@@ -780,27 +760,12 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const assetAppreciationRateStep = (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>What is the expected property appreciation rate?</CardTitle>
+                <CardTitle>How might home prices change each year?</CardTitle>
                 <CardDescription>
-                    The annual percentage increase you expect in the property's market value
+                    Average annual appreciation (can be negative).
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                {/* Information about Canadian property appreciation */}
-                <div className="flex gap-3 p-4 bg-muted/50 rounded-lg border border-border">
-                    <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
-                    <div className="text-sm">
-                        <p className="font-medium mb-1">Canadian Property Appreciation</p>
-                        <p className="text-muted-foreground">
-                            Historically, Canadian real estate has appreciated at an average rate of
-                            3-5% annually, though this varies significantly by location and market
-                            conditions. Major cities like Toronto and Vancouver have seen higher rates,
-                            while other areas may experience slower growth. The default value of 3%
-                            represents a conservative long-term estimate.
-                        </p>
-                    </div>
-                </div>
-
                 <AssetAppreciationRateField
                     value={assetAppreciationRate}
                     onChange={setAssetAppreciationRate}
@@ -855,7 +820,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Next question</p>
+                                    <p>Continue</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -864,6 +829,8 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             </CardContent>
         </Card>
     )
+
+    const progress = getProgressPercentage()
 
     return (
         <div className="min-h-screen bg-background">
@@ -877,11 +844,19 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
 
             {/* Main Content */}
             <main className="w-full max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8 space-y-6">
+                {/* Progress Bar */}
+                <div className="space-y-2">
+                    <Progress value={progress} className="w-full" />
+                    <div className="flex justify-end">
+                        <span className="text-xs text-muted-foreground">{progress}% complete</span>
+                    </div>
+                </div>
+
                 {/* Header */}
                 <div className="text-center py-6 sm:py-8">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Purchase Information</h1>
                     <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                        Let's gather some information about the property you're considering
+                        Now let's outline the home you have in mind. You can accept defaults or customize.
                     </p>
                 </div>
 
