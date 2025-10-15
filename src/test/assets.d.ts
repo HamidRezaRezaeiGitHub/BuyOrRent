@@ -1,6 +1,4 @@
-/// <reference types="vite/client" />
-
-// Type declarations for asset imports
+// Type declarations for static assets
 declare module '*.svg' {
   const content: string;
   export default content;

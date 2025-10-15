@@ -32,8 +32,8 @@ describe('FlexibleNavbar', () => {
   test('FlexibleNavbar_shouldRenderWithDefaultProps', () => {
     render(<FlexibleNavbar />);
     
-        // Logo should be displayed by default with default brand text
-    expect(screen.getByText('Brand')).toBeInTheDocument();
+    // Logo should be displayed by default
+    expect(screen.getByAltText('BuyOrRent logo')).toBeInTheDocument();
     
     // Should show auth buttons when not authenticated
     expect(screen.getByText('Login')).toBeInTheDocument();

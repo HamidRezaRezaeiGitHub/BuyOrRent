@@ -4,6 +4,7 @@ export default {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   moduleNameMapper: {
+    '\\.(svg|png|jpg|jpeg|gif|webp)$': '<rootDir>/src/test/__mocks__/fileMock.js',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   transform: {
@@ -15,7 +16,7 @@ export default {
         resolveJsonModule: true,
       },
       diagnostics: {
-        ignoreCodes: [2339], // Ignore missing property errors (for jest-dom matchers)
+        ignoreCodes: [1259, 2307, 2339], // Ignore: 1259 (JSX), 2307 (module not found), 2339 (missing property - jest-dom)
       },
     }],
   },
