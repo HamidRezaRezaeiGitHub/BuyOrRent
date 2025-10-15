@@ -23,9 +23,10 @@ BuyOrRent is a React + Vite + Tailwind + shadcn/ui deployed to GitHub Pages. It 
 ## 3) Technical Stack & Conventions
 
 - **Node & npm versions:** 20.x+ recommended (npm 8.0.0+)
-- **React version:** 19.1.1
-- **React DOM version:** 19.1.1
-- **React Router version:** 7.9.1
+- **React ecosystem:** 
+  - React 19.1.1
+  - React DOM 19.1.1
+  - React Router 7.9.1
 - **Vite version:** 7.1.7
 - **Tailwind version:** 4.1.13
 - **shadcn/ui usage:** Present under `src/components/ui/` (accordion, avatar, badge, button, card, carousel, chart, dialog, drawer, dropdown-menu, field, input-group, input, label, navigation-menu, popover, progress, radio-group, separator, slider, switch, table, tabs, textarea, toggle, tooltip, etc.)
