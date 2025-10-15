@@ -4,6 +4,7 @@ import { FlexibleNavbar } from '@/components/navbar'
 import { CompactThemeToggle } from '@/components/theme'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { ArrowLeft, ArrowRight, Info } from 'lucide-react'
 import { FC, useState } from 'react'
@@ -21,8 +22,8 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
     const navigate = useNavigate()
 
     // Default values
-    const defaultMonthlyRent = 0
-    const minMonthlyRent = 1000
+    const defaultMonthlyRent = 2400
+    const minMonthlyRent = 500
     const maxMonthlyRent = 5000
 
     const defaultRentIncrease = 2.5
@@ -33,6 +34,11 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
     const [step, setStep] = useState<1 | 2>(1)
     const [monthlyRent, setMonthlyRent] = useState<number>(defaultMonthlyRent)
     const [rentIncrease, setRentIncrease] = useState<number>(defaultRentIncrease)
+
+    // Calculate progress percentage based on step
+    const getProgressPercentage = () => {
+        return step === 1 ? 20 : 100
+    }
 
     // Handler to move to next step
     const handleNext = () => {
@@ -71,9 +77,9 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
     const monthlyRentStep = (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>How much rent are you paying now?</CardTitle>
+                <CardTitle>How much rent do you pay each month?</CardTitle>
                 <CardDescription>
-                    Enter the total monthly rent amount you currently pay
+                    Enter your total out-of-pocket monthly rent. This should include anything you pay separately (e.g., utilities, parking, renter's insurance). If they're already included in your rent, just enter the single amount.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -131,9 +137,9 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
     const rentIncreaseStep = (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>What is your expected average rent increase rate per year?</CardTitle>
+                <CardTitle>How much might your rent increase each year?</CardTitle>
                 <CardDescription>
-                    The annual percentage by which your rent is expected to increase
+                    Annual average increase (Canada defaults shown; adjust if your lease or province differs).
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -141,11 +147,9 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
                 <div className="flex gap-3 p-4 bg-muted/50 rounded-lg border border-border">
                     <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
                     <div className="text-sm">
-                        <p className="font-medium mb-1">Canadian Rent Control Information</p>
+                        <p className="font-medium mb-1">About rent controls in Canada</p>
                         <p className="text-muted-foreground">
-                            In Canada, for properties built before November 2018, the maximum rate of rent increase
-                            is typically 2.5% per year (varies by province). This is why 2.5% is the default value.
-                            You can adjust this based on your specific situation or local regulations.
+                            Many provinces cap annual increases (often around 2.5% for eligible units; details vary by province and building age). We use 2.5% as a reasonable default.
                         </p>
                     </div>
                 </div>
@@ -214,6 +218,8 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
         </Card>
     )
 
+    const progress = getProgressPercentage()
+
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
@@ -226,11 +232,19 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
 
             {/* Main Content */}
             <main className="w-full max-w-4xl mx-auto px-4 py-6 sm:px-6 sm:py-8 space-y-6">
+                {/* Progress Bar */}
+                <div className="space-y-2">
+                    <Progress value={progress} className="w-full" />
+                    <div className="flex justify-end">
+                        <span className="text-xs text-muted-foreground">{progress}% complete</span>
+                    </div>
+                </div>
+
                 {/* Header */}
                 <div className="text-center py-6 sm:py-8">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Rent Information</h1>
                     <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                        Let's gather some information about your rental situation
+                        A few quick questions about your current rental. You can change these later.
                     </p>
                 </div>
 
