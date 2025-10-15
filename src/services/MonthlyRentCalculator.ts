@@ -230,7 +230,7 @@ export const calculateMonthlyRentData = (
  * Guarantees:
  * - Preserves chronological order
  * - Last row's cumulativeTotal equals input's last year cumulativeTotal
- * - Returns at most maxRows rows (or fewer if input is shorter)
+ * - Returns at most maxRows rows (or fewer if input is shorter), except when maxRows <= 0, which aggregates all years into a single row
  * - Cumulative totals are strictly increasing
  * 
  * @param years - Array of year data to compress (must be in chronological order)
