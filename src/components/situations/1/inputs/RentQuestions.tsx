@@ -7,8 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { ArrowLeft, ArrowRight, Info } from 'lucide-react'
-import { FC, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { FC, useState, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { localToGlobalStep, globalToLocalStep, buildNavigationUrl } from '@/common/globalStep'
 
 export interface RentQuestionsProps {
     previousUrl?: string
@@ -24,6 +25,7 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
     progressMax = 100
 }) => {
     const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
 
     // Default values
     const defaultMonthlyRent = 2400
@@ -38,6 +40,18 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
     const [step, setStep] = useState<1 | 2>(1)
     const [monthlyRent, setMonthlyRent] = useState<number>(defaultMonthlyRent)
     const [rentIncrease, setRentIncrease] = useState<number>(defaultRentIncrease)
+    
+    // Initialize step from gs parameter if present
+    useEffect(() => {
+        const gsParam = searchParams.get('gs')
+        if (gsParam) {
+            const globalStep = parseInt(gsParam, 10)
+            const stepInfo = globalToLocalStep(globalStep)
+            if (stepInfo && stepInfo.component === 'RentQuestions') {
+                setStep(stepInfo.localStep as 1 | 2)
+            }
+        }
+    }, [searchParams])
 
     // Calculate progress percentage based on step
     const getProgressPercentage = () => {
@@ -55,11 +69,27 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
                 setStep(2)
             }
         } else if (step === 2) {
-            // Navigate using nextUrl if provided, otherwise use default
+            // Build data params
+            const dataParams = new URLSearchParams(searchParams)
+            dataParams.set('monthlyRent', monthlyRent.toString())
+            dataParams.set('rentIncrease', rentIncrease.toString())
+            
+            // Calculate next global step
+            const currentGlobalStep = localToGlobalStep('RentQuestions', step)
+            if (currentGlobalStep) {
+                const nextGlobalStep = currentGlobalStep + 1
+                const navUrl = buildNavigationUrl(nextGlobalStep, dataParams)
+                if (navUrl) {
+                    navigate(navUrl)
+                    return
+                }
+            }
+            
+            // Fallback to legacy navigation
             if (nextUrl) {
-                navigate(`${nextUrl}?monthlyRent=${monthlyRent}&rentIncrease=${rentIncrease}`)
+                navigate(`${nextUrl}?${dataParams.toString()}`)
             } else {
-                navigate(`/situation/1/question/purchase?monthlyRent=${monthlyRent}&rentIncrease=${rentIncrease}`)
+                navigate(`/situation/1/question/purchase?${dataParams.toString()}`)
             }
         }
     }
@@ -68,8 +98,23 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
     const handlePrevious = () => {
         if (step === 2) {
             setStep(1)
-        } else if (step === 1 && previousUrl) {
-            navigate(previousUrl)
+        } else if (step === 1) {
+            // Calculate previous global step
+            const currentGlobalStep = localToGlobalStep('RentQuestions', step)
+            if (currentGlobalStep && currentGlobalStep > 1) {
+                const prevGlobalStep = currentGlobalStep - 1
+                const dataParams = new URLSearchParams(searchParams)
+                const navUrl = buildNavigationUrl(prevGlobalStep, dataParams)
+                if (navUrl) {
+                    navigate(navUrl)
+                    return
+                }
+            }
+            
+            // Fallback to previousUrl if at first step
+            if (previousUrl) {
+                navigate(previousUrl)
+            }
         }
     }
 
