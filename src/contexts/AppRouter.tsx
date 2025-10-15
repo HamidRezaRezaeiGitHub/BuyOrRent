@@ -4,8 +4,14 @@ import { ThemeShowcase } from '../components/theme/ThemeShowcase';
 import { LandingPage, QuestionnairePage } from '../pages';
 import { Situation1 } from '../components/situations';
 import { RentQuestions, PurchaseQuestions, InvestmentQuestions } from '../components/situations/1/inputs';
+import { getSegmentForComponent } from '../common/progress';
 
 export const AppRouter: React.FC = () => {
+    // Get progress segments for each section
+    const rentSegment = getSegmentForComponent('RentQuestions')
+    const purchaseSegment = getSegmentForComponent('PurchaseQuestions')
+    const investmentSegment = getSegmentForComponent('InvestmentQuestions')
+
     return (
         <Routes>
             {/* Home route - Landing Page */}
@@ -21,6 +27,8 @@ export const AppRouter: React.FC = () => {
                     <RentQuestions 
                         previousUrl="/"
                         nextUrl="/situation/1/question/purchase"
+                        progressMin={rentSegment?.progressMin}
+                        progressMax={rentSegment?.progressMax}
                     />
                 } 
             />
@@ -30,6 +38,8 @@ export const AppRouter: React.FC = () => {
                     <PurchaseQuestions 
                         previousUrl="/situation/1/question/rent"
                         nextUrl="/situation/1/question/investment"
+                        progressMin={purchaseSegment?.progressMin}
+                        progressMax={purchaseSegment?.progressMax}
                     />
                 } 
             />
@@ -39,6 +49,8 @@ export const AppRouter: React.FC = () => {
                     <InvestmentQuestions 
                         previousUrl="/situation/1/question/purchase"
                         nextUrl="/situation/1/panel"
+                        progressMin={investmentSegment?.progressMin}
+                        progressMax={investmentSegment?.progressMax}
                     />
                 } 
             />
