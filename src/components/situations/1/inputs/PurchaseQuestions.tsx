@@ -159,7 +159,38 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
         setPropertyTaxPercentage(defaultPropertyTaxPercentage)
         setMaintenancePercentage(defaultMaintenancePercentage)
         setAssetAppreciationRate(defaultAssetAppreciationRate)
-        navigateToNext()
+        
+        // Skip all remaining steps and go directly to the next component (InvestmentQuestions)
+        const params = new URLSearchParams(searchParams)
+        params.set('monthlyRent', monthlyRent)
+        params.set('rentIncrease', rentIncrease)
+        params.set('purchasePrice', purchasePrice.toString())
+        params.set('downPaymentPercentage', defaultDownPaymentPercentage.toString())
+        params.set('mortgageRate', defaultMortgageRate.toString())
+        params.set('mortgageLength', defaultMortgageLength.toString())
+        params.set('propertyTaxPercentage', defaultPropertyTaxPercentage.toString())
+        params.set('maintenancePercentage', defaultMaintenancePercentage.toString())
+        params.set('assetAppreciationRate', defaultAssetAppreciationRate.toString())
+        // Mark that user used defaults to skip intermediate steps
+        params.set('usedPurchaseDefaults', 'true')
+        
+        // Calculate the first global step of the next component (InvestmentQuestions)
+        const purchaseLastGlobalStep = localToGlobalStep('PurchaseQuestions', 8)
+        if (purchaseLastGlobalStep) {
+            const nextGlobalStep = purchaseLastGlobalStep + 1
+            const navUrl = buildNavigationUrl(nextGlobalStep, params)
+            if (navUrl) {
+                navigate(navUrl)
+                return
+            }
+        }
+        
+        // Fallback to legacy navigation
+        if (nextUrl) {
+            navigate(`${nextUrl}?${params.toString()}`)
+        } else {
+            navigate(`/situation/1/question/investment?${params.toString()}`)
+        }
     }
 
     // Handler to go to previous step
@@ -184,6 +215,8 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             if (currentGlobalStep && currentGlobalStep > 1) {
                 const prevGlobalStep = currentGlobalStep - 1
                 const dataParams = new URLSearchParams(searchParams)
+                // Remove the usedPurchaseDefaults flag when going back
+                dataParams.delete('usedPurchaseDefaults')
                 const navUrl = buildNavigationUrl(prevGlobalStep, dataParams)
                 if (navUrl) {
                     navigate(navUrl)

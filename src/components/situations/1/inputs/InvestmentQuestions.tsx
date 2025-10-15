@@ -67,7 +67,25 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
 
     // Handler to go to previous step
     const handlePrevious = () => {
-        // Navigate to previous global step
+        // Check if user used defaults in PurchaseQuestions
+        const usedPurchaseDefaults = searchParams.get('usedPurchaseDefaults') === 'true'
+        
+        if (usedPurchaseDefaults) {
+            // If user used defaults, go back to step 2 of PurchaseQuestions (the intermediary question)
+            const purchaseStep2GlobalStep = localToGlobalStep('PurchaseQuestions', 2)
+            if (purchaseStep2GlobalStep) {
+                const dataParams = new URLSearchParams(searchParams)
+                // Remove the usedPurchaseDefaults flag when going back
+                dataParams.delete('usedPurchaseDefaults')
+                const navUrl = buildNavigationUrl(purchaseStep2GlobalStep, dataParams)
+                if (navUrl) {
+                    navigate(navUrl)
+                    return
+                }
+            }
+        }
+        
+        // Default behavior: Navigate to previous global step (step 8 of PurchaseQuestions)
         const currentGlobalStep = localToGlobalStep('InvestmentQuestions', 1)
         if (currentGlobalStep && currentGlobalStep > 1) {
             const prevGlobalStep = currentGlobalStep - 1
