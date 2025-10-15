@@ -43,7 +43,7 @@ export interface CompactRow {
  */
 const applyRounding = (value: number, roundTo: RoundTo): number => {
     if (roundTo === 'cents') {
-        return Math.round(value * 100) / 100;
+        return Math.round((value + Number.EPSILON) * 100) / 100;
     }
     return value;
 };
