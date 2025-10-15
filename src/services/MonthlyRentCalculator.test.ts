@@ -380,4 +380,320 @@ describe('MonthlyRentCalculator Service', () => {
             expect(result[0].total).toBe(30000); // 10000 + 20000
         });
     });
+
+    // New tests for determinism (startYear parameter)
+    describe('Determinism with startYear', () => {
+        test('calculateMonthlyRentData_shouldUseDeterministicStartYear', () => {
+            const result = calculateMonthlyRentData(1000, 3, 2.5, { startYear: 2024 });
+            
+            expect(result).not.toBeNull();
+            expect(result?.years[0].year).toBe(2024);
+            expect(result?.years[1].year).toBe(2025);
+            expect(result?.years[2].year).toBe(2026);
+        });
+
+        test('calculateMonthlyRentData_shouldProduceSameResultsWithSameStartYear', () => {
+            const result1 = calculateMonthlyRentData(1500, 5, 3, { startYear: 2020 });
+            const result2 = calculateMonthlyRentData(1500, 5, 3, { startYear: 2020 });
+            
+            expect(result1).toEqual(result2);
+        });
+
+        test('calculateMonthlyRentData_shouldDefaultToCurrentYear_whenStartYearNotProvided', () => {
+            const currentYear = new Date().getFullYear();
+            const result = calculateMonthlyRentData(1000, 2, 2.5);
+            
+            expect(result?.years[0].year).toBe(currentYear);
+        });
+    });
+
+    // Tests for rounding control
+    describe('Rounding control', () => {
+        test('calculateMonthlyRentForYear_shouldNotRound_withRoundToNone', () => {
+            const result = calculateMonthlyRentForYear(1000, 2, 2.5, 'none');
+            expect(result).toBe(1050.625);
+        });
+
+        test('calculateMonthlyRentForYear_shouldRoundToCents_withRoundToCents', () => {
+            const result = calculateMonthlyRentForYear(1000, 2, 2.5, 'cents');
+            expect(result).toBe(1050.63);
+        });
+
+        test('calculateMonthlyRentData_shouldApplyRounding_toCents', () => {
+            const result = calculateMonthlyRentData(1000.999, 2, 2.5, { roundTo: 'cents' });
+            
+            expect(result).not.toBeNull();
+            // Base year: 1000.999 rounded = 1001.00
+            expect(result?.years[0].months[0]).toBe(1001);
+            expect(result?.years[0].yearTotal).toBe(12012);
+        });
+
+        test('calculateMonthlyRentData_shouldNotRound_withRoundToNone', () => {
+            const result = calculateMonthlyRentData(1000.123, 1, 0, { roundTo: 'none' });
+            
+            expect(result).not.toBeNull();
+            expect(result?.years[0].months[0]).toBe(1000.123);
+            expect(result?.years[0].yearTotal).toBeCloseTo(12001.476, 10);
+        });
+
+        test('compressYearData_shouldApplyRounding_toCompressedRows', () => {
+            const data = createMockData(2);
+            const result = compressYearData(data.years, 1, 'cents');
+            
+            // Should have proper rounding
+            expect(result[0].total).toBe(30000);
+            expect(result[0].cumulativeTotal).toBe(30000);
+        });
+    });
+
+    // Tests for validation and caps
+    describe('Validation and caps', () => {
+        test('calculateMonthlyRentData_shouldReturnNull_forNaNMonthlyRent', () => {
+            const result = calculateMonthlyRentData(NaN, 5, 2.5);
+            expect(result).toBeNull();
+        });
+
+        test('calculateMonthlyRentData_shouldReturnNull_forNaNAnalysisYears', () => {
+            const result = calculateMonthlyRentData(1000, NaN, 2.5);
+            expect(result).toBeNull();
+        });
+
+        test('calculateMonthlyRentData_shouldReturnNull_forNaNAnnualRentIncrease', () => {
+            const result = calculateMonthlyRentData(1000, 5, NaN);
+            expect(result).toBeNull();
+        });
+
+        test('calculateMonthlyRentData_shouldReturnNull_whenAnalysisYearsExceedsCap', () => {
+            const result = calculateMonthlyRentData(1000, 121, 2.5);
+            expect(result).toBeNull();
+        });
+
+        test('calculateMonthlyRentData_shouldAccept120Years', () => {
+            const result = calculateMonthlyRentData(1000, 120, 2.5, { startYear: 2024 });
+            expect(result).not.toBeNull();
+            expect(result?.years).toHaveLength(120);
+        });
+
+        test('calculateMonthlyRentData_shouldAccept1Year', () => {
+            const result = calculateMonthlyRentData(1000, 1, 2.5);
+            expect(result).not.toBeNull();
+            expect(result?.years).toHaveLength(1);
+        });
+
+        test('calculateMonthlyRentData_shouldReturnNull_forInvalidIncreaseMonth', () => {
+            const result = calculateMonthlyRentData(1000, 5, 2.5, { increaseMonth: 13 });
+            expect(result).toBeNull();
+        });
+
+        test('calculateMonthlyRentData_shouldReturnNull_forZeroIncreaseMonth', () => {
+            const result = calculateMonthlyRentData(1000, 5, 2.5, { increaseMonth: 0 });
+            expect(result).toBeNull();
+        });
+
+        test('calculateMonthlyRentData_shouldReturnNull_forNonIntegerIncreaseMonth', () => {
+            const result = calculateMonthlyRentData(1000, 5, 2.5, { increaseMonth: 6.5 });
+            expect(result).toBeNull();
+        });
+    });
+
+    // Tests for negative increase (deflation)
+    describe('Negative increase (deflation)', () => {
+        test('calculateMonthlyRentForYear_shouldHandleNegativeIncrease', () => {
+            // -2.5% deflation: 1000 * 0.975 = 975
+            const result = calculateMonthlyRentForYear(1000, 1, -2.5);
+            expect(result).toBe(975);
+        });
+
+        test('calculateMonthlyRentData_shouldHandleDeflation', () => {
+            const result = calculateMonthlyRentData(2000, 3, -2.5, { startYear: 2024 });
+            
+            expect(result).not.toBeNull();
+            // Year 0: 2000
+            expect(result?.years[0].yearTotal).toBe(24000);
+            // Year 1: 2000 * 0.975 = 1950
+            expect(result?.years[1].yearTotal).toBe(23400);
+            // Year 2: 2000 * 0.975^2 = 1901.25
+            expect(result?.years[2].yearTotal).toBeCloseTo(22815, 0);
+        });
+
+        test('calculateMonthlyRentData_shouldHandleDeflation_withRounding', () => {
+            const result = calculateMonthlyRentData(2000, 2, -3, { startYear: 2024, roundTo: 'cents' });
+            
+            expect(result).not.toBeNull();
+            expect(result?.years[0].yearTotal).toBe(24000);
+            // Year 1: 2000 * 0.97 = 1940, rounded
+            expect(result?.years[1].yearTotal).toBe(23280);
+        });
+    });
+
+    // Tests for anniversary month (increaseMonth)
+    describe('Anniversary month logic', () => {
+        test('calculateMonthlyRentData_shouldHandleIncreaseMonthInJanuary', () => {
+            const result = calculateMonthlyRentData(1000, 2, 10, { 
+                startYear: 2024, 
+                increaseMonth: 1 
+            });
+            
+            expect(result).not.toBeNull();
+            // Year 0: all months = 1000
+            expect(result?.years[0].months).toEqual(Array(12).fill(1000));
+            // Year 1: all months = 1100 (increase starts in month 1)
+            expect(result?.years[1].months).toEqual(Array(12).fill(1100));
+        });
+
+        test('calculateMonthlyRentData_shouldHandleIncreaseMonthInJuly', () => {
+            const result = calculateMonthlyRentData(1000, 3, 10, { 
+                startYear: 2024, 
+                increaseMonth: 7 
+            });
+            
+            expect(result).not.toBeNull();
+            // Year 0: all months = 1000
+            expect(result?.years[0].months).toEqual(Array(12).fill(1000));
+            
+            // Year 1: months 1-6 = 1000, months 7-12 = 1100
+            const year1Expected = [...Array(6).fill(1000), ...Array(6).fill(1100)];
+            expect(result?.years[1].months).toEqual(year1Expected);
+            expect(result?.years[1].yearTotal).toBe(12600); // 6*1000 + 6*1100
+            
+            // Year 2: months 1-6 = 1100, months 7-12 = 1210 (with floating point tolerance)
+            expect(result?.years[2].months.slice(0, 6)).toEqual(Array(6).fill(1100));
+            result?.years[2].months.slice(6).forEach(val => {
+                expect(val).toBeCloseTo(1210, 5);
+            });
+            expect(result?.years[2].yearTotal).toBeCloseTo(13860, 5); // 6*1100 + 6*1210
+        });
+
+        test('calculateMonthlyRentData_shouldHandleIncreaseMonthInDecember', () => {
+            const result = calculateMonthlyRentData(1000, 2, 10, { 
+                startYear: 2024, 
+                increaseMonth: 12 
+            });
+            
+            expect(result).not.toBeNull();
+            // Year 0: all months = 1000
+            expect(result?.years[0].months).toEqual(Array(12).fill(1000));
+            
+            // Year 1: months 1-11 = 1000, month 12 = 1100
+            const year1Expected = [...Array(11).fill(1000), 1100];
+            expect(result?.years[1].months).toEqual(year1Expected);
+            expect(result?.years[1].yearTotal).toBe(12100); // 11*1000 + 1*1100
+        });
+
+        test('calculateMonthlyRentData_shouldCalculateCorrectCumulativeTotal_withIncreaseMonth', () => {
+            const result = calculateMonthlyRentData(1000, 3, 10, { 
+                startYear: 2024, 
+                increaseMonth: 7 
+            });
+            
+            expect(result).not.toBeNull();
+            expect(result?.years[0].cumulativeTotal).toBe(12000);
+            expect(result?.years[1].cumulativeTotal).toBe(24600); // 12000 + 12600
+            expect(result?.years[2].cumulativeTotal).toBe(38460); // 24600 + 13860
+        });
+
+        test('calculateMonthlyRentData_shouldHandleIncreaseMonth_withRounding', () => {
+            const result = calculateMonthlyRentData(1000, 2, 2.5, { 
+                startYear: 2024, 
+                increaseMonth: 7,
+                roundTo: 'cents'
+            });
+            
+            expect(result).not.toBeNull();
+            // Year 0: all = 1000
+            expect(result?.years[0].months).toEqual(Array(12).fill(1000));
+            
+            // Year 1: months 1-6 = 1000, months 7-12 = 1025 (1000 * 1.025)
+            const year1Expected = [...Array(6).fill(1000), ...Array(6).fill(1025)];
+            expect(result?.years[1].months).toEqual(year1Expected);
+            expect(result?.years[1].yearTotal).toBe(12150); // 6*1000 + 6*1025
+        });
+
+        test('calculateMonthlyRentData_shouldHandleIncreaseMonth_withDeflation', () => {
+            const result = calculateMonthlyRentData(1000, 2, -10, { 
+                startYear: 2024, 
+                increaseMonth: 6 
+            });
+            
+            expect(result).not.toBeNull();
+            // Year 1: months 1-5 = 1000, months 6-12 = 900
+            const year1Expected = [...Array(5).fill(1000), ...Array(7).fill(900)];
+            expect(result?.years[1].months).toEqual(year1Expected);
+            expect(result?.years[1].yearTotal).toBe(11300); // 5*1000 + 7*900
+        });
+    });
+
+    // Tests for compression guarantees
+    describe('Compression guarantees', () => {
+        test('compressYearData_shouldPreserveChronologicalOrder', () => {
+            const data = createMockData(10);
+            const result = compressYearData(data.years, 3);
+            
+            // Verify year ranges are in order
+            let lastYear = 0;
+            result.forEach(row => {
+                const years = row.yearRange.split('-').map(y => parseInt(y));
+                const startYear = years[0];
+                expect(startYear).toBeGreaterThanOrEqual(lastYear);
+                lastYear = years[years.length - 1];
+            });
+        });
+
+        test('compressYearData_shouldEnsureLastCumulativeMatchesInput', () => {
+            const data = createMockData(15);
+            const result = compressYearData(data.years, 5);
+            
+            expect(result[result.length - 1].cumulativeTotal).toBe(
+                data.years[data.years.length - 1].cumulativeTotal
+            );
+        });
+
+        test('compressYearData_shouldProduceAtMostMaxRows', () => {
+            const data = createMockData(20);
+            const result = compressYearData(data.years, 5);
+            
+            expect(result.length).toBeLessThanOrEqual(5);
+        });
+
+        test('compressYearData_shouldHaveStrictlyIncreasingCumulativeTotals', () => {
+            const data = createMockData(15);
+            const result = compressYearData(data.years, 6);
+            
+            for (let i = 1; i < result.length; i++) {
+                expect(result[i].cumulativeTotal).toBeGreaterThan(result[i - 1].cumulativeTotal);
+            }
+        });
+
+        test('compressYearData_shouldHandleMaxRowsEqualToYears', () => {
+            const data = createMockData(5);
+            const result = compressYearData(data.years, 5);
+            
+            expect(result).toHaveLength(5);
+            expect(result[result.length - 1].cumulativeTotal).toBe(
+                data.years[data.years.length - 1].cumulativeTotal
+            );
+        });
+
+        test('compressYearData_shouldHandleMaxRowsGreaterThanYears', () => {
+            const data = createMockData(3);
+            const result = compressYearData(data.years, 10);
+            
+            expect(result).toHaveLength(3);
+            expect(result[result.length - 1].cumulativeTotal).toBe(
+                data.years[data.years.length - 1].cumulativeTotal
+            );
+        });
+
+        test('compressYearData_shouldHandleNonDivisibleGrouping', () => {
+            const data = createMockData(10);
+            const result = compressYearData(data.years, 3);
+            
+            // 10 years / 3 rows = ceil(3.33) = 4 years per row
+            // Should produce 3 rows
+            expect(result.length).toBeLessThanOrEqual(3);
+            expect(result[result.length - 1].cumulativeTotal).toBe(
+                data.years[data.years.length - 1].cumulativeTotal
+            );
+        });
+    });
 });
