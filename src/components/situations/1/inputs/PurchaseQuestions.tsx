@@ -32,7 +32,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const rentIncrease = searchParams.get('rentIncrease') || '2.5'
 
     // Default values - Canadian ranges and defaults
-    const defaultPurchasePrice = 0
+    const defaultPurchasePrice = 800000
     const minPurchasePrice = 300000
     const maxPurchasePrice = 2500000
 
