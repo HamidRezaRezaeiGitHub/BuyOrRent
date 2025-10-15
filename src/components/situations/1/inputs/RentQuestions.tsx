@@ -276,7 +276,6 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
         <div className="min-h-screen bg-background">
             {/* Navigation */}
             <FlexibleNavbar
-                brandText="BuyOrRent"
                 showAuthButtons={false}
                 showThemeToggle={true}
                 ThemeToggleComponent={CompactThemeToggle}

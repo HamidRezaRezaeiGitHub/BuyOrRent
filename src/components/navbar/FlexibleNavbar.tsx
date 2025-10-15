@@ -1,18 +1,11 @@
-import React, { useState } from 'react';
-// Note: These imports should be configured by the consuming project
-// See dependencies.ts for interface requirements
-// Example: import { Button } from '@/components/ui/button';
-// Example: import { cn } from '@/lib/utils';  
-// Example: import { Menu, X } from 'lucide-react';
-
-// TODO: Replace these with your project's actual imports
 import { Button } from '@/components/ui/button';
 import { cn } from '@/utils/utils';
 import { Menu, X } from 'lucide-react';
-import { Logo } from './Logo';
-import { LoginButton } from './LoginButton';
-import { SignUpButton } from './SignUpButton';
+import React, { useState } from 'react';
 import { Avatar } from './Avatar';
+import { LoginButton } from './LoginButton';
+import { Logo } from './Logo';
+import { SignUpButton } from './SignUpButton';
 import { NavbarUser } from './types';
 
 // Type for theme toggle component
@@ -28,35 +21,32 @@ export interface NavItem {
 
 export interface FlexibleNavbarProps {
   className?: string;
-  
+
   // Brand configuration
   showLogo?: boolean;
   logoSize?: 'sm' | 'md' | 'lg';
-  showBrandText?: boolean;
-  brandText?: string;
-  logoSvg?: React.ReactNode;
-  
+
   // Authentication state
   isAuthenticated?: boolean;
   user?: NavbarUser | null;
-  
+
   // Navigation items
   navItems?: NavItem[];
-  
+
   // Authentication buttons (when not authenticated)
   showAuthButtons?: boolean;
   onLoginClick?: () => void;
   onSignUpClick?: () => void;
   loginButtonText?: string;
   signUpButtonText?: string;
-  
+
   // User menu (when authenticated)
   onAvatarClick?: () => void;
-  
+
   // Theme toggle configuration
   ThemeToggleComponent?: ThemeToggleComponent;
   showThemeToggle?: boolean;
-  
+
   // Mobile menu
   enableMobileMenu?: boolean;
 }
@@ -74,44 +64,41 @@ export interface FlexibleNavbarProps {
  */
 export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
   className = '',
-  
+
   // Brand props
   showLogo = true,
   logoSize = 'md',
-  showBrandText = true,
-  brandText,
-  logoSvg,
-  
+
   // Auth props
   isAuthenticated = false,
   user = null,
-  
+
   // Navigation props
   navItems = [],
-  
+
   // Auth button props
   showAuthButtons = true,
   onLoginClick,
   onSignUpClick,
   loginButtonText = 'Login',
   signUpButtonText = 'Sign Up',
-  
+
   // User menu props
   onAvatarClick,
-  
+
   // Theme toggle props
   ThemeToggleComponent,
   showThemeToggle = true,
-  
+
   // Mobile menu props
   enableMobileMenu = true,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-  
+
   const handleNavItemClick = (item: NavItem) => {
     if (item.onClick) {
       item.onClick();
@@ -137,20 +124,17 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
       "sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
       className
     )}>
-      <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 h-14 sm:h-16 flex items-center justify-between">
-        
+      <div className="w-full max-w-4xl mx-auto px-2 sm:px-3 lg:px-4 h-14 sm:h-16 flex items-center justify-between">
+
         {/* Left side - Logo and Brand */}
-        <div className="flex items-center gap-3 sm:gap-6 lg:gap-8 min-w-0">
+        <div className="flex items-center gap-1 sm:gap-3 lg:gap-5 min-w-0">
           {showLogo && (
-            <Logo 
+            <Logo
               size={logoSize}
-              showText={showBrandText}
-              brandText={brandText}
-              logoSvg={logoSvg}
               className="flex-shrink-0"
             />
           )}
-          
+
           {/* Desktop Navigation */}
           {navItems.length > 0 && (
             <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
@@ -169,18 +153,18 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
 
         {/* Right side - Theme Toggle and Auth */}
         <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-shrink-0">
-          
+
           {/* Theme Toggle - Always visible on mobile for your use case */}
           {showThemeToggle && (
             <div className="flex-shrink-0">
               {renderThemeToggle(false)}
             </div>
           )}
-          
+
           {/* Authentication Section */}
           {isAuthenticated && user ? (
             // Authenticated: Show Avatar
-            <Avatar 
+            <Avatar
               user={user}
               onClick={onAvatarClick}
               size="md"
@@ -189,14 +173,14 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
           ) : showAuthButtons ? (
             // Not Authenticated: Show Login/SignUp buttons
             <div className="hidden md:flex items-center gap-2 lg:gap-3">
-              <LoginButton 
+              <LoginButton
                 onClick={onLoginClick}
                 variant="ghost"
                 size="sm"
               >
                 {loginButtonText}
               </LoginButton>
-              <SignUpButton 
+              <SignUpButton
                 onClick={onSignUpClick}
                 variant="default"
                 size="sm"
@@ -205,7 +189,7 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
               </SignUpButton>
             </div>
           ) : null}
-          
+
           {/* Mobile Menu Button */}
           {enableMobileMenu && (navItems.length > 0 || showAuthButtons) && (
             <Button
@@ -229,7 +213,7 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
       {enableMobileMenu && isMobileMenuOpen && (
         <div className="lg:hidden border-t border-border/20 bg-background/95 backdrop-blur">
           <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4 space-y-3 sm:space-y-4">
-            
+
             {/* Mobile Navigation */}
             {navItems.length > 0 && (
               <nav className="space-y-1">
@@ -244,11 +228,11 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
                 ))}
               </nav>
             )}
-            
+
             {/* Mobile Auth Buttons */}
             {!isAuthenticated && showAuthButtons && (
               <div className="flex flex-col space-y-2 pt-2 border-t border-border/20">
-                <LoginButton 
+                <LoginButton
                   onClick={() => {
                     onLoginClick?.();
                     setIsMobileMenuOpen(false);
@@ -258,7 +242,7 @@ export const FlexibleNavbar: React.FC<FlexibleNavbarProps> = ({
                 >
                   {loginButtonText}
                 </LoginButton>
-                <SignUpButton 
+                <SignUpButton
                   onClick={() => {
                     onSignUpClick?.();
                     setIsMobileMenuOpen(false);

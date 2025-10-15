@@ -139,7 +139,6 @@ export const Situation1: React.FC = () => {
     // Navigation Component
     const navigationSection = (
         <FlexibleNavbar
-            brandText="BuyOrRent"
             showAuthButtons={false}
             showThemeToggle={true}
             ThemeToggleComponent={CompactThemeToggle}
