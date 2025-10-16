@@ -50,15 +50,32 @@ describe('PurchaseQuestions - Use default button behavior', () => {
             expect(screen.getByText(/Use default values/i)).toBeInTheDocument();
         });
 
-        // Verify primary button "Use defaults" exists
-        const useDefaultsButton = screen.getByText('Use defaults');
-        expect(useDefaultsButton).toBeInTheDocument();
-        expect(useDefaultsButton).toHaveAttribute('aria-label', 'Apply default values and skip to the next section');
+        // Verify Previous button (icon-only, secondary, left-chevron)
+        const previousButton = screen.getByLabelText('Previous');
+        expect(previousButton).toBeInTheDocument();
+        expect(previousButton.querySelector('.lucide-chevron-left')).toBeInTheDocument();
 
-        // Verify secondary button "Review" exists
+        // Verify Review button (secondary, text + right-chevron)
         const reviewButton = screen.getByText('Review');
         expect(reviewButton).toBeInTheDocument();
         expect(reviewButton).toHaveAttribute('aria-label', 'Review and customize each value');
+        expect(reviewButton.querySelector('.lucide-chevron-right')).toBeInTheDocument();
+
+        // Verify Use defaults button (primary, text + double-right-chevron)
+        const useDefaultsButton = screen.getByText('Use defaults');
+        expect(useDefaultsButton).toBeInTheDocument();
+        expect(useDefaultsButton).toHaveAttribute('aria-label', 'Apply default values and skip to the next section');
+        expect(useDefaultsButton.querySelector('.lucide-chevrons-right')).toBeInTheDocument();
+
+        // Verify layout: Previous on left, Review and Use defaults on right
+        const allButtons = screen.getAllByRole('button');
+        const prevIndex = allButtons.findIndex((btn) => btn.getAttribute('aria-label') === 'Previous');
+        const reviewIndex = allButtons.findIndex((btn) => btn.textContent === 'Review');
+        const useDefaultsIndex = allButtons.findIndex((btn) => btn.textContent === 'Use defaults');
+        
+        // Previous should come before Review and Use defaults
+        expect(prevIndex).toBeLessThan(reviewIndex);
+        expect(reviewIndex).toBeLessThan(useDefaultsIndex);
     });
 
     test('PurchaseQuestions_gatewaySlide_useDefaultsNavigatesToNextSection', async () => {
@@ -169,8 +186,8 @@ describe('PurchaseQuestions - Use default button behavior', () => {
         fireEvent.change(purchasePriceInput, { target: { value: '800000' } });
         fireEvent.blur(purchasePriceInput);
 
-        let buttons = screen.getAllByRole('button');
-        let nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
+        const buttons = screen.getAllByRole('button');
+        const nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
         fireEvent.click(nextButton!);
 
         await waitFor(() => {
@@ -208,8 +225,8 @@ describe('PurchaseQuestions - Use default button behavior', () => {
         fireEvent.change(purchasePriceInput, { target: { value: '800000' } });
         fireEvent.blur(purchasePriceInput);
 
-        let buttons = screen.getAllByRole('button');
-        let nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
+        const buttons = screen.getAllByRole('button');
+        const nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
         fireEvent.click(nextButton!);
 
         await waitFor(() => {
@@ -259,8 +276,8 @@ describe('PurchaseQuestions - Use default button behavior', () => {
         fireEvent.change(purchasePriceInput, { target: { value: '800000' } });
         fireEvent.blur(purchasePriceInput);
 
-        let buttons = screen.getAllByRole('button');
-        let nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
+        const buttons = screen.getAllByRole('button');
+        const nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
         fireEvent.click(nextButton!);
 
         await waitFor(() => {

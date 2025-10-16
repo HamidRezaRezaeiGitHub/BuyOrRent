@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { ArrowLeft, ArrowRight, Info } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, ChevronsRight, Info } from 'lucide-react'
 import { FC, useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { localToGlobalStep, globalToLocalStep, buildNavigationUrl } from '@/common/globalStep'
@@ -366,32 +366,33 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+                <div className="flex justify-between items-center gap-3">
                     <Button
                         onClick={handlePrevious}
-                        variant="outline"
+                        variant="secondary"
                         size="icon"
-                        className="self-start"
-                        aria-label="Go back to previous question"
+                        aria-label="Previous"
                     >
-                        <ArrowLeft className="h-4 w-4" />
+                        <ChevronLeft className="h-4 w-4" />
                     </Button>
-                    <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                    <div className="flex gap-3">
                         <Button
                             onClick={handleNext}
                             variant="secondary"
-                            className="w-full sm:w-auto"
+                            className="flex items-center gap-2"
                             aria-label="Review and customize each value"
                         >
                             Review
+                            <ChevronRight className="h-4 w-4" />
                         </Button>
                         <Button
                             onClick={handleUseAllDefaults}
                             variant="default"
-                            className="w-full sm:w-auto"
+                            className="flex items-center gap-2"
                             aria-label="Apply default values and skip to the next section"
                         >
                             Use defaults
+                            <ChevronsRight className="h-4 w-4" />
                         </Button>
                     </div>
                 </div>
