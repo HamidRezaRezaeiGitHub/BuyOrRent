@@ -121,8 +121,6 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
     // Handler to use default value for rent increase
     const handleUseDefault = () => {
         setRentIncrease(defaultRentIncrease)
-        // Automatically proceed to next after setting default
-        handleNext()
     }
 
     // Define each step JSX separately
@@ -240,12 +238,13 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
                                     <Button
                                         onClick={handleUseDefault}
                                         variant="secondary"
+                                        disabled={rentIncrease === defaultRentIncrease}
                                     >
                                         Use default
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Use default value and continue</p>
+                                    <p>Reset to default value</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
