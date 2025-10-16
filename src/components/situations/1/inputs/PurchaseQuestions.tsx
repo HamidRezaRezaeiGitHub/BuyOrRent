@@ -467,22 +467,23 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                         </Tooltip>
                     </TooltipProvider>
                     <div className="flex gap-3">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        onClick={handleUseDefaultDownPayment}
-                                        variant="secondary"
-                                        disabled={downPaymentPercentage === defaultDownPaymentPercentage}
-                                    >
-                                        Use default
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Reset to default value</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        {downPaymentPercentage !== defaultDownPaymentPercentage && (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            onClick={handleUseDefaultDownPayment}
+                                            variant="secondary"
+                                        >
+                                            Use default
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Reset to default value</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )}
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -552,22 +553,23 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                         </Tooltip>
                     </TooltipProvider>
                     <div className="flex gap-3">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        onClick={handleUseDefaultMortgageRate}
-                                        variant="secondary"
-                                        disabled={mortgageRate === defaultMortgageRate}
-                                    >
-                                        Use default
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Reset to default value</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        {mortgageRate !== defaultMortgageRate && (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            onClick={handleUseDefaultMortgageRate}
+                                            variant="secondary"
+                                        >
+                                            Use default
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Reset to default value</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )}
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -626,22 +628,23 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                         </Tooltip>
                     </TooltipProvider>
                     <div className="flex gap-3">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        onClick={handleUseDefaultMortgageLength}
-                                        variant="secondary"
-                                        disabled={mortgageLength === defaultMortgageLength}
-                                    >
-                                        Use default
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Reset to default value</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        {mortgageLength !== defaultMortgageLength && (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            onClick={handleUseDefaultMortgageLength}
+                                            variant="secondary"
+                                        >
+                                            Use default
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Reset to default value</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )}
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -700,22 +703,23 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                         </Tooltip>
                     </TooltipProvider>
                     <div className="flex gap-3">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        onClick={handleUseDefaultPropertyTax}
-                                        variant="secondary"
-                                        disabled={propertyTaxPercentage === defaultPropertyTaxPercentage}
-                                    >
-                                        Use default
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Reset to default value</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        {propertyTaxPercentage !== defaultPropertyTaxPercentage && (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            onClick={handleUseDefaultPropertyTax}
+                                            variant="secondary"
+                                        >
+                                            Use default
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Reset to default value</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )}
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -774,22 +778,23 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                         </Tooltip>
                     </TooltipProvider>
                     <div className="flex gap-3">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        onClick={handleUseDefaultMaintenance}
-                                        variant="secondary"
-                                        disabled={maintenancePercentage === defaultMaintenancePercentage}
-                                    >
-                                        Use default
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Reset to default value</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        {maintenancePercentage !== defaultMaintenancePercentage && (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            onClick={handleUseDefaultMaintenance}
+                                            variant="secondary"
+                                        >
+                                            Use default
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Reset to default value</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )}
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -848,22 +853,23 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                         </Tooltip>
                     </TooltipProvider>
                     <div className="flex gap-3">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        onClick={handleUseDefaultAssetAppreciationRate}
-                                        variant="secondary"
-                                        disabled={assetAppreciationRate === defaultAssetAppreciationRate}
-                                    >
-                                        Use default
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Reset to default value</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        {assetAppreciationRate !== defaultAssetAppreciationRate && (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            onClick={handleUseDefaultAssetAppreciationRate}
+                                            variant="secondary"
+                                        >
+                                            Use default
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Reset to default value</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )}
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
