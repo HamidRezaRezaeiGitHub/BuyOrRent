@@ -69,7 +69,7 @@ export interface MortgageAmortizationData {
  */
 const applyRounding = (value: number, roundMode: RoundMode): number => {
     if (roundMode === 'cents') {
-        return Math.round((value + Number.EPSILON) * 100) / 100;
+        return Math.round(value * 100) / 100;
     }
     return value;
 };
