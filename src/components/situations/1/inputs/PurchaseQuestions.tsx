@@ -234,43 +234,31 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     // Handler to use default value for down payment
     const handleUseDefaultDownPayment = () => {
         setDownPaymentPercentage(defaultDownPaymentPercentage)
-        // Automatically proceed to next after setting default
-        handleNext()
     }
 
     // Handler to use default value for mortgage rate
     const handleUseDefaultMortgageRate = () => {
         setMortgageRate(defaultMortgageRate)
-        // Automatically proceed to next after setting default
-        handleNext()
     }
 
     // Handler to use default value for mortgage length
     const handleUseDefaultMortgageLength = () => {
         setMortgageLength(defaultMortgageLength)
-        // Automatically proceed to next after setting default
-        handleNext()
     }
 
     // Handler to use default value for property tax
     const handleUseDefaultPropertyTax = () => {
         setPropertyTaxPercentage(defaultPropertyTaxPercentage)
-        // Automatically proceed to next after setting default
-        handleNext()
     }
 
     // Handler to use default value for maintenance
     const handleUseDefaultMaintenance = () => {
         setMaintenancePercentage(defaultMaintenancePercentage)
-        // Automatically proceed to next after setting default
-        handleNext()
     }
 
     // Handler to use default value for asset appreciation rate
     const handleUseDefaultAssetAppreciationRate = () => {
         setAssetAppreciationRate(defaultAssetAppreciationRate)
-        // Automatically proceed to next after setting default
-        handleNext()
     }
 
     // Define each step JSX separately
@@ -485,12 +473,13 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                                     <Button
                                         onClick={handleUseDefaultDownPayment}
                                         variant="secondary"
+                                        disabled={downPaymentPercentage === defaultDownPaymentPercentage}
                                     >
                                         Use default
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Use default value and continue</p>
+                                    <p>Reset to default value</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -569,12 +558,13 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                                     <Button
                                         onClick={handleUseDefaultMortgageRate}
                                         variant="secondary"
+                                        disabled={mortgageRate === defaultMortgageRate}
                                     >
                                         Use default
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Use default value and continue</p>
+                                    <p>Reset to default value</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -642,12 +632,13 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                                     <Button
                                         onClick={handleUseDefaultMortgageLength}
                                         variant="secondary"
+                                        disabled={mortgageLength === defaultMortgageLength}
                                     >
                                         Use default
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Use default value and continue</p>
+                                    <p>Reset to default value</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -715,12 +706,13 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                                     <Button
                                         onClick={handleUseDefaultPropertyTax}
                                         variant="secondary"
+                                        disabled={propertyTaxPercentage === defaultPropertyTaxPercentage}
                                     >
                                         Use default
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Use default value and continue</p>
+                                    <p>Reset to default value</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -788,12 +780,13 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                                     <Button
                                         onClick={handleUseDefaultMaintenance}
                                         variant="secondary"
+                                        disabled={maintenancePercentage === defaultMaintenancePercentage}
                                     >
                                         Use default
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Use default value and continue</p>
+                                    <p>Reset to default value</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -861,12 +854,13 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                                     <Button
                                         onClick={handleUseDefaultAssetAppreciationRate}
                                         variant="secondary"
+                                        disabled={assetAppreciationRate === defaultAssetAppreciationRate}
                                     >
                                         Use default
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Use default value and continue</p>
+                                    <p>Reset to default value</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>

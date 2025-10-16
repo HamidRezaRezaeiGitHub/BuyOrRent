@@ -107,8 +107,6 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
     // Handler to use default value
     const handleUseDefault = () => {
         setInvestmentReturn(defaultInvestmentReturn)
-        // Automatically proceed to next after setting default
-        handleNext()
     }
 
     // Define the investment return step JSX
@@ -170,12 +168,13 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
                                     <Button
                                         onClick={handleUseDefault}
                                         variant="secondary"
+                                        disabled={investmentReturn === defaultInvestmentReturn}
                                     >
                                         Use default
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Use default value and continue</p>
+                                    <p>Reset to default value</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
