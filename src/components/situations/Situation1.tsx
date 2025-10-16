@@ -58,6 +58,10 @@ export const Situation1: React.FC = () => {
     const minAssetAppreciationRate = -5
     const maxAssetAppreciationRate = 20
 
+    const defaultClosingCostsPercentage = 1.5
+    const minClosingCostsPercentage = 0
+    const maxClosingCostsPercentage = 5
+
     const [inputSectionOpen, setInputSectionOpen] = useState(true)
     const [resultsSectionOpen, setResultsSectionOpen] = useState(true)
     const [analysisYears, setAnalysisYears] = useState<number>(defaultAnalysisYears)
@@ -99,6 +103,9 @@ export const Situation1: React.FC = () => {
     const initialAssetAppreciationRate = searchParams.get('assetAppreciationRate')
         ? parseFloat(searchParams.get('assetAppreciationRate')!)
         : defaultAssetAppreciationRate
+    const initialClosingCostsPercentage = searchParams.get('closingCostsPercentage')
+        ? parseFloat(searchParams.get('closingCostsPercentage')!)
+        : defaultClosingCostsPercentage
 
     // Buy fields state
     const [purchasePrice, setPurchasePrice] = useState<number>(initialPurchasePrice)
@@ -114,6 +121,9 @@ export const Situation1: React.FC = () => {
     const [maintenanceAmount, setMaintenanceAmount] = useState<number>(initialMaintenancePercentage / 100 * initialPurchasePrice)
     const [maintenanceMode, setMaintenanceMode] = useState<'percentage' | 'amount'>('percentage')
     const [assetAppreciationRate, setAssetAppreciationRate] = useState<number>(initialAssetAppreciationRate)
+    const [closingCostsPercentage, setClosingCostsPercentage] = useState<number>(initialClosingCostsPercentage)
+    const [closingCostsAmount, setClosingCostsAmount] = useState<number>(initialClosingCostsPercentage / 100 * initialPurchasePrice)
+    const [closingCostsMode, setClosingCostsMode] = useState<'percentage' | 'amount'>('percentage')
 
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
     const [tableDialogOpen, setTableDialogOpen] = useState(false)
@@ -220,6 +230,15 @@ export const Situation1: React.FC = () => {
                             defaultAssetAppreciationRate={defaultAssetAppreciationRate}
                             minAssetAppreciationRate={minAssetAppreciationRate}
                             maxAssetAppreciationRate={maxAssetAppreciationRate}
+                            closingCostsPercentage={closingCostsPercentage}
+                            setClosingCostsPercentage={setClosingCostsPercentage}
+                            closingCostsAmount={closingCostsAmount}
+                            setClosingCostsAmount={setClosingCostsAmount}
+                            closingCostsMode={closingCostsMode}
+                            setClosingCostsMode={setClosingCostsMode}
+                            defaultClosingCostsPercentage={defaultClosingCostsPercentage}
+                            minClosingCostsPercentage={minClosingCostsPercentage}
+                            maxClosingCostsPercentage={maxClosingCostsPercentage}
                         />
                     </AccordionContent>
                 </AccordionItem>

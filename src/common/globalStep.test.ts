@@ -26,20 +26,20 @@ describe('Global Step Cursor Helper', () => {
                 globalStepEnd: 2
             })
             
-            // PurchaseQuestions: steps 3-10 (8 steps)
+            // PurchaseQuestions: steps 3-11 (9 steps)
             expect(mappings[1]).toEqual({
                 component: 'PurchaseQuestions',
-                stepCount: 8,
+                stepCount: 9,
                 globalStepStart: 3,
-                globalStepEnd: 10
+                globalStepEnd: 11
             })
             
-            // InvestmentQuestions: step 11 (1 step)
+            // InvestmentQuestions: step 12 (1 step)
             expect(mappings[2]).toEqual({
                 component: 'InvestmentQuestions',
                 stepCount: 1,
-                globalStepStart: 11,
-                globalStepEnd: 11
+                globalStepStart: 12,
+                globalStepEnd: 12
             })
         })
         
@@ -53,8 +53,8 @@ describe('Global Step Cursor Helper', () => {
     })
     
     describe('getTotalSteps', () => {
-        it('should return 11 total steps', () => {
-            expect(getTotalSteps()).toBe(11)
+        it('should return 12 total steps', () => {
+            expect(getTotalSteps()).toBe(12)
         })
     })
     
@@ -67,11 +67,11 @@ describe('Global Step Cursor Helper', () => {
         it('should convert PurchaseQuestions local steps correctly', () => {
             expect(localToGlobalStep('PurchaseQuestions', 1)).toBe(3)
             expect(localToGlobalStep('PurchaseQuestions', 2)).toBe(4)
-            expect(localToGlobalStep('PurchaseQuestions', 8)).toBe(10)
+            expect(localToGlobalStep('PurchaseQuestions', 9)).toBe(11)
         })
         
         it('should convert InvestmentQuestions local step correctly', () => {
-            expect(localToGlobalStep('InvestmentQuestions', 1)).toBe(11)
+            expect(localToGlobalStep('InvestmentQuestions', 1)).toBe(12)
         })
         
         it('should return null for unknown component', () => {
@@ -81,7 +81,7 @@ describe('Global Step Cursor Helper', () => {
         it('should return null for out of range local step', () => {
             expect(localToGlobalStep('RentQuestions', 0)).toBeNull()
             expect(localToGlobalStep('RentQuestions', 3)).toBeNull()
-            expect(localToGlobalStep('PurchaseQuestions', 9)).toBeNull()
+            expect(localToGlobalStep('PurchaseQuestions', 10)).toBeNull()
         })
     })
     
@@ -97,7 +97,7 @@ describe('Global Step Cursor Helper', () => {
             })
         })
         
-        it('should convert global steps 3-10 to PurchaseQuestions', () => {
+        it('should convert global steps 3-11 to PurchaseQuestions', () => {
             expect(globalToLocalStep(3)).toEqual({
                 component: 'PurchaseQuestions',
                 localStep: 1
@@ -106,14 +106,14 @@ describe('Global Step Cursor Helper', () => {
                 component: 'PurchaseQuestions',
                 localStep: 2
             })
-            expect(globalToLocalStep(10)).toEqual({
+            expect(globalToLocalStep(11)).toEqual({
                 component: 'PurchaseQuestions',
-                localStep: 8
+                localStep: 9
             })
         })
         
-        it('should convert global step 11 to InvestmentQuestions', () => {
-            expect(globalToLocalStep(11)).toEqual({
+        it('should convert global step 12 to InvestmentQuestions', () => {
+            expect(globalToLocalStep(12)).toEqual({
                 component: 'InvestmentQuestions',
                 localStep: 1
             })
@@ -121,7 +121,7 @@ describe('Global Step Cursor Helper', () => {
         
         it('should return null for out of range global step', () => {
             expect(globalToLocalStep(0)).toBeNull()
-            expect(globalToLocalStep(12)).toBeNull()
+            expect(globalToLocalStep(13)).toBeNull()
             expect(globalToLocalStep(-1)).toBeNull()
         })
     })
@@ -150,8 +150,8 @@ describe('Global Step Cursor Helper', () => {
         })
         
         it('should build URL for InvestmentQuestions', () => {
-            const url = buildNavigationUrl(11)
-            expect(url).toBe('/situation/1/question/investment?gs=11')
+            const url = buildNavigationUrl(12)
+            expect(url).toBe('/situation/1/question/investment?gs=12')
         })
         
         it('should preserve data params when building URL', () => {
@@ -169,7 +169,7 @@ describe('Global Step Cursor Helper', () => {
         
         it('should return null for invalid global step', () => {
             expect(buildNavigationUrl(0)).toBeNull()
-            expect(buildNavigationUrl(12)).toBeNull()
+            expect(buildNavigationUrl(13)).toBeNull()
         })
         
         it('should handle existing gs param in dataParams', () => {
@@ -188,7 +188,7 @@ describe('Global Step Cursor Helper', () => {
     describe('Integration: Round-trip conversions', () => {
         it('should maintain consistency in forward and backward conversions', () => {
             // Test all global steps
-            for (let gs = 1; gs <= 11; gs++) {
+            for (let gs = 1; gs <= 12; gs++) {
                 const localInfo = globalToLocalStep(gs)
                 expect(localInfo).not.toBeNull()
                 
