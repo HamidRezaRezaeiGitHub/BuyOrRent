@@ -378,20 +378,20 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     </Button>
                     <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                         <Button
-                            onClick={handleUseAllDefaults}
-                            variant="default"
-                            className="w-full sm:w-auto"
-                            aria-label="Apply default values and skip to the next section"
-                        >
-                            Use defaults
-                        </Button>
-                        <Button
                             onClick={handleNext}
                             variant="secondary"
                             className="w-full sm:w-auto"
                             aria-label="Review and customize each value"
                         >
                             Review
+                        </Button>
+                        <Button
+                            onClick={handleUseAllDefaults}
+                            variant="default"
+                            className="w-full sm:w-auto"
+                            aria-label="Apply default values and skip to the next section"
+                        >
+                            Use defaults
                         </Button>
                     </div>
                 </div>
