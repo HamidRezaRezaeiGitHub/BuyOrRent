@@ -1,4 +1,5 @@
 import { AssetAppreciationRateField } from '@/components/inputs/buy/AssetAppreciationRate'
+import { ClosingCostsPercentageField } from '@/components/inputs/buy/ClosingCostsPercentage'
 import { DownPaymentPercentageField } from '@/components/inputs/buy/DownPaymentPercentage'
 import { MaintenancePercentageField } from '@/components/inputs/buy/MaintenancePercentage'
 import { MortgageLengthField } from '@/components/inputs/buy/MortgageLength'
@@ -65,8 +66,12 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const minAssetAppreciationRate = -5
     const maxAssetAppreciationRate = 10
 
+    const defaultClosingCostsPercentage = 1.5
+    const minClosingCostsPercentage = 0
+    const maxClosingCostsPercentage = 5
+
     // State
-    const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8>(1)
+    const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>(1)
     const [purchasePrice, setPurchasePrice] = useState<number>(defaultPurchasePrice)
     const [downPaymentPercentage, setDownPaymentPercentage] = useState<number>(defaultDownPaymentPercentage)
     const [mortgageRate, setMortgageRate] = useState<number>(defaultMortgageRate)
@@ -74,6 +79,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const [propertyTaxPercentage, setPropertyTaxPercentage] = useState<number>(defaultPropertyTaxPercentage)
     const [maintenancePercentage, setMaintenancePercentage] = useState<number>(defaultMaintenancePercentage)
     const [assetAppreciationRate, setAssetAppreciationRate] = useState<number>(defaultAssetAppreciationRate)
+    const [closingCostsPercentage, setClosingCostsPercentage] = useState<number>(defaultClosingCostsPercentage)
     
     // Initialize step from gs parameter if present
     useEffect(() => {
@@ -82,7 +88,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             const globalStep = parseInt(gsParam, 10)
             const stepInfo = globalToLocalStep(globalStep)
             if (stepInfo && stepInfo.component === 'PurchaseQuestions') {
-                setStep(stepInfo.localStep as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)
+                setStep(stepInfo.localStep as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9)
             }
         }
     }, [searchParams])
@@ -90,7 +96,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     // Calculate progress percentage based on step
     const getProgressPercentage = () => {
         // Interpolate between progressMin and progressMax based on current step
-        const progressPerStep = (progressMax - progressMin) / 8 // 8 steps total
+        const progressPerStep = (progressMax - progressMin) / 9 // 9 steps total
         const progress = progressMin + (progressPerStep * (step - 1))
         return Math.round(progress)
     }
@@ -107,6 +113,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
         params.set('propertyTaxPercentage', propertyTaxPercentage.toString())
         params.set('maintenancePercentage', maintenancePercentage.toString())
         params.set('assetAppreciationRate', assetAppreciationRate.toString())
+        params.set('closingCostsPercentage', closingCostsPercentage.toString())
         
         // Calculate next global step
         const currentGlobalStep = localToGlobalStep('PurchaseQuestions', step)
@@ -147,6 +154,8 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
         } else if (step === 7) {
             setStep(8)
         } else if (step === 8) {
+            setStep(9)
+        } else if (step === 9) {
             navigateToNext()
         }
     }
@@ -159,6 +168,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
         setPropertyTaxPercentage(defaultPropertyTaxPercentage)
         setMaintenancePercentage(defaultMaintenancePercentage)
         setAssetAppreciationRate(defaultAssetAppreciationRate)
+        setClosingCostsPercentage(defaultClosingCostsPercentage)
         
         // Skip all remaining steps and go directly to the next component (InvestmentQuestions)
         const params = new URLSearchParams(searchParams)
@@ -171,11 +181,12 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
         params.set('propertyTaxPercentage', defaultPropertyTaxPercentage.toString())
         params.set('maintenancePercentage', defaultMaintenancePercentage.toString())
         params.set('assetAppreciationRate', defaultAssetAppreciationRate.toString())
+        params.set('closingCostsPercentage', defaultClosingCostsPercentage.toString())
         // Mark that user used defaults to skip intermediate steps
         params.set('usedPurchaseDefaults', 'true')
         
         // Calculate the first global step of the next component (InvestmentQuestions)
-        const purchaseLastGlobalStep = localToGlobalStep('PurchaseQuestions', 8)
+        const purchaseLastGlobalStep = localToGlobalStep('PurchaseQuestions', 9)
         if (purchaseLastGlobalStep) {
             const nextGlobalStep = purchaseLastGlobalStep + 1
             const navUrl = buildNavigationUrl(nextGlobalStep, params)
@@ -209,6 +220,8 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             setStep(6)
         } else if (step === 8) {
             setStep(7)
+        } else if (step === 9) {
+            setStep(8)
         } else if (step === 1) {
             // Navigate to previous global step
             const currentGlobalStep = localToGlobalStep('PurchaseQuestions', step)
@@ -259,6 +272,11 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     // Handler to use default value for asset appreciation rate
     const handleUseDefaultAssetAppreciationRate = () => {
         setAssetAppreciationRate(defaultAssetAppreciationRate)
+    }
+
+    // Handler to use default value for closing costs
+    const handleUseDefaultClosingCosts = () => {
+        setClosingCostsPercentage(defaultClosingCostsPercentage)
     }
 
     // Define each step JSX separately
@@ -359,6 +377,10 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                         <div className="flex justify-between text-sm">
                             <span className="font-medium">Appreciation:</span>
                             <span>{defaultAssetAppreciationRate}%</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                            <span className="font-medium">Closing costs:</span>
+                            <span>{defaultClosingCostsPercentage}%</span>
                         </div>
                     </div>
                     <p className="text-sm text-muted-foreground italic">
@@ -861,6 +883,92 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
+                                    <p>Next question</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    )
+
+    const closingCostsStep = (
+        <Card className="w-full">
+            <CardHeader>
+                <CardTitle>What are the estimated closing costs?</CardTitle>
+                <CardDescription>
+                    Typical closing costs are around 1.5% of purchase price; varies by province and municipality.
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                {/* Information about Canadian closing costs */}
+                <div className="flex gap-3 p-4 bg-muted/50 rounded-lg border border-border">
+                    <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                    <div className="text-sm">
+                        <p className="font-medium mb-1">About closing costs</p>
+                        <p className="text-muted-foreground">
+                            Includes legal fees, land transfer tax, title insurance, and other one-time transaction fees. Costs vary by province and municipality.
+                        </p>
+                    </div>
+                </div>
+
+                <ClosingCostsPercentageField
+                    value={closingCostsPercentage}
+                    onChange={setClosingCostsPercentage}
+                    defaultValue={defaultClosingCostsPercentage}
+                    minValue={minClosingCostsPercentage}
+                    maxValue={maxClosingCostsPercentage}
+                    displayMode="combined"
+                    showDescription={true}
+                />
+
+                <div className="flex justify-between gap-3">
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    onClick={handlePrevious}
+                                    variant="outline"
+                                    size="icon"
+                                >
+                                    <ArrowLeft className="h-4 w-4" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Previous question</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                    <div className="flex gap-3">
+                        {closingCostsPercentage !== defaultClosingCostsPercentage && (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            onClick={handleUseDefaultClosingCosts}
+                                            variant="secondary"
+                                        >
+                                            Use default
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Reset to default value</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )}
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        onClick={handleNext}
+                                        size="icon"
+                                    >
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
                                     <p>Continue</p>
                                 </TooltipContent>
                             </Tooltip>
@@ -923,6 +1031,9 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
 
                 {/* Step 8: Asset Appreciation Rate */}
                 {step === 8 && assetAppreciationRateStep}
+
+                {/* Step 9: Closing Costs */}
+                {step === 9 && closingCostsStep}
             </main>
         </div>
     )

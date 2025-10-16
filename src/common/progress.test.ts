@@ -22,19 +22,19 @@ describe('Progress Helper', () => {
         it('should allocate progress proportionally based on step counts', () => {
             const segments = computeProgressSegments()
             
-            // Total steps: 2 + 8 + 1 = 11
-            // RentQuestions: 2/11 ≈ 18.18%
-            // PurchaseQuestions: 8/11 ≈ 72.73%
-            // InvestmentQuestions: 1/11 ≈ 9.09%
+            // Total steps: 2 + 9 + 1 = 12
+            // RentQuestions: 2/12 ≈ 16.67%
+            // PurchaseQuestions: 9/12 = 75%
+            // InvestmentQuestions: 1/12 ≈ 8.33%
             
             expect(segments.RentQuestions.stepCount).toBe(2)
-            expect(segments.PurchaseQuestions.stepCount).toBe(8)
+            expect(segments.PurchaseQuestions.stepCount).toBe(9)
             expect(segments.InvestmentQuestions.stepCount).toBe(1)
             
             // Check approximate ranges
-            expect(segments.RentQuestions.progressMax).toBeCloseTo(18.18, 1)
-            expect(segments.PurchaseQuestions.progressMin).toBeCloseTo(18.18, 1)
-            expect(segments.PurchaseQuestions.progressMax).toBeCloseTo(90.91, 1)
+            expect(segments.RentQuestions.progressMax).toBeCloseTo(16.67, 1)
+            expect(segments.PurchaseQuestions.progressMin).toBeCloseTo(16.67, 1)
+            expect(segments.PurchaseQuestions.progressMax).toBeCloseTo(91.67, 1)
         })
 
         it('should ensure segments are contiguous', () => {
@@ -77,8 +77,8 @@ describe('Progress Helper', () => {
         it('should interpolate through all steps of PurchaseQuestions', () => {
             const segments = computeProgressSegments()
             
-            // Test all 8 steps
-            for (let step = 1; step <= 8; step++) {
+            // Test all 9 steps
+            for (let step = 1; step <= 9; step++) {
                 const progress = calculateProgress('PurchaseQuestions', step)
                 
                 // Progress should be within the segment bounds
@@ -97,7 +97,7 @@ describe('Progress Helper', () => {
             const segments = computeProgressSegments()
             const progress = calculateProgress('InvestmentQuestions', 1)
             
-            // Single step should show progressMin (≈90.91%)
+            // Single step should show progressMin (≈91.67%)
             expect(progress).toBeCloseTo(segments.InvestmentQuestions.progressMin, 1)
         })
 

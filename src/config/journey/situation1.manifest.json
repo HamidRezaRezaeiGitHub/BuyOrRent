@@ -2,7 +2,7 @@
   "situationId": 1,
   "sections": [
     { "component": "RentQuestions", "stepCount": 2 },
-    { "component": "PurchaseQuestions", "stepCount": 8 },
+    { "component": "PurchaseQuestions", "stepCount": 9 },
     { "component": "InvestmentQuestions", "stepCount": 1 }
   ]
 }
