@@ -366,54 +366,33 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     </p>
                 </div>
 
-                <div className="flex justify-between gap-3">
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    onClick={handlePrevious}
-                                    variant="outline"
-                                    size="icon"
-                                >
-                                    <ArrowLeft className="h-4 w-4" />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Previous question</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
-                    <div className="flex gap-3">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        onClick={handleUseAllDefaults}
-                                        variant="default"
-                                    >
-                                        Use all defaults
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Apply default values and skip to next section</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        onClick={handleNext}
-                                        size="icon"
-                                    >
-                                        <ArrowRight className="h-4 w-4" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Customize values</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+                    <Button
+                        onClick={handlePrevious}
+                        variant="outline"
+                        size="icon"
+                        className="self-start"
+                        aria-label="Go back to previous question"
+                    >
+                        <ArrowLeft className="h-4 w-4" />
+                    </Button>
+                    <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                        <Button
+                            onClick={handleNext}
+                            variant="secondary"
+                            className="w-full sm:w-auto"
+                            aria-label="Review and customize each value"
+                        >
+                            Review
+                        </Button>
+                        <Button
+                            onClick={handleUseAllDefaults}
+                            variant="default"
+                            className="w-full sm:w-auto"
+                            aria-label="Apply default values and skip to the next section"
+                        >
+                            Use defaults
+                        </Button>
                     </div>
                 </div>
             </CardContent>

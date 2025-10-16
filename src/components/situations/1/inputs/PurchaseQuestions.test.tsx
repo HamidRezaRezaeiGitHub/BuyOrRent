@@ -28,6 +28,102 @@ describe('PurchaseQuestions - Use default button behavior', () => {
         jest.clearAllMocks();
     });
 
+    test('PurchaseQuestions_gatewaySlide_shouldShowCorrectButtons', async () => {
+        render(
+            <MemoryRouter>
+                <PurchaseQuestions />
+            </MemoryRouter>
+        );
+
+        // Enter purchase price to advance to step 2 (gateway slide)
+        const purchasePriceInput = screen.getByRole('textbox');
+        fireEvent.change(purchasePriceInput, { target: { value: '800000' } });
+        fireEvent.blur(purchasePriceInput);
+
+        // Click next to go to step 2
+        const buttons = screen.getAllByRole('button');
+        const nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
+        fireEvent.click(nextButton!);
+
+        // Verify gateway slide appears with correct buttons
+        await waitFor(() => {
+            expect(screen.getByText(/Use default values/i)).toBeInTheDocument();
+        });
+
+        // Verify primary button "Use defaults" exists
+        const useDefaultsButton = screen.getByText('Use defaults');
+        expect(useDefaultsButton).toBeInTheDocument();
+        expect(useDefaultsButton).toHaveAttribute('aria-label', 'Apply default values and skip to the next section');
+
+        // Verify secondary button "Review" exists
+        const reviewButton = screen.getByText('Review');
+        expect(reviewButton).toBeInTheDocument();
+        expect(reviewButton).toHaveAttribute('aria-label', 'Review and customize each value');
+    });
+
+    test('PurchaseQuestions_gatewaySlide_useDefaultsNavigatesToNextSection', async () => {
+        render(
+            <MemoryRouter>
+                <PurchaseQuestions />
+            </MemoryRouter>
+        );
+
+        // Enter purchase price and navigate to step 2
+        const purchasePriceInput = screen.getByRole('textbox');
+        fireEvent.change(purchasePriceInput, { target: { value: '800000' } });
+        fireEvent.blur(purchasePriceInput);
+
+        const buttons = screen.getAllByRole('button');
+        const nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
+        fireEvent.click(nextButton!);
+
+        await waitFor(() => {
+            expect(screen.getByText(/Use default values/i)).toBeInTheDocument();
+        });
+
+        // Click "Use defaults" button
+        const useDefaultsButton = screen.getByText('Use defaults');
+        fireEvent.click(useDefaultsButton);
+
+        // Verify navigation to next section occurs
+        await waitFor(() => {
+            expect(mockNavigate).toHaveBeenCalled();
+        });
+    });
+
+    test('PurchaseQuestions_gatewaySlide_reviewNavigatesToFirstQuestion', async () => {
+        render(
+            <MemoryRouter>
+                <PurchaseQuestions />
+            </MemoryRouter>
+        );
+
+        // Enter purchase price and navigate to step 2
+        const purchasePriceInput = screen.getByRole('textbox');
+        fireEvent.change(purchasePriceInput, { target: { value: '800000' } });
+        fireEvent.blur(purchasePriceInput);
+
+        const buttons = screen.getAllByRole('button');
+        const nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
+        fireEvent.click(nextButton!);
+
+        await waitFor(() => {
+            expect(screen.getByText(/Use default values/i)).toBeInTheDocument();
+        });
+
+        // Click "Review" button
+        const reviewButton = screen.getByText('Review');
+        fireEvent.click(reviewButton);
+
+        // Verify navigation to first question (step 3 - down payment)
+        await waitFor(() => {
+            expect(screen.getByText(/What percentage will you put as a down payment/i)).toBeInTheDocument();
+        });
+
+        // Verify navigation did NOT skip to next section
+        expect(mockNavigate).not.toHaveBeenCalled();
+    });
+
     test('PurchaseQuestions_useDefaultButton_shouldNotBeRenderedWhenValueEqualsDefault', async () => {
         render(
             <MemoryRouter>
@@ -45,12 +141,12 @@ describe('PurchaseQuestions - Use default button behavior', () => {
         const nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
         fireEvent.click(nextButton!);
 
-        // Skip the defaults overview by clicking next
+        // Skip the defaults overview by clicking "Review"
         await waitFor(() => {
             expect(screen.getByText(/Use default values/i)).toBeInTheDocument();
         });
-        const nextButton2 = screen.getAllByRole('button').find((btn) => btn.querySelector('.lucide-arrow-right'));
-        fireEvent.click(nextButton2!);
+        const reviewButton = screen.getByText('Review');
+        fireEvent.click(reviewButton);
 
         // Wait for step 3 (down payment) to appear
         await waitFor(() => {
@@ -81,9 +177,9 @@ describe('PurchaseQuestions - Use default button behavior', () => {
             expect(screen.getByText(/Use default values/i)).toBeInTheDocument();
         });
 
-        buttons = screen.getAllByRole('button');
-        nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
-        fireEvent.click(nextButton!);
+        // Click "Review" button instead of arrow
+        const reviewButton = screen.getByText('Review');
+        fireEvent.click(reviewButton);
 
         await waitFor(() => {
             expect(screen.getByText(/What percentage will you put as a down payment/i)).toBeInTheDocument();
@@ -120,9 +216,9 @@ describe('PurchaseQuestions - Use default button behavior', () => {
             expect(screen.getByText(/Use default values/i)).toBeInTheDocument();
         });
 
-        buttons = screen.getAllByRole('button');
-        nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
-        fireEvent.click(nextButton!);
+        // Click "Review" button instead of arrow
+        const reviewButton = screen.getByText('Review');
+        fireEvent.click(reviewButton);
 
         await waitFor(() => {
             expect(screen.getByText(/What percentage will you put as a down payment/i)).toBeInTheDocument();
@@ -171,9 +267,9 @@ describe('PurchaseQuestions - Use default button behavior', () => {
             expect(screen.getByText(/Use default values/i)).toBeInTheDocument();
         });
 
-        buttons = screen.getAllByRole('button');
-        nextButton = buttons.find((btn) => btn.querySelector('.lucide-arrow-right'));
-        fireEvent.click(nextButton!);
+        // Click "Review" button instead of arrow
+        const reviewButton = screen.getByText('Review');
+        fireEvent.click(reviewButton);
 
         await waitFor(() => {
             expect(screen.getByText(/What percentage will you put as a down payment/i)).toBeInTheDocument();
