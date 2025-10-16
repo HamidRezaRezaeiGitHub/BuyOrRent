@@ -162,22 +162,23 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
                         </TooltipProvider>
                     )}
                     <div className="flex gap-3 ml-auto">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button
-                                        onClick={handleUseDefault}
-                                        variant="secondary"
-                                        disabled={investmentReturn === defaultInvestmentReturn}
-                                    >
-                                        Use default
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Reset to default value</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        {investmentReturn !== defaultInvestmentReturn && (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            onClick={handleUseDefault}
+                                            variant="secondary"
+                                        >
+                                            Use default
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Reset to default value</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )}
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
