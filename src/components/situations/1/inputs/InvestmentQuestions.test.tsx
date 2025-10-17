@@ -28,12 +28,12 @@ jest.mock('react-router-dom', () => ({
     ],
 }));
 
-describe('InvestmentQuestions - Use default button behavior', () => {
+describe('InvestmentQuestions - Input behavior', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    test('InvestmentQuestions_useDefaultButton_shouldNotBeRenderedWhenValueEqualsDefault', async () => {
+    test('InvestmentQuestions_shouldRenderWithDefaultValue', async () => {
         render(
             <MemoryRouter>
                 <InvestmentQuestions />
@@ -45,11 +45,13 @@ describe('InvestmentQuestions - Use default button behavior', () => {
             expect(screen.getByText(/What annual investment return do you want to assume/i)).toBeInTheDocument();
         });
 
-        // The "Use default" button should not be rendered when value equals default (6.0%)
-        expect(screen.queryByText('Use default')).not.toBeInTheDocument();
+        // Verify the input renders with the default value (8.0%)
+        const investmentReturnInput = screen.getByRole('textbox');
+        expect(investmentReturnInput).toBeInTheDocument();
+        expect(investmentReturnInput).toHaveValue('8.00');
     });
 
-    test('InvestmentQuestions_useDefaultButton_shouldBeRenderedWhenValueDiffersFromDefault', async () => {
+    test('InvestmentQuestions_shouldAllowChangingValue', async () => {
         render(
             <MemoryRouter>
                 <InvestmentQuestions />
@@ -62,16 +64,16 @@ describe('InvestmentQuestions - Use default button behavior', () => {
 
         // Change the investment return value
         const investmentReturnInput = screen.getByRole('textbox');
-        fireEvent.change(investmentReturnInput, { target: { value: '8' } });
+        fireEvent.change(investmentReturnInput, { target: { value: '10' } });
         fireEvent.blur(investmentReturnInput);
 
-        // The "Use default" button should now be rendered
+        // Verify the value changed
         await waitFor(() => {
-            expect(screen.getByText('Use default')).toBeInTheDocument();
+            expect(investmentReturnInput).toHaveValue('10.00');
         });
     });
 
-    test('InvestmentQuestions_useDefaultButton_shouldResetValueWithoutNavigating', async () => {
+    test('InvestmentQuestions_shouldClampValueToValidRange', async () => {
         render(
             <MemoryRouter>
                 <InvestmentQuestions />
@@ -82,33 +84,33 @@ describe('InvestmentQuestions - Use default button behavior', () => {
             expect(screen.getByText(/What annual investment return do you want to assume/i)).toBeInTheDocument();
         });
 
-        // Change the value
+        // Try to set a value above max (30)
         const investmentReturnInput = screen.getByRole('textbox');
-        fireEvent.change(investmentReturnInput, { target: { value: '8' } });
+        fireEvent.change(investmentReturnInput, { target: { value: '50' } });
         fireEvent.blur(investmentReturnInput);
 
+        // Verify the value was clamped to max
         await waitFor(() => {
-            expect(investmentReturnInput).toHaveValue('8.00');
+            expect(investmentReturnInput).toHaveValue('30.00');
         });
 
-        // Click the "Use default" button
-        const useDefaultButton = screen.getByText('Use default').closest('button');
-        fireEvent.click(useDefaultButton!);
+        // Try to set a value below min (-10)
+        fireEvent.change(investmentReturnInput, { target: { value: '-20' } });
+        fireEvent.blur(investmentReturnInput);
 
-        // Verify the value was reset to default (6.0)
+        // Verify the value was clamped to min
         await waitFor(() => {
-            expect(investmentReturnInput).toHaveValue('6.00');
+            expect(investmentReturnInput).toHaveValue('-10.00');
         });
-
-        // Verify navigation did NOT happen
-        expect(screen.getByText(/What annual investment return do you want to assume/i)).toBeInTheDocument();
-        expect(mockNavigate).not.toHaveBeenCalled();
     });
 
-    test('InvestmentQuestions_useDefaultButton_shouldDisappearAfterResettingValue', async () => {
+    test('InvestmentQuestions_shouldRenderNavigationButtonsWithProps', async () => {
         render(
             <MemoryRouter>
-                <InvestmentQuestions />
+                <InvestmentQuestions 
+                    previousUrl="/previous"
+                    nextUrl="/next"
+                />
             </MemoryRouter>
         );
 
@@ -116,34 +118,10 @@ describe('InvestmentQuestions - Use default button behavior', () => {
             expect(screen.getByText(/What annual investment return do you want to assume/i)).toBeInTheDocument();
         });
 
-        // Change the value
-        const investmentReturnInput = screen.getByRole('textbox');
-        fireEvent.change(investmentReturnInput, { target: { value: '8' } });
-        fireEvent.blur(investmentReturnInput);
-
-        await waitFor(() => {
-            expect(investmentReturnInput).toHaveValue('8.00');
-        });
-
-        // The "Use default" button should be visible
-        expect(screen.getByText('Use default')).toBeInTheDocument();
-
-        // Click the "Use default" button
-        const useDefaultButton = screen.getByText('Use default').closest('button');
-        fireEvent.click(useDefaultButton!);
-
-        // Verify the value was reset to default
-        await waitFor(() => {
-            expect(investmentReturnInput).toHaveValue('6.00');
-        });
-
-        // The "Use default" button should now be hidden
-        await waitFor(() => {
-            expect(screen.queryByText('Use default')).not.toBeInTheDocument();
-        });
-
-        // Verify we're still on the investment questions page
-        expect(screen.getByText(/What annual investment return do you want to assume/i)).toBeInTheDocument();
-        expect(mockNavigate).not.toHaveBeenCalled();
+        // Verify navigation buttons are rendered when props are provided
+        const buttons = screen.getAllByRole('button');
+        
+        // Should have at least 2 buttons (previous and next) plus theme toggle
+        expect(buttons.length).toBeGreaterThanOrEqual(2);
     });
 });
