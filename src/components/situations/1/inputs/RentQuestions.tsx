@@ -28,8 +28,8 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
     const [searchParams] = useSearchParams()
 
     // Default values
-    const defaultMonthlyRent = 2400
-    const minMonthlyRent = 500
+    const defaultMonthlyRent = 2500
+    const minMonthlyRent = 1000
     const maxMonthlyRent = 5000
 
     const defaultRentIncrease = 2.5
@@ -140,7 +140,7 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
                     minValue={minMonthlyRent}
                     maxValue={maxMonthlyRent}
                     displayMode="combined"
-                    showDescription={true}
+                    showDescription={false}
                 />
 
                 <div className="flex justify-between gap-3">
@@ -189,7 +189,7 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
             <CardHeader>
                 <CardTitle>How much might your rent increase each year?</CardTitle>
                 <CardDescription>
-                    Annual average increase (Canada defaults shown; adjust if your lease or province differs).
+                    Annual average increase.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -211,7 +211,7 @@ export const RentQuestions: FC<RentQuestionsProps> = ({
                     minValue={minRentIncrease}
                     maxValue={maxRentIncrease}
                     displayMode="combined"
-                    showDescription={true}
+                    showDescription={false}
                 />
 
                 <div className="flex justify-between gap-3">

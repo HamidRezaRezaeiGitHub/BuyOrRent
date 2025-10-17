@@ -1,3 +1,4 @@
+import { buildNavigationUrl, localToGlobalStep } from '@/common/globalStep'
 import { InvestmentReturnField } from '@/components/inputs/invest/InvestmentReturn'
 import { FlexibleNavbar } from '@/components/navbar'
 import { CompactThemeToggle } from '@/components/theme'
@@ -8,7 +9,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ArrowLeft, ArrowRight, Info } from 'lucide-react'
 import { FC, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { localToGlobalStep, buildNavigationUrl } from '@/common/globalStep'
 
 export interface InvestmentQuestionsProps {
     previousUrl?: string
@@ -37,9 +37,9 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
     const maintenancePercentage = searchParams.get('maintenancePercentage') || '2.0'
 
     // Default values - Canadian defaults & ranges
-    const defaultInvestmentReturn = 6.0
+    const defaultInvestmentReturn = 8.0
     const minInvestmentReturn = -10
-    const maxInvestmentReturn = 15
+    const maxInvestmentReturn = 30
 
     // State
     const [investmentReturn, setInvestmentReturn] = useState<number>(defaultInvestmentReturn)
@@ -57,7 +57,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
         params.set('propertyTaxPercentage', propertyTaxPercentage)
         params.set('maintenancePercentage', maintenancePercentage)
         params.set('investmentReturn', investmentReturn.toString())
-        
+
         if (nextUrl) {
             navigate(`${nextUrl}?${params.toString()}`)
         } else {
@@ -69,7 +69,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
     const handlePrevious = () => {
         // Check if user used defaults in PurchaseQuestions
         const usedPurchaseDefaults = searchParams.get('usedPurchaseDefaults') === 'true'
-        
+
         if (usedPurchaseDefaults) {
             // If user used defaults, go back to step 2 of PurchaseQuestions (the intermediary question)
             const purchaseStep2GlobalStep = localToGlobalStep('PurchaseQuestions', 2)
@@ -84,7 +84,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
                 }
             }
         }
-        
+
         // Default behavior: Navigate to previous global step (step 8 of PurchaseQuestions)
         const currentGlobalStep = localToGlobalStep('InvestmentQuestions', 1)
         if (currentGlobalStep && currentGlobalStep > 1) {
@@ -96,7 +96,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
                 return
             }
         }
-        
+
         // Fallback to previousUrl
         if (previousUrl) {
             const params = new URLSearchParams(searchParams)
@@ -140,6 +140,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
                     maxValue={maxInvestmentReturn}
                     displayMode="combined"
                     showHelper={true}
+                    showDescription={false}
                 />
 
                 <div className="flex justify-between gap-3">
@@ -162,23 +163,6 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
                         </TooltipProvider>
                     )}
                     <div className="flex gap-3 ml-auto">
-                        {investmentReturn !== defaultInvestmentReturn && (
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button
-                                            onClick={handleUseDefault}
-                                            variant="secondary"
-                                        >
-                                            Use default
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Reset to default value</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-                        )}
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -223,7 +207,7 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
                 <div className="text-center py-6 sm:py-8">
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Investment Information</h1>
                     <p className="text-sm sm:text-base text-muted-foreground mt-2">
-                        This is the expected annual return if you rent and invest the cash you don't use for buying (e.g., the down payment and monthly differences).
+                        Last step before we crunch the numbers!
                     </p>
                 </div>
 

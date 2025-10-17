@@ -144,6 +144,7 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             minValue={minPurchasePrice}
             maxValue={maxPurchasePrice}
             displayMode='combined'
+            showDescription={false}
         />
     );
 
@@ -156,6 +157,7 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             minValue={minDownPaymentPercentage}
             maxValue={maxDownPaymentPercentage}
             displayMode='combined'
+            showDescription={false}
         />
     );
 
@@ -167,6 +169,7 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
             minValue={minDownPaymentPercentage}
             maxValue={purchasePrice}
             displayMode='combined'
+            
         />
     );
 
@@ -366,6 +369,12 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
                         </>
                     )}
                 </div>
+                {purchasePrice > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {/* Closing Costs with Percentage/Amount Switch */}
+                        {closingCostsSwitchComponent}
+                    </div>
+                )}
             </FieldGroup>
 
             {purchasePrice > 0 && (
@@ -409,18 +418,6 @@ export const PurchaseInformation: React.FC<PurchaseInformationProps> = ({
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {/* Asset Appreciation Rate */}
                             {assetAppreciationRateComponent}
-                        </div>
-                    </FieldGroup>
-
-                    <FieldSeparator />
-
-                    <FieldGroup>
-                        <FieldDescription>
-                            One-time closing costs
-                        </FieldDescription>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            {/* Closing Costs with Percentage/Amount Switch */}
-                            {closingCostsSwitchComponent}
                         </div>
                     </FieldGroup>
                 </>

@@ -20,6 +20,7 @@ export interface InvestmentReturnFieldProps {
     showHelper?: boolean; // Default: false
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
+    showDescription?: boolean; // Default: true - whether to show the description text below the field
 }
 
 export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
@@ -34,7 +35,8 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
     maxValue = 100,
     showHelper = false,
     onLabelSet,
-    showLabel = true
+    showLabel = true,
+    showDescription = true
 }) => {
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -289,9 +291,11 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
         <Field className={className}>
             {showLabel && labelComponent}
             {renderField()}
-            <FieldDescription className="text-xs text-muted-foreground">
-                Expected yearly growth in investment value
-            </FieldDescription>
+            {showDescription && (
+                <FieldDescription className="text-xs text-muted-foreground">
+                    Expected yearly growth in investment value
+                </FieldDescription>
+            )}
 
             {/* Helper link */}
             {showHelper && (

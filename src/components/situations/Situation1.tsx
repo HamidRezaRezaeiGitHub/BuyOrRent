@@ -267,7 +267,7 @@ export const Situation1: React.FC = () => {
                             <div className="flex-1">
                                 <CardTitle className="text-xl sm:text-2xl">Property & Financial Information</CardTitle>
                                 <p className="text-sm sm:text-base text-muted-foreground">
-                                    (Placeholder)
+                                    All the input data about the property and your financial assumptions:
                                 </p>
                             </div>
                             {inputSectionOpen ? (

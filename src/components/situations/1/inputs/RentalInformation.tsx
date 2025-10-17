@@ -45,7 +45,7 @@ export const RentalInformation: React.FC<RentalInformationProps> = ({
                         minValue={minMonthlyRent}
                         maxValue={maxMonthlyRent}
                         displayMode='combined'
-                        showDescription={true}
+                        showDescription={false}
                     />
                     {monthlyRent > 0 && (
                         <RentIncreaseField

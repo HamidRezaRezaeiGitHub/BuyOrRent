@@ -38,7 +38,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const rentIncrease = searchParams.get('rentIncrease') || '2.5'
 
     // Default values - Canadian ranges and defaults
-    const defaultPurchasePrice = 800000
+    const defaultPurchasePrice = 1000000
     const minPurchasePrice = 300000
     const maxPurchasePrice = 2500000
 
@@ -58,7 +58,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const minPropertyTaxPercentage = 0
     const maxPropertyTaxPercentage = 3.0
 
-    const defaultMaintenancePercentage = 1.0
+    const defaultMaintenancePercentage = 2.0
     const minMaintenancePercentage = 0
     const maxMaintenancePercentage = 5
 
@@ -285,7 +285,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             <CardHeader>
                 <CardTitle>What is the purchase price of the property?</CardTitle>
                 <CardDescription>
-                    Enter the total price (CAD).
+                    Total amount agreed upon for the property acquisition (before closing costs).
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -296,7 +296,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     minValue={minPurchasePrice}
                     maxValue={maxPurchasePrice}
                     displayMode="combined"
-                    showDescription={true}
+                    showDescription={false}
                 />
 
                 <div className="flex justify-between gap-3">
@@ -345,7 +345,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             <CardHeader>
                 <CardTitle>Use default values?</CardTitle>
                 <CardDescription>
-                    We'll fill typical Canadian defaults. You can change them anytime.
+                    We'll fill typical Canadian defaults. <span className='italic'>You can change them anytime.</span>
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -383,9 +383,6 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                             <span>{defaultClosingCostsPercentage}%</span>
                         </div>
                     </div>
-                    <p className="text-sm text-muted-foreground italic">
-                        You can modify these later.
-                    </p>
                 </div>
 
                 <div className="flex justify-between items-center gap-3">
@@ -427,7 +424,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             <CardHeader>
                 <CardTitle>What percentage will you put as a down payment?</CardTitle>
                 <CardDescription>
-                    The percentage of the purchase price you'll pay upfront
+                    The percentage of the purchase price you'll pay upfront.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -449,6 +446,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     minValue={minDownPaymentPercentage}
                     maxValue={maxDownPaymentPercentage}
                     displayMode="combined"
+                    showDescription={false}
                 />
 
                 <div className="flex justify-between gap-3">
@@ -512,7 +510,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             <CardHeader>
                 <CardTitle>What is the mortgage interest rate?</CardTitle>
                 <CardDescription>
-                    The annual interest rate for your mortgage loan
+                    The annual interest rate for your mortgage loan.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -535,6 +533,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     maxValue={maxMortgageRate}
                     displayMode="combined"
                     showLabel={true}
+                    showDescription={false}
                 />
 
                 <div className="flex justify-between gap-3">
@@ -684,7 +683,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     minValue={minPropertyTaxPercentage}
                     maxValue={maxPropertyTaxPercentage}
                     displayMode="combined"
-                    showDescription={true}
+                    showDescription={false}
                 />
 
                 <div className="flex justify-between gap-3">
@@ -748,7 +747,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
             <CardHeader>
                 <CardTitle>What is the annual maintenance cost rate?</CardTitle>
                 <CardDescription>
-                    Annual maintenance as a % of home value (rule of thumb ≈ 1%/yr). Condos may differ depending on fees.
+                    Annual maintenance as a % of home value (rule of thumb ≈ 2%/yr). Condos may differ depending on fees.
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -759,7 +758,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     minValue={minMaintenancePercentage}
                     maxValue={maxMaintenancePercentage}
                     displayMode="combined"
-                    showDescription={true}
+                    showDescription={false}
                 />
 
                 <div className="flex justify-between gap-3">
@@ -821,9 +820,9 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
     const assetAppreciationRateStep = (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>How might home prices change each year?</CardTitle>
+                <CardTitle>How might home prices change each year on average?</CardTitle>
                 <CardDescription>
-                    Average annual appreciation (can be negative).
+                    Average annual appreciation (can be negative in some markets or years).
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -834,7 +833,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     minValue={minAssetAppreciationRate}
                     maxValue={maxAssetAppreciationRate}
                     displayMode="combined"
-                    showDescription={true}
+                    showDescription={false}
                 />
 
                 <div className="flex justify-between gap-3">
@@ -920,7 +919,7 @@ export const PurchaseQuestions: FC<PurchaseQuestionsProps> = ({
                     minValue={minClosingCostsPercentage}
                     maxValue={maxClosingCostsPercentage}
                     displayMode="combined"
-                    showDescription={true}
+                    showDescription={false}
                 />
 
                 <div className="flex justify-between gap-3">
