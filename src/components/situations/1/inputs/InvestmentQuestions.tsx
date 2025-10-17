@@ -20,8 +20,7 @@ export interface InvestmentQuestionsProps {
 export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
     previousUrl,
     nextUrl,
-    progressMin = 0,
-    progressMax: _progressMax = 100
+    progressMin = 0
 }) => {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
@@ -102,11 +101,6 @@ export const InvestmentQuestions: FC<InvestmentQuestionsProps> = ({
             const params = new URLSearchParams(searchParams)
             navigate(`${previousUrl}?${params.toString()}`)
         }
-    }
-
-    // Handler to use default value
-    const handleUseDefault = () => {
-        setInvestmentReturn(defaultInvestmentReturn)
     }
 
     // Define the investment return step JSX
