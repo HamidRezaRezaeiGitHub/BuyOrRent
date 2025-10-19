@@ -54,7 +54,7 @@ export const ClosingCostsPercentageField: FC<ClosingCostsPercentageFieldProps> =
             return clampValue(configDefault);
         }
         return clampValue(value);
-    }, [value, defaultValue, clampValue]);
+    }, [value, configDefault, clampValue]);
 
     const displayValue = useMemo(() => {
         if (isFocused) {

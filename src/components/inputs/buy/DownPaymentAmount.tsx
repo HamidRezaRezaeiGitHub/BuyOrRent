@@ -66,7 +66,7 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
         }
 
         return clampValue(value);
-    }, [value, defaultValue, clampValue]);
+    }, [value, configDefault, clampValue]);
 
     // Compute display value based on focus state
     const displayValue = useMemo(() => {

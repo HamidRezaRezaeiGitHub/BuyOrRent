@@ -58,7 +58,7 @@ export const PropertyTaxPercentageField: FC<PropertyTaxPercentageFieldProps> = (
         }
 
         return clampValue(value);
-    }, [value, defaultValue, clampValue]);
+    }, [value, configDefault, clampValue]);
 
     // Compute display value based on focus state
     const displayValue = useMemo(() => {
