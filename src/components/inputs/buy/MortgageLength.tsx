@@ -4,6 +4,7 @@ import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Calendar, Info } from 'lucide-react';
 import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { defaultConfigProvider } from '@/common/ConfigProvider';
 
 export interface MortgageLengthFieldProps {
     id?: string;
@@ -12,9 +13,9 @@ export interface MortgageLengthFieldProps {
     disabled?: boolean;
     className?: string;
     displayMode?: 'slider' | 'input' | 'combined'; // Default: 'combined'
-    defaultValue?: number; // Default: 25 (most common in Canada)
-    minValue?: number; // Default: 1
-    maxValue?: number; // Default: 40
+    defaultValue?: number; // Optional override, uses config default if not provided
+    minValue?: number; // Optional override, uses config min if not provided
+    maxValue?: number; // Optional override, uses config max if not provided
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
 }
@@ -29,12 +30,17 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
     disabled = false,
     className = '',
     displayMode = 'combined',
-    defaultValue = 25,
-    minValue = 1,
-    maxValue = 40,
+    defaultValue,
+    minValue,
+    maxValue,
     onLabelSet,
     showLabel = true
 }) => {
+    // Get config values, allowing props to override
+    const fieldConfig = defaultConfigProvider.getField('purchase', 'mortgageLength');
+    const configDefault = defaultValue ?? fieldConfig?.default ?? 25;
+    const configMin = minValue ?? fieldConfig?.min ?? 1;
+    const configMax = maxValue ?? fieldConfig?.max ?? 40;
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const [inputValue, setInputValue] = useState<string>('');
@@ -43,18 +49,18 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
     const clampValue = useCallback((inputValue: number): number => {
         // Round to nearest step increment
         const rounded = Math.round(inputValue / STEP_INCREMENT) * STEP_INCREMENT;
-        return Math.max(minValue, Math.min(maxValue, rounded));
-    }, [minValue, maxValue]);
+        return Math.max(configMin, Math.min(configMax, rounded));
+    }, [configMin, configMax]);
 
     // Validate and clamp the initial value with comprehensive error handling
     const validatedValue = useMemo(() => {
         // Handle invalid inputs: NaN, Infinity, null, undefined, etc.
         if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
-            return clampValue(defaultValue);
+            return clampValue(configDefault);
         }
 
         return clampValue(value);
-    }, [value, defaultValue, clampValue]);
+    }, [value, configDefault, clampValue]);
 
     // Compute display value based on focus state
     const displayValue = useMemo(() => {
@@ -106,7 +112,7 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
         // Provide immediate feedback for valid numeric values
         try {
             const numericValue = parseFloat(newValue);
-            if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= minValue && numericValue <= maxValue) {
+            if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= configMin && numericValue <= configMax) {
                 const clampedValue = clampValue(numericValue);
                 onChange(clampedValue);
             }
@@ -129,14 +135,14 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
             const numericValue = parseFloat(trimmedValue); // Use parseFloat to handle decimals
 
             if (trimmedValue === '' || isNaN(numericValue) || !isFinite(numericValue)) {
-                finalValue = clampValue(defaultValue);
+                finalValue = clampValue(configDefault);
             } else {
                 // Clamp value between min and max, ensure it's an integer
                 finalValue = clampValue(numericValue);
             }
         } catch (error) {
             console.debug('Input blur parsing error:', error);
-            finalValue = clampValue(defaultValue);
+            finalValue = clampValue(configDefault);
         }
 
         // Only call onChange if the value actually changed
@@ -190,16 +196,16 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
     const sliderComponent = (
         <Slider
             id={displayMode === 'slider' ? id : `${id}-slider`}
-            min={minValue}
-            max={maxValue}
+            min={configMin}
+            max={configMax}
             step={STEP_INCREMENT}
             value={[validatedValue]}
             onValueChange={handleSliderChange}
             disabled={disabled}
             className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
             aria-label={`Mortgage length: ${validatedValue} years`}
-            aria-valuemin={minValue}
-            aria-valuemax={maxValue}
+            aria-valuemin={configMin}
+            aria-valuemax={configMax}
             aria-valuenow={validatedValue}
             aria-valuetext={`${validatedValue} years`}
         />
@@ -212,8 +218,8 @@ export const MortgageLengthField: FC<MortgageLengthFieldProps> = ({
                 id={displayMode === 'input' ? id : `${id}-input`}
                 type="number"
                 inputMode="numeric"
-                min={minValue}
-                max={maxValue}
+                min={configMin}
+                max={configMax}
                 placeholder="Enter years"
                 value={displayValue}
                 onFocus={handleInputFocus}

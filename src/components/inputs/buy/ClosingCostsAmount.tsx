@@ -4,6 +4,7 @@ import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DollarSign, Info } from 'lucide-react';
 import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { defaultConfigProvider } from '@/common/ConfigProvider';
 
 export interface ClosingCostsAmountFieldProps {
     id?: string;
@@ -34,27 +35,33 @@ export const ClosingCostsAmountField: FC<ClosingCostsAmountFieldProps> = ({
     disabled = false,
     className = '',
     displayMode = 'combined',
-    defaultValue = 12000,
-    minValue = 0,
-    maxValue = 100000,
+    defaultValue,
+    minValue,
+    maxValue,
     onLabelSet,
     showLabel = true,
     showDescription = true
 }) => {
+    // Get config values, allowing props to override
+    const fieldConfig = defaultConfigProvider.getField('purchase', 'closingCostsAmount');
+    const configDefault = defaultValue ?? fieldConfig?.default ?? 0;
+    const configMin = minValue ?? fieldConfig?.min ?? 0;
+    const configMax = maxValue ?? fieldConfig?.max ?? 100;
+
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const [inputValue, setInputValue] = useState<string>('');
 
     const clampValue = useCallback((inputValue: number): number => {
-        return Math.max(minValue, Math.min(maxValue, Math.round(inputValue)));
-    }, [minValue, maxValue]);
+        return Math.max(configMin, Math.min(configMax, Math.round(inputValue)));
+    }, [configMin, configMax]);
 
     const validatedValue = useMemo(() => {
         if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
-            return clampValue(defaultValue);
+            return clampValue(configDefault);
         }
         return clampValue(value);
-    }, [value, defaultValue, clampValue]);
+    }, [value, configDefault, clampValue]);
 
     const displayValue = useMemo(() => {
         if (isFocused) {
@@ -92,7 +99,7 @@ export const ClosingCostsAmountField: FC<ClosingCostsAmountFieldProps> = ({
 
         try {
             const numericValue = parseFloat(newValue.replace(/,/g, ''));
-            if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= minValue && numericValue <= maxValue) {
+            if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= configMin && numericValue <= configMax) {
                 const clampedValue = clampValue(numericValue);
                 onChange(clampedValue);
             }
@@ -115,13 +122,13 @@ export const ClosingCostsAmountField: FC<ClosingCostsAmountFieldProps> = ({
             const numericValue = parseFloat(cleanedValue);
 
             if (cleanedValue === '' || isNaN(numericValue) || !isFinite(numericValue)) {
-                finalValue = clampValue(defaultValue);
+                finalValue = clampValue(configDefault);
             } else {
                 finalValue = clampValue(numericValue);
             }
         } catch (error) {
             console.debug('Input blur parsing error:', error);
-            finalValue = clampValue(defaultValue);
+            finalValue = clampValue(configDefault);
         }
 
         setIsFocused(false);
@@ -188,16 +195,16 @@ export const ClosingCostsAmountField: FC<ClosingCostsAmountFieldProps> = ({
     const sliderComponent = (
         <Slider
             id={displayMode === 'slider' ? id : `${id}-slider`}
-            min={minValue}
-            max={maxValue}
+            min={configMin}
+            max={configMax}
             step={500}
             value={[validatedValue]}
             onValueChange={handleSliderChange}
             disabled={disabled}
             className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
             aria-label={`Closing costs amount: $${validatedValue}`}
-            aria-valuemin={minValue}
-            aria-valuemax={maxValue}
+            aria-valuemin={configMin}
+            aria-valuemax={configMax}
             aria-valuenow={validatedValue}
             aria-valuetext={`${validatedValue} dollars`}
         />
@@ -212,8 +219,8 @@ export const ClosingCostsAmountField: FC<ClosingCostsAmountFieldProps> = ({
                 id={displayMode === 'input' ? id : `${id}-input`}
                 type={isFocused ? 'number' : 'text'}
                 inputMode={isFocused ? 'numeric' : 'text'}
-                min={minValue}
-                max={maxValue}
+                min={configMin}
+                max={configMax}
                 step={500}
                 placeholder="Enter amount"
                 value={displayValue}
