@@ -1,5 +1,5 @@
 import { CanadaConfig } from '@/config/config-canada';
-import type { CountryConfig, FieldConfig } from '@/config/config-canada';
+import type { CountryConfig, FieldConfig, RentConfig, PurchaseConfig, InvestmentConfig } from '@/config/config-canada';
 
 /**
  * ConfigProvider class for accessing country-specific configuration values
@@ -35,7 +35,10 @@ export class ConfigProvider {
    * @param section - Section name ('rent', 'purchase', or 'investment')
    * @returns Section configuration object
    */
-  getSection(section: 'rent' | 'purchase' | 'investment'): any {
+  getSection(section: 'rent'): RentConfig;
+  getSection(section: 'purchase'): PurchaseConfig;
+  getSection(section: 'investment'): InvestmentConfig;
+  getSection(section: 'rent' | 'purchase' | 'investment'): RentConfig | PurchaseConfig | InvestmentConfig {
     return this.config[section];
   }
 
@@ -52,7 +55,8 @@ export class ConfigProvider {
       return null;
     }
 
-    const fieldConfig = (sectionConfig as any)[field];
+    // Type-safe access to field config
+    const fieldConfig = sectionConfig[field as keyof typeof sectionConfig] as FieldConfig | undefined;
     if (!fieldConfig) {
       console.warn(`Field "${field}" not found in section "${section}"`);
       return null;
