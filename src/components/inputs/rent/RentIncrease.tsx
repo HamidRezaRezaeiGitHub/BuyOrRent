@@ -4,6 +4,7 @@ import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Info, Percent } from 'lucide-react';
 import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { defaultConfigProvider } from '@/common/ConfigProvider';
 
 export interface RentIncreaseFieldProps {
     id?: string;
@@ -12,9 +13,9 @@ export interface RentIncreaseFieldProps {
     disabled?: boolean;
     className?: string;
     displayMode?: 'slider' | 'input' | 'combined'; // Default: 'combined'
-    defaultValue?: number; // Default: 2.5
-    minValue?: number; // Default: 0
-    maxValue?: number; // Default: 20
+    defaultValue?: number; // Optional override, uses config default if not provided
+    minValue?: number; // Optional override, uses config min if not provided
+    maxValue?: number; // Optional override, uses config max if not provided
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
     showDescription?: boolean; // Default: true
@@ -27,31 +28,36 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
     disabled = false,
     className = '',
     displayMode = 'combined',
-    defaultValue = 2.5,
-    minValue = 0,
-    maxValue = 20,
+    defaultValue,
+    minValue,
+    maxValue,
     onLabelSet,
     showLabel = true,
     showDescription = true
 }) => {
+    // Get config values, allowing props to override
+    const fieldConfig = defaultConfigProvider.getField('rent', 'rentIncreaseRate');
+    const configDefault = defaultValue ?? fieldConfig?.default ?? 2.5;
+    const configMin = minValue ?? fieldConfig?.min ?? 0;
+    const configMax = maxValue ?? fieldConfig?.max ?? 20;
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const [inputValue, setInputValue] = useState<string>('');
 
     // Reusable function to clamp and round percentage values within valid range
     const clampValue = useCallback((inputValue: number): number => {
-        return Math.max(minValue, Math.min(maxValue, Math.round(inputValue * 100) / 100));
-    }, [minValue, maxValue]);
+        return Math.max(configMin, Math.min(configMax, Math.round(inputValue * 100) / 100));
+    }, [configMin, configMax]);
 
     // Validate and clamp the initial value with comprehensive error handling
     const validatedValue = useMemo(() => {
         // Handle invalid inputs: NaN, Infinity, null, undefined, etc.
         if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
-            return clampValue(defaultValue);
+            return clampValue(configDefault);
         }
 
         return clampValue(value);
-    }, [value, defaultValue, clampValue]);
+    }, [value, configDefault, clampValue]);
 
     // Compute display value based on focus state
     const displayValue = useMemo(() => {
@@ -97,7 +103,7 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
         try {
             const numericValue = parseFloat(newValue);
             if (!isNaN(numericValue) && isFinite(numericValue) &&
-                numericValue >= minValue && numericValue <= maxValue) {
+                numericValue >= configMin && numericValue <= configMax) {
                 onChange(numericValue);
             }
         } catch (error) {
@@ -119,14 +125,14 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
             const numericValue = parseFloat(trimmedValue);
 
             if (trimmedValue === '' || isNaN(numericValue) || !isFinite(numericValue)) {
-                finalValue = clampValue(defaultValue);
+                finalValue = clampValue(configDefault);
             } else {
                 // Clamp value between min and max, ensure it's properly rounded
                 finalValue = clampValue(numericValue);
             }
         } catch (error) {
             console.debug('Input blur parsing error:', error);
-            finalValue = defaultValue;
+            finalValue = configDefault;
         }
 
         setIsFocused(false);
@@ -200,16 +206,16 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
     const sliderComponent = (
         <Slider
             id={displayMode === 'slider' ? id : `${id}-slider`}
-            min={minValue}
-            max={maxValue}
+            min={configMin}
+            max={configMax}
             step={0.1} // 0.1% increments for fine granularity
             value={[validatedValue]}
             onValueChange={handleSliderChange}
             disabled={disabled}
             className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
             aria-label={`Rent increase rate: ${validatedValue}%`}
-            aria-valuemin={minValue}
-            aria-valuemax={maxValue}
+            aria-valuemin={configMin}
+            aria-valuemax={configMax}
             aria-valuenow={validatedValue}
             aria-valuetext={`${validatedValue} percent`}
         />
@@ -222,8 +228,8 @@ export const RentIncreaseField: FC<RentIncreaseFieldProps> = ({
                 id={displayMode === 'input' ? id : `${id}-input`}
                 type={isFocused ? 'number' : 'text'}
                 inputMode={isFocused ? 'decimal' : 'text'}
-                min={minValue}
-                max={maxValue}
+                min={configMin}
+                max={configMax}
                 step={0.1}
                 placeholder="Enter percentage"
                 value={displayValue}

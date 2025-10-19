@@ -4,6 +4,7 @@ import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Info, TrendingUp } from 'lucide-react';
 import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { defaultConfigProvider } from '@/common/ConfigProvider';
 
 export interface AssetAppreciationRateFieldProps {
     id?: string;
@@ -12,9 +13,9 @@ export interface AssetAppreciationRateFieldProps {
     disabled?: boolean;
     className?: string;
     displayMode?: 'slider' | 'input' | 'combined'; // Default: 'combined'
-    defaultValue?: number; // Default: 3.0 (typical Canadian property appreciation rate)
-    minValue?: number; // Default: -5
-    maxValue?: number; // Default: 20
+    defaultValue?: number; // Optional override, uses config default if not provided (typical Canadian property appreciation rate)
+    minValue?: number; // Optional override, uses config min if not provided
+    maxValue?: number; // Optional override, uses config max if not provided
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
     showDescription?: boolean; // Default: true
@@ -27,27 +28,33 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
     disabled = false,
     className = '',
     displayMode = 'combined',
-    defaultValue = 3.0,
-    minValue = -5,
-    maxValue = 20,
+    defaultValue,
+    minValue,
+    maxValue,
     onLabelSet,
     showLabel = true,
     showDescription = true
 }) => {
+    // Get config values, allowing props to override
+    const fieldConfig = defaultConfigProvider.getField('purchase', 'assetAppreciationRate');
+    const configDefault = defaultValue ?? fieldConfig?.default ?? 0;
+    const configMin = minValue ?? fieldConfig?.min ?? 0;
+    const configMax = maxValue ?? fieldConfig?.max ?? 100;
+
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const [inputValue, setInputValue] = useState<string>('');
 
     // Reusable function to clamp and round percentage values within valid range
     const clampValue = useCallback((inputValue: number): number => {
-        return Math.max(minValue, Math.min(maxValue, Math.round(inputValue * 100) / 100));
-    }, [minValue, maxValue]);
+        return Math.max(configMin, Math.min(configMax, Math.round(inputValue * 100) / 100));
+    }, [configMin, configMax]);
 
     // Validate and clamp the initial value with comprehensive error handling
     const validatedValue = useMemo(() => {
         // Handle invalid inputs: NaN, Infinity, null, undefined, etc.
         if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
-            return clampValue(defaultValue);
+            return clampValue(configDefault);
         }
 
         return clampValue(value);
@@ -110,7 +117,7 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
         // Provide immediate feedback for valid numeric values
         try {
             const numericValue = parseFloat(newValue);
-            if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= minValue && numericValue <= maxValue) {
+            if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= configMin && numericValue <= configMax) {
                 const clampedValue = clampValue(numericValue);
                 onChange(clampedValue);
             }
@@ -133,14 +140,14 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
             const numericValue = parseFloat(trimmedValue);
 
             if (trimmedValue === '' || isNaN(numericValue) || !isFinite(numericValue)) {
-                finalValue = clampValue(defaultValue);
+                finalValue = clampValue(configDefault);
             } else {
                 // Clamp value between min and max
                 finalValue = clampValue(numericValue);
             }
         } catch (error) {
             console.debug('Input blur parsing error:', error);
-            finalValue = defaultValue;
+            finalValue = configDefault;
         }
 
         setIsFocused(false);
@@ -202,16 +209,16 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
     const sliderComponent = (
         <Slider
             id={displayMode === 'slider' ? id : `${id}-slider`}
-            min={minValue}
-            max={maxValue}
+            min={configMin}
+            max={configMax}
             step={0.1} // 0.1% increments for fine granularity
             value={[validatedValue]}
             onValueChange={handleSliderChange}
             disabled={disabled}
             className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
             aria-label={`Property appreciation rate: ${validatedValue}%`}
-            aria-valuemin={minValue}
-            aria-valuemax={maxValue}
+            aria-valuemin={configMin}
+            aria-valuemax={configMax}
             aria-valuenow={validatedValue}
             aria-valuetext={`${validatedValue} percent`}
         />
@@ -224,8 +231,8 @@ export const AssetAppreciationRateField: FC<AssetAppreciationRateFieldProps> = (
                 id={displayMode === 'input' ? id : `${id}-input`}
                 type={isFocused ? 'number' : 'text'}
                 inputMode={isFocused ? 'decimal' : 'text'}
-                min={minValue}
-                max={maxValue}
+                min={configMin}
+                max={configMax}
                 step={0.1}
                 placeholder="Enter percentage"
                 value={displayValue}

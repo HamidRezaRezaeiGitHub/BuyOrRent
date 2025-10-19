@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Info, Percent } from 'lucide-react';
 import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { InvestmentReturnHelperDrawer } from './InvestmentReturnHelperDrawer';
+import { defaultConfigProvider } from '@/common/ConfigProvider';
 
 export interface InvestmentReturnFieldProps {
     id?: string;
@@ -14,9 +15,9 @@ export interface InvestmentReturnFieldProps {
     disabled?: boolean;
     className?: string;
     displayMode?: 'slider' | 'input' | 'combined'; // Default: 'combined'
-    defaultValue?: number; // Default: 7.5
-    minValue?: number; // Default: -20
-    maxValue?: number; // Default: 100
+    defaultValue?: number; // Optional override, uses config default if not provided
+    minValue?: number; // Optional override, uses config min if not provided
+    maxValue?: number; // Optional override, uses config max if not provided
     showHelper?: boolean; // Default: false
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
@@ -30,14 +31,19 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
     disabled = false,
     className = '',
     displayMode = 'combined',
-    defaultValue = 7.5,
-    minValue = -20,
-    maxValue = 100,
+    defaultValue,
+    minValue,
+    maxValue,
     showHelper = false,
     onLabelSet,
     showLabel = true,
     showDescription = true
 }) => {
+    // Get config values, allowing props to override
+    const fieldConfig = defaultConfigProvider.getField('investment', 'investmentReturn');
+    const configDefault = defaultValue ?? fieldConfig?.default ?? 7.5;
+    const configMin = minValue ?? fieldConfig?.min ?? -20;
+    const configMax = maxValue ?? fieldConfig?.max ?? 100;
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -45,14 +51,14 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
 
     // Reusable function to clamp and round percentage values within valid range
     const clampValue = useCallback((inputValue: number): number => {
-        return Math.max(minValue, Math.min(maxValue, Math.round(inputValue * 100) / 100));
-    }, [minValue, maxValue]);
+        return Math.max(configMin, Math.min(configMax, Math.round(inputValue * 100) / 100));
+    }, [configMin, configMax]);
 
     // Validate and clamp the initial value with comprehensive error handling
     const validatedValue = useMemo(() => {
         // Handle invalid inputs: NaN, Infinity, null, undefined, etc.
         if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
-            return clampValue(defaultValue);
+            return clampValue(configDefault);
         }
 
         return clampValue(value);
@@ -102,7 +108,7 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
         // Provide immediate feedback for valid numeric values
         try {
             const numericValue = parseFloat(newValue);
-            if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= minValue && numericValue <= maxValue) {
+            if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= configMin && numericValue <= configMax) {
                 onChange(numericValue);
             }
         } catch (error) {
@@ -124,14 +130,14 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
             const numericValue = parseFloat(trimmedValue);
 
             if (trimmedValue === '' || isNaN(numericValue) || !isFinite(numericValue)) {
-                finalValue = clampValue(defaultValue);
+                finalValue = clampValue(configDefault);
             } else {
                 // Clamp value between min and max, ensure it's properly rounded
                 finalValue = clampValue(numericValue);
             }
         } catch (error) {
             console.debug('Input blur parsing error:', error);
-            finalValue = defaultValue;
+            finalValue = configDefault;
         }
 
         setIsFocused(false);
@@ -208,8 +214,8 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
                 id={displayMode === 'input' ? id : `${id}-input`}
                 type={isFocused ? 'number' : 'text'}
                 inputMode={isFocused ? 'decimal' : 'text'}
-                min={minValue}
-                max={maxValue}
+                min={configMin}
+                max={configMax}
                 step={0.1}
                 placeholder="Enter percentage"
                 value={displayValue}
@@ -230,16 +236,16 @@ export const InvestmentReturnField: FC<InvestmentReturnFieldProps> = ({
     const sliderComponent = (
         <Slider
             id={displayMode === 'slider' ? id : `${id}-slider`}
-            min={minValue}
-            max={maxValue}
+            min={configMin}
+            max={configMax}
             step={0.1}
             value={[validatedValue]}
             onValueChange={handleSliderChange}
             disabled={disabled}
             className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
             aria-label={`Expected yearly investment return: ${validatedValue}%`}
-            aria-valuemin={minValue}
-            aria-valuemax={maxValue}
+            aria-valuemin={configMin}
+            aria-valuemax={configMax}
             aria-valuenow={validatedValue}
             aria-valuetext={`${validatedValue} percent`}
         />

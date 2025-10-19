@@ -4,6 +4,7 @@ import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DollarSign, Info } from 'lucide-react';
 import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { defaultConfigProvider } from '@/common/ConfigProvider';
 
 export interface DownPaymentAmountFieldProps {
     id?: string;
@@ -12,9 +13,9 @@ export interface DownPaymentAmountFieldProps {
     disabled?: boolean;
     className?: string;
     displayMode?: 'slider' | 'input' | 'combined'; // Default: 'combined'
-    defaultValue?: number; // Default: 120000
-    minValue?: number; // Default: 0
-    maxValue?: number; // Default: 3000000
+    defaultValue?: number; // Optional override, uses config default if not provided
+    minValue?: number; // Optional override, uses config min if not provided
+    maxValue?: number; // Optional override, uses config max if not provided
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
 }
@@ -36,26 +37,32 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
     disabled = false,
     className = '',
     displayMode = 'combined',
-    defaultValue = 120000,
-    minValue = 0,
-    maxValue = 3000000,
+    defaultValue,
+    minValue,
+    maxValue,
     onLabelSet,
     showLabel = true
 }) => {
+    // Get config values, allowing props to override
+    const fieldConfig = defaultConfigProvider.getField('purchase', 'downPaymentAmount');
+    const configDefault = defaultValue ?? fieldConfig?.default ?? 0;
+    const configMin = minValue ?? fieldConfig?.min ?? 0;
+    const configMax = maxValue ?? fieldConfig?.max ?? 100;
+
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const [inputValue, setInputValue] = useState<string>('');
 
     // Reusable function to clamp and round values within valid range
     const clampValue = useCallback((inputValue: number): number => {
-        return Math.max(minValue, Math.min(maxValue, Math.round(inputValue)));
-    }, [minValue, maxValue]);
+        return Math.max(configMin, Math.min(configMax, Math.round(inputValue)));
+    }, [configMin, configMax]);
 
     // Validate and clamp the initial value with comprehensive error handling
     const validatedValue = useMemo(() => {
         // Handle invalid inputs: NaN, Infinity, null, undefined, etc.
         if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
-            return clampValue(defaultValue);
+            return clampValue(configDefault);
         }
 
         return clampValue(value);
@@ -104,7 +111,7 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
         // Provide immediate feedback for valid numeric values
         try {
             const numericValue = parseFloat(newValue.replace(/,/g, ''));
-            if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= minValue && numericValue <= maxValue) {
+            if (!isNaN(numericValue) && isFinite(numericValue) && numericValue >= configMin && numericValue <= configMax) {
                 const clampedValue = clampValue(numericValue);
                 onChange(clampedValue);
             }
@@ -129,14 +136,14 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
             const numericValue = parseFloat(cleanedValue);
 
             if (cleanedValue === '' || isNaN(numericValue) || !isFinite(numericValue)) {
-                finalValue = clampValue(defaultValue);
+                finalValue = clampValue(configDefault);
             } else {
                 // Clamp value between min and max
                 finalValue = clampValue(numericValue);
             }
         } catch (error) {
             console.debug('Input blur parsing error:', error);
-            finalValue = clampValue(defaultValue);
+            finalValue = clampValue(configDefault);
         }
 
         setIsFocused(false);
@@ -210,16 +217,16 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
     const sliderComponent = (
         <Slider
             id={displayMode === 'slider' ? id : `${id}-slider`}
-            min={minValue}
-            max={maxValue}
+            min={configMin}
+            max={configMax}
             step={5000} // $5,000 increments for reasonable granularity
             value={[validatedValue]}
             onValueChange={handleSliderChange}
             disabled={disabled}
             className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
             aria-label={`Down payment amount: $${validatedValue}`}
-            aria-valuemin={minValue}
-            aria-valuemax={maxValue}
+            aria-valuemin={configMin}
+            aria-valuemax={configMax}
             aria-valuenow={validatedValue}
             aria-valuetext={`${validatedValue} dollars`}
         />
@@ -235,8 +242,8 @@ export const DownPaymentAmountField: FC<DownPaymentAmountFieldProps> = ({
                 id={displayMode === 'input' ? id : `${id}-input`}
                 type={isFocused ? 'number' : 'text'}
                 inputMode={isFocused ? 'numeric' : 'text'}
-                min={minValue}
-                max={maxValue}
+                min={configMin}
+                max={configMax}
                 step={5000}
                 placeholder="Enter amount"
                 value={displayValue}

@@ -4,6 +4,7 @@ import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DollarSign, Info } from 'lucide-react';
 import { ChangeEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { defaultConfigProvider } from '@/common/ConfigProvider';
 
 export interface MonthlyRentFieldProps {
     id?: string;
@@ -12,9 +13,9 @@ export interface MonthlyRentFieldProps {
     disabled?: boolean;
     className?: string;
     displayMode?: 'slider' | 'input' | 'combined'; // Default: 'combined'
-    defaultValue?: number; // Default: 2000
-    minValue?: number; // Default: 0
-    maxValue?: number; // Default: 10000
+    defaultValue?: number; // Optional override, uses config default if not provided
+    minValue?: number; // Optional override, uses config min if not provided
+    maxValue?: number; // Optional override, uses config max if not provided
     onLabelSet?: (label: React.ReactElement) => void;
     showLabel?: boolean; // Default: true
     showDescription?: boolean; // Default: true
@@ -37,13 +38,18 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
     disabled = false,
     className = '',
     displayMode = 'combined',
-    defaultValue = 2000,
-    minValue = 0,
-    maxValue = 10000,
+    defaultValue,
+    minValue,
+    maxValue,
     onLabelSet,
     showLabel = true,
     showDescription = true
 }) => {
+    // Get config values, allowing props to override
+    const fieldConfig = defaultConfigProvider.getField('rent', 'monthlyRent');
+    const configDefault = defaultValue ?? fieldConfig?.default ?? 2000;
+    const configMin = minValue ?? fieldConfig?.min ?? 0;
+    const configMax = maxValue ?? fieldConfig?.max ?? 10000;
     const [tooltipOpen, setTooltipOpen] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const [inputValue, setInputValue] = useState<string>('');
@@ -54,18 +60,18 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
         if (inputValue === 0) {
             return 0;
         }
-        return Math.max(minValue, Math.min(maxValue, Math.round(inputValue)));
-    }, [minValue, maxValue]);
+        return Math.max(configMin, Math.min(configMax, Math.round(inputValue)));
+    }, [configMin, configMax]);
 
     // Validate and clamp the initial value with comprehensive error handling
     const validatedValue = useMemo(() => {
         // Handle invalid inputs: NaN, Infinity, null, undefined, etc.
         if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
-            return clampValue(defaultValue);
+            return clampValue(configDefault);
         }
 
         return clampValue(value);
-    }, [value, defaultValue, clampValue]);
+    }, [value, configDefault, clampValue]);
 
     // Compute display value based on focus state
     const displayValue = useMemo(() => {
@@ -111,7 +117,7 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
         try {
             const numericValue = parseFloat(newValue);
             if (!isNaN(numericValue) && isFinite(numericValue) &&
-                numericValue >= minValue && numericValue <= maxValue) {
+                numericValue >= configMin && numericValue <= configMax) {
                 onChange(numericValue);
             }
         } catch (error) {
@@ -133,14 +139,14 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
             const numericValue = parseFloat(trimmedValue);
 
             if (trimmedValue === '' || isNaN(numericValue) || !isFinite(numericValue)) {
-                finalValue = clampValue(defaultValue);
+                finalValue = clampValue(configDefault);
             } else {
                 // Clamp value between min and max, ensure it's properly rounded
                 finalValue = clampValue(numericValue);
             }
         } catch (error) {
             console.debug('Input blur parsing error:', error);
-            finalValue = clampValue(defaultValue);
+            finalValue = clampValue(configDefault);
         }
 
         setIsFocused(false);
@@ -214,16 +220,16 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
     const sliderComponent = (
         <Slider
             id={displayMode === 'slider' ? id : `${id}-slider`}
-            min={minValue}
-            max={maxValue}
+            min={configMin}
+            max={configMax}
             step={50} // $50 increments for reasonable granularity
-            value={[validatedValue === 0 ? minValue : validatedValue]}
+            value={[validatedValue === 0 ? configMin : validatedValue]}
             onValueChange={handleSliderChange}
             disabled={disabled}
             className={`${displayMode === 'combined' ? 'flex-1' : 'w-full'}`}
             aria-label={`Monthly rent: $${validatedValue}`}
-            aria-valuemin={minValue}
-            aria-valuemax={maxValue}
+            aria-valuemin={configMin}
+            aria-valuemax={configMax}
             aria-valuenow={validatedValue}
             aria-valuetext={`${validatedValue} dollars per month`}
         />
@@ -239,8 +245,8 @@ export const MonthlyRentField: FC<MonthlyRentFieldProps> = ({
                 id={displayMode === 'input' ? id : `${id}-input`}
                 type={isFocused ? 'number' : 'text'}
                 inputMode={isFocused ? 'numeric' : 'text'}
-                min={minValue}
-                max={maxValue}
+                min={configMin}
+                max={configMax}
                 step={50}
                 placeholder="Enter amount"
                 value={displayValue}
