@@ -10,8 +10,16 @@ This directory contains components that display calculation results, projections
 
 ```
 src/components/outputs/
-└── rent/
-    └── README.md               # Rent projection outputs (tables & graphs)
+├── rent/
+│   ├── CompactMonthlyRentGraph.tsx
+│   ├── CompactMonthlyRentTable.test.tsx
+│   ├── CompactMonthlyRentTable.tsx
+│   ├── MonthlyRentGraph.test.tsx
+│   ├── MonthlyRentGraph.tsx
+│   ├── MonthlyRentTable.test.tsx
+│   ├── MonthlyRentTable.tsx
+│   └── README.md
+└── README.md
 ```
 
 ## Output Categories

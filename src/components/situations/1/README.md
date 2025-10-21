@@ -11,10 +11,25 @@ Complete implementation of the "Currently Renting, Considering Buying" user jour
 ```
 src/components/situations/1/
 ├── inputs/
-│   └── README.md               # Question pages (rent, purchase, investment)
+│   ├── InvestmentInformation.tsx
+│   ├── InvestmentQuestions.test.tsx
+│   ├── InvestmentQuestions.tsx
+│   ├── PurchaseInformation.tsx
+│   ├── PurchaseQuestions.test.tsx
+│   ├── PurchaseQuestions.tsx
+│   ├── README.md
+│   ├── RentQuestions.test.tsx
+│   ├── RentQuestions.tsx
+│   ├── RentalInformation.tsx
+│   └── index.ts
 ├── outputs/
-│   └── README.md               # Analysis components (rent, buy, comparison)
-└── README.md                   # This file
+│   ├── BuyAnalysis.tsx
+│   ├── ComparisonAnalysis.tsx
+│   ├── README.md
+│   ├── RentAnalysis.tsx
+│   └── index.ts
+├── README.md
+└── index.ts
 ```
 
 ## Overview

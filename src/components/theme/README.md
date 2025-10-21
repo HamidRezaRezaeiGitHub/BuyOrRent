@@ -10,6 +10,7 @@ This directory contains components for managing and displaying theme options, in
 
 ```
 src/components/theme/
+├── README.md
 ├── ThemeShowcase.tsx
 ├── ThemeToggle.tsx
 └── index.ts

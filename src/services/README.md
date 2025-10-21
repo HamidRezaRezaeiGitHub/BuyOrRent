@@ -11,13 +11,23 @@ This directory contains business logic services that perform calculations, data 
 ```
 src/services/
 ├── formatting/
-│   └── README.md                       # Currency and data formatting
+│   ├── FormattingService.test.ts
+│   ├── FormattingService.ts
+│   ├── README.md
+│   └── index.ts
 ├── validation/
-│   └── README.md                       # Field validation and rules
-├── MonthlyRentCalculator.ts
+│   ├── README.md
+│   ├── ValidationService.test.ts
+│   ├── ValidationService.ts
+│   ├── index.ts
+│   ├── types.ts
+│   ├── useSmartFieldValidation.test.ts
+│   └── useSmartFieldValidation.ts
 ├── MonthlyRentCalculator.test.ts
+├── MonthlyRentCalculator.ts
+├── MortgageAmortizationCalculator.test.ts
 ├── MortgageAmortizationCalculator.ts
-└── MortgageAmortizationCalculator.test.ts
+└── README.md
 ```
 
 ## Service Categories

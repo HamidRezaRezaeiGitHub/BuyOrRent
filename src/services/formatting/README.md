@@ -10,8 +10,9 @@ This directory contains the `FormattingService` which provides centralized forma
 
 ```
 src/services/formatting/
-├── FormattingService.ts
 ├── FormattingService.test.ts
+├── FormattingService.ts
+├── README.md
 └── index.ts
 ```
 

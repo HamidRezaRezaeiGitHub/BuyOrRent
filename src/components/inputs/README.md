@@ -11,13 +11,45 @@ This directory contains all user input components for the questionnaire, organiz
 ```
 src/components/inputs/
 ├── buy/
-│   └── README.md               # Purchase-related input fields
+│   ├── AssetAppreciationRate.test.tsx
+│   ├── AssetAppreciationRate.tsx
+│   ├── ClosingCostsAmount.test.tsx
+│   ├── ClosingCostsAmount.tsx
+│   ├── ClosingCostsPercentage.test.tsx
+│   ├── ClosingCostsPercentage.tsx
+│   ├── DownPaymentAmount.test.tsx
+│   ├── DownPaymentAmount.tsx
+│   ├── DownPaymentPercentage.test.tsx
+│   ├── DownPaymentPercentage.tsx
+│   ├── MaintenanceAmount.test.tsx
+│   ├── MaintenanceAmount.tsx
+│   ├── MaintenancePercentage.test.tsx
+│   ├── MaintenancePercentage.tsx
+│   ├── MortgageLength.test.tsx
+│   ├── MortgageLength.tsx
+│   ├── MortgageRate.test.tsx
+│   ├── MortgageRate.tsx
+│   ├── PropertyTaxAmount.test.tsx
+│   ├── PropertyTaxAmount.tsx
+│   ├── PropertyTaxPercentage.test.tsx
+│   ├── PropertyTaxPercentage.tsx
+│   ├── PurchasePrice.test.tsx
+│   ├── PurchasePrice.tsx
+│   └── README.md
 ├── invest/
-│   └── README.md               # Investment-related input fields
+│   ├── InvestmentReturn.test.tsx
+│   ├── InvestmentReturn.tsx
+│   ├── InvestmentReturnHelperDrawer.tsx
+│   └── README.md
 ├── rent/
-│   └── README.md               # Rent-related input fields
-├── PercentageAmountSwitch.tsx  # Toggle component for amount/percentage display
-└── PercentageAmountSwitch.test.tsx
+│   ├── MonthlyRent.test.tsx
+│   ├── MonthlyRent.tsx
+│   ├── README.md
+│   ├── RentIncrease.test.tsx
+│   └── RentIncrease.tsx
+├── PercentageAmountSwitch.test.tsx
+├── PercentageAmountSwitch.tsx
+└── README.md
 ```
 
 ## Input Categories

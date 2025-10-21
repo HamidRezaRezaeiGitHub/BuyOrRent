@@ -11,9 +11,29 @@ This directory contains complete user journey implementations for different scen
 ```
 src/components/situations/
 ├── 1/
-│   └── README.md               # Situation 1: Renting, considering buying
-├── Situation1.tsx              # Situation 1 results container
-└── index.ts                    # Exports
+│   ├── inputs/
+│   │   ├── InvestmentInformation.tsx
+│   │   ├── InvestmentQuestions.test.tsx
+│   │   ├── InvestmentQuestions.tsx
+│   │   ├── PurchaseInformation.tsx
+│   │   ├── PurchaseQuestions.test.tsx
+│   │   ├── PurchaseQuestions.tsx
+│   │   ├── README.md
+│   │   ├── RentQuestions.test.tsx
+│   │   ├── RentQuestions.tsx
+│   │   ├── RentalInformation.tsx
+│   │   └── index.ts
+│   ├── outputs/
+│   │   ├── BuyAnalysis.tsx
+│   │   ├── ComparisonAnalysis.tsx
+│   │   ├── README.md
+│   │   ├── RentAnalysis.tsx
+│   │   └── index.ts
+│   ├── README.md
+│   └── index.ts
+├── README.md
+├── Situation1.tsx
+└── index.ts
 ```
 
 ## Current Situations
