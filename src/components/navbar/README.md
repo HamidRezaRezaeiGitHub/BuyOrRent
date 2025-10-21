@@ -215,17 +215,19 @@ const themeToggleComponents = {
 
 ## 📂 Package Structure
 
-### Current File Structure
+### Files Structure
 ```
 src/components/navbar/
+├── Avatar.tsx                  # User avatar component
 ├── FlexibleNavbar.tsx          # Main flexible navbar component
 ├── FlexibleNavbar.test.tsx     # Comprehensive test suite (15 scenarios)
-├── Logo.tsx                    # Brand logo component
 ├── LoginButton.tsx             # Authentication login button
+├── Logo.tsx                    # Brand logo component
+├── README.md                   # This documentation
 ├── SignUpButton.tsx            # Authentication signup button
-├── Avatar.tsx                  # User avatar component
+├── dependencies.ts             # External dependency interfaces
 ├── index.ts                    # Package exports and legacy compatibility
-└── README.md                   # This documentation
+└── types.ts                    # TypeScript type definitions
 ```
 
 ### Component Dependencies

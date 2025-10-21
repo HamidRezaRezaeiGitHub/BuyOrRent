@@ -2,6 +2,19 @@
 
 A comprehensive, reusable React validation package providing centralized validation services, smart field validation hooks, and type-safe validation for form components. This package offers advanced features like autofill detection, progressive error display, and configurable validation rules.
 
+## Files Structure
+
+```
+src/services/validation/
+├── README.md                           # This comprehensive documentation
+├── ValidationService.ts                # Centralized validation service (singleton)
+├── ValidationService.test.ts           # Service tests (24 test scenarios)
+├── index.ts                            # Package exports
+├── types.ts                            # TypeScript interfaces and types
+├── useSmartFieldValidation.ts          # Smart field validation hook
+└── useSmartFieldValidation.test.ts     # Hook tests (27 test scenarios)
+```
+
 ## Table of Contents
 1. [Overview](#overview)
 2. [Installation & Setup](#installation--setup)
