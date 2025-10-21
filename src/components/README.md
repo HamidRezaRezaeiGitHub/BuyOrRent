@@ -19,7 +19,22 @@ src/components/
 │   └── index.ts
 ├── inputs/
 │   ├── buy/
-│   │   ├── [24 buy-related input files]
+│   │   ├── ClosingCosts.test.tsx
+│   │   ├── ClosingCosts.tsx
+│   │   ├── DownPayment.test.tsx
+│   │   ├── DownPayment.tsx
+│   │   ├── HomeAppreciation.test.tsx
+│   │   ├── HomeAppreciation.tsx
+│   │   ├── HomeInsurance.test.tsx
+│   │   ├── HomeInsurance.tsx
+│   │   ├── HomePrice.test.tsx
+│   │   ├── HomePrice.tsx
+│   │   ├── HOAFees.test.tsx
+│   │   ├── HOAFees.tsx
+│   │   ├── Maintenance.test.tsx
+│   │   ├── Maintenance.tsx
+│   │   ├── MortgageInterest.test.tsx
+│   │   ├── MortgageInterest.tsx
 │   │   └── README.md
 │   ├── invest/
 │   │   ├── InvestmentReturn.test.tsx
