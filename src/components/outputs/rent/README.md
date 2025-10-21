@@ -11,12 +11,13 @@ This directory contains components that display rent calculations, projections, 
 ```
 src/components/outputs/rent/
 ├── CompactMonthlyRentGraph.tsx
-├── CompactMonthlyRentTable.tsx
 ├── CompactMonthlyRentTable.test.tsx
-├── MonthlyRentGraph.tsx
+├── CompactMonthlyRentTable.tsx
 ├── MonthlyRentGraph.test.tsx
+├── MonthlyRentGraph.tsx
+├── MonthlyRentTable.test.tsx
 ├── MonthlyRentTable.tsx
-└── MonthlyRentTable.test.tsx
+└── README.md
 ```
 
 ## Output Components

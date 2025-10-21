@@ -10,9 +10,10 @@ This directory contains input components related to investment returns and strat
 
 ```
 src/components/inputs/invest/
-├── InvestmentReturn.tsx
 ├── InvestmentReturn.test.tsx
-└── InvestmentReturnHelperDrawer.tsx
+├── InvestmentReturn.tsx
+├── InvestmentReturnHelperDrawer.tsx
+└── README.md
 ```
 
 ## Input Components

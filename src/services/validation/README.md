@@ -6,13 +6,13 @@ A comprehensive, reusable React validation package providing centralized validat
 
 ```
 src/services/validation/
-├── README.md                           # This comprehensive documentation
-├── ValidationService.ts                # Centralized validation service (singleton)
-├── ValidationService.test.ts           # Service tests (24 test scenarios)
-├── index.ts                            # Package exports
-├── types.ts                            # TypeScript interfaces and types
-├── useSmartFieldValidation.ts          # Smart field validation hook
-└── useSmartFieldValidation.test.ts     # Hook tests (27 test scenarios)
+├── README.md
+├── ValidationService.test.ts
+├── ValidationService.ts
+├── index.ts
+├── types.ts
+├── useSmartFieldValidation.test.ts
+└── useSmartFieldValidation.ts
 ```
 
 ## Table of Contents

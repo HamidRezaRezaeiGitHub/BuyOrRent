@@ -140,35 +140,220 @@ This will:
 ## 📁 Project Structure
 
 ```
-├── src/                        # Source code
-│   ├── components/            # React components
-│   │   ├── ui/               # shadcn/ui components
-│   │   │   └── button.tsx    # Button component with variants
-│   │   ├── navigation.tsx    # Main navigation bar
-│   │   └── theme-toggle.tsx  # Dark/light mode toggle
-│   ├── hooks/                # Custom React hooks
-│   │   └── use-theme.tsx     # Theme management hook
-│   ├── lib/                  # Utility libraries
-│   │   └── utils.ts          # Common utility functions (cn, etc.)
-│   ├── providers/            # React context providers
-│   │   └── app-provider.tsx  # Main application provider
-│   ├── App.tsx              # Main application component
-│   ├── App.css              # Component-specific styles
-│   ├── main.tsx             # React application entry point
-│   ├── index.css            # Global styles, Tailwind imports & CSS variables
-│   └── assets/              # Static assets
-├── public/                   # Public static files
-├── dist/                     # Production build output
+.
+├── docs/
+│   ├── CONFIG_IMPLEMENTATION.md
+│   ├── GLOBAL_STEP_CURSOR.md
+│   └── README.md
+├── public/
+│   ├── README.md
+│   └── vite.svg
+├── src/
+│   ├── assets/
+│   │   ├── brand/
+│   │   │   ├── README.md
+│   │   │   └── [brand logo files]
+│   │   └── README.md
+│   ├── common/
+│   │   ├── ConfigProvider.test.ts
+│   │   ├── ConfigProvider.ts
+│   │   ├── README.md
+│   │   ├── globalStep.test.ts
+│   │   ├── globalStep.ts
+│   │   ├── progress.test.ts
+│   │   ├── progress.ts
+│   │   └── useConfig.tsx
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── FlexibleInputField.test.tsx
+│   │   │   ├── FlexibleInputField.tsx
+│   │   │   ├── README.md
+│   │   │   ├── Years.test.tsx
+│   │   │   ├── Years.tsx
+│   │   │   └── index.ts
+│   │   ├── inputs/
+│   │   │   ├── buy/
+│   │   │   │   ├── AssetAppreciationRate.test.tsx
+│   │   │   │   ├── AssetAppreciationRate.tsx
+│   │   │   │   ├── ClosingCosts*.tsx
+│   │   │   │   ├── DownPayment*.tsx
+│   │   │   │   ├── Maintenance*.tsx
+│   │   │   │   ├── MortgageLength.tsx
+│   │   │   │   ├── MortgageRate.tsx
+│   │   │   │   ├── PropertyTax*.tsx
+│   │   │   │   ├── PurchasePrice.tsx
+│   │   │   │   └── README.md
+│   │   │   ├── invest/
+│   │   │   │   ├── InvestmentReturn.test.tsx
+│   │   │   │   ├── InvestmentReturn.tsx
+│   │   │   │   ├── InvestmentReturnHelperDrawer.tsx
+│   │   │   │   └── README.md
+│   │   │   ├── rent/
+│   │   │   │   ├── MonthlyRent.test.tsx
+│   │   │   │   ├── MonthlyRent.tsx
+│   │   │   │   ├── README.md
+│   │   │   │   ├── RentIncrease.test.tsx
+│   │   │   │   └── RentIncrease.tsx
+│   │   │   ├── PercentageAmountSwitch.test.tsx
+│   │   │   ├── PercentageAmountSwitch.tsx
+│   │   │   └── README.md
+│   │   ├── navbar/
+│   │   │   ├── Avatar.tsx
+│   │   │   ├── FlexibleNavbar.test.tsx
+│   │   │   ├── FlexibleNavbar.tsx
+│   │   │   ├── LoginButton.tsx
+│   │   │   ├── Logo.tsx
+│   │   │   ├── README.md
+│   │   │   ├── SignUpButton.tsx
+│   │   │   ├── dependencies.ts
+│   │   │   ├── index.ts
+│   │   │   └── types.ts
+│   │   ├── outputs/
+│   │   │   ├── rent/
+│   │   │   │   ├── CompactMonthlyRentGraph.tsx
+│   │   │   │   ├── CompactMonthlyRentTable.test.tsx
+│   │   │   │   ├── CompactMonthlyRentTable.tsx
+│   │   │   │   ├── MonthlyRentGraph.test.tsx
+│   │   │   │   ├── MonthlyRentGraph.tsx
+│   │   │   │   ├── MonthlyRentTable.test.tsx
+│   │   │   │   ├── MonthlyRentTable.tsx
+│   │   │   │   └── README.md
+│   │   │   └── README.md
+│   │   ├── situations/
+│   │   │   ├── 1/
+│   │   │   │   ├── inputs/
+│   │   │   │   │   ├── InvestmentInformation.tsx
+│   │   │   │   │   ├── InvestmentQuestions.test.tsx
+│   │   │   │   │   ├── InvestmentQuestions.tsx
+│   │   │   │   │   ├── PurchaseInformation.tsx
+│   │   │   │   │   ├── PurchaseQuestions.test.tsx
+│   │   │   │   │   ├── PurchaseQuestions.tsx
+│   │   │   │   │   ├── README.md
+│   │   │   │   │   ├── RentQuestions.test.tsx
+│   │   │   │   │   ├── RentQuestions.tsx
+│   │   │   │   │   ├── RentalInformation.tsx
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── outputs/
+│   │   │   │   │   ├── BuyAnalysis.tsx
+│   │   │   │   │   ├── ComparisonAnalysis.tsx
+│   │   │   │   │   ├── README.md
+│   │   │   │   │   ├── RentAnalysis.tsx
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── README.md
+│   │   │   │   └── index.ts
+│   │   │   ├── README.md
+│   │   │   ├── Situation1.tsx
+│   │   │   └── index.ts
+│   │   ├── theme/
+│   │   │   ├── README.md
+│   │   │   ├── ThemeShowcase.tsx
+│   │   │   ├── ThemeToggle.tsx
+│   │   │   └── index.ts
+│   │   ├── ui/
+│   │   │   ├── accordion.tsx
+│   │   │   ├── avatar.tsx
+│   │   │   ├── badge.tsx
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── carousel.tsx
+│   │   │   ├── chart.tsx
+│   │   │   ├── collapsible.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── drawer.tsx
+│   │   │   ├── dropdown-menu.tsx
+│   │   │   ├── field.tsx
+│   │   │   ├── input-group.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── label.tsx
+│   │   │   ├── navigation-menu.tsx
+│   │   │   ├── popover.tsx
+│   │   │   ├── progress.tsx
+│   │   │   ├── radio-group.tsx
+│   │   │   ├── resizable.tsx
+│   │   │   ├── separator.tsx
+│   │   │   ├── sheet.tsx
+│   │   │   ├── slider.tsx
+│   │   │   ├── switch.tsx
+│   │   │   ├── table.tsx
+│   │   │   ├── tabs.tsx
+│   │   │   ├── textarea.tsx
+│   │   │   ├── toggle.tsx
+│   │   │   └── tooltip.tsx
+│   │   └── README.md
+│   ├── config/
+│   │   ├── journey/
+│   │   │   ├── README.md
+│   │   │   └── situation1.manifest.json
+│   │   ├── README.md
+│   │   └── config-canada.ts
+│   ├── contexts/
+│   │   ├── AppProviders.tsx
+│   │   ├── AppRouter.tsx
+│   │   ├── README.md
+│   │   ├── RouterProvider.tsx
+│   │   ├── ThemeContext.README.md
+│   │   ├── ThemeContext.test.tsx
+│   │   ├── ThemeContext.tsx
+│   │   └── index.ts
+│   ├── pages/
+│   │   ├── LandingPage.tsx
+│   │   ├── MainAppPage.tsx
+│   │   ├── QuestionnairePage.tsx
+│   │   ├── README.md
+│   │   └── index.ts
+│   ├── services/
+│   │   ├── formatting/
+│   │   │   ├── FormattingService.test.ts
+│   │   │   ├── FormattingService.ts
+│   │   │   ├── README.md
+│   │   │   └── index.ts
+│   │   ├── validation/
+│   │   │   ├── README.md
+│   │   │   ├── ValidationService.test.ts
+│   │   │   ├── ValidationService.ts
+│   │   │   ├── index.ts
+│   │   │   ├── types.ts
+│   │   │   ├── useSmartFieldValidation.test.ts
+│   │   │   └── useSmartFieldValidation.ts
+│   │   ├── MonthlyRentCalculator.test.ts
+│   │   ├── MonthlyRentCalculator.ts
+│   │   ├── MortgageAmortizationCalculator.test.ts
+│   │   ├── MortgageAmortizationCalculator.ts
+│   │   └── README.md
+│   ├── test/
+│   │   ├── __mocks__/
+│   │   │   ├── README.md
+│   │   │   └── fileMock.js
+│   │   ├── README.md
+│   │   ├── assets.d.ts
+│   │   └── setupTests.ts
+│   ├── utils/
+│   │   ├── README.md
+│   │   └── utils.ts
+│   ├── App.tsx
+│   ├── README.md
+│   ├── index.css
+│   ├── jest-dom.d.ts
+│   ├── main.tsx
+│   ├── setupTests.ts
+│   └── vite-env.d.ts
 ├── .github/
+│   ├── copilot-instructions.md
 │   └── workflows/
-│       └── deploy.yml        # GitHub Actions deployment
-├── components.json           # shadcn/ui configuration
-├── .prettierrc              # Prettier configuration
-├── index.html               # HTML template
-├── vite.config.ts           # Vite configuration with path aliases
-├── tailwind.config.js       # Tailwind CSS configuration with design tokens
-├── tsconfig.json            # TypeScript configuration with path mapping
-└── package.json             # Dependencies and scripts
+│       └── deploy.yml
+├── README.md                   # This file
+├── components.json
+├── eslint.config.js
+├── index.html
+├── jest.config.js
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── tailwind.config.js
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
 ```
 
 ### Key Architecture Decisions

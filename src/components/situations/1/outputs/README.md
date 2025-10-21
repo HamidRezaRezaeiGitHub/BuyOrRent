@@ -12,6 +12,7 @@ This directory contains the output components that display analysis results afte
 src/components/situations/1/outputs/
 ├── BuyAnalysis.tsx
 ├── ComparisonAnalysis.tsx
+├── README.md
 ├── RentAnalysis.tsx
 └── index.ts
 ```

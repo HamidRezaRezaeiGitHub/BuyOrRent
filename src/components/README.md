@@ -11,18 +11,65 @@ This directory contains all React components for the BuyOrRent application, orga
 ```
 src/components/
 ├── common/
-│   └── README.md               # Common reusable field components
+│   ├── FlexibleInputField.test.tsx
+│   ├── FlexibleInputField.tsx
+│   ├── README.md
+│   ├── Years.test.tsx
+│   ├── Years.tsx
+│   └── index.ts
 ├── inputs/
-│   └── README.md               # Input field components (buy, invest, rent)
+│   ├── buy/
+│   │   ├── [24 buy-related input files]
+│   │   └── README.md
+│   ├── invest/
+│   │   ├── InvestmentReturn.test.tsx
+│   │   ├── InvestmentReturn.tsx
+│   │   ├── InvestmentReturnHelperDrawer.tsx
+│   │   └── README.md
+│   ├── rent/
+│   │   ├── MonthlyRent.test.tsx
+│   │   ├── MonthlyRent.tsx
+│   │   ├── README.md
+│   │   ├── RentIncrease.test.tsx
+│   │   └── RentIncrease.tsx
+│   ├── PercentageAmountSwitch.test.tsx
+│   ├── PercentageAmountSwitch.tsx
+│   └── README.md
 ├── navbar/
-│   └── README.md               # Navigation bar components
+│   ├── Avatar.tsx
+│   ├── FlexibleNavbar.test.tsx
+│   ├── FlexibleNavbar.tsx
+│   ├── LoginButton.tsx
+│   ├── Logo.tsx
+│   ├── README.md
+│   ├── SignUpButton.tsx
+│   ├── dependencies.ts
+│   ├── index.ts
+│   └── types.ts
 ├── outputs/
-│   └── README.md               # Output/result display components
+│   ├── rent/
+│   │   ├── [7 rent output files]
+│   │   └── README.md
+│   └── README.md
 ├── situations/
-│   └── README.md               # Situation-specific flows and pages
+│   ├── 1/
+│   │   ├── inputs/
+│   │   │   └── [12 input files + README.md]
+│   │   ├── outputs/
+│   │   │   └── [5 output files + README.md]
+│   │   ├── README.md
+│   │   └── index.ts
+│   ├── README.md
+│   ├── Situation1.tsx
+│   └── index.ts
 ├── theme/
-│   └── README.md               # Theme toggle and showcase components
-└── ui/                         # [EXCLUDED] shadcn/ui base components
+│   ├── README.md
+│   ├── ThemeShowcase.tsx
+│   ├── ThemeToggle.tsx
+│   └── index.ts
+├── ui/
+│   └── [28 shadcn/ui components]
+└── README.md
 ```
 
 ## Component Categories

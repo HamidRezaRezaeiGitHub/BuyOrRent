@@ -10,10 +10,11 @@ This directory contains input components related to renting scenarios, including
 
 ```
 src/components/inputs/rent/
-├── MonthlyRent.tsx
 ├── MonthlyRent.test.tsx
-├── RentIncrease.tsx
-└── RentIncrease.test.tsx
+├── MonthlyRent.tsx
+├── README.md
+├── RentIncrease.test.tsx
+└── RentIncrease.tsx
 ```
 
 ## Input Components

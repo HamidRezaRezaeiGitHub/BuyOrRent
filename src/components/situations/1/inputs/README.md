@@ -11,13 +11,14 @@ This directory contains the question page components that collect user inputs fo
 ```
 src/components/situations/1/inputs/
 ├── InvestmentInformation.tsx
-├── InvestmentQuestions.tsx
 ├── InvestmentQuestions.test.tsx
+├── InvestmentQuestions.tsx
 ├── PurchaseInformation.tsx
-├── PurchaseQuestions.tsx
 ├── PurchaseQuestions.test.tsx
-├── RentQuestions.tsx
+├── PurchaseQuestions.tsx
+├── README.md
 ├── RentQuestions.test.tsx
+├── RentQuestions.tsx
 ├── RentalInformation.tsx
 └── index.ts
 ```

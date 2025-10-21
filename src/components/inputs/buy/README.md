@@ -10,30 +10,31 @@ This directory contains all input components related to purchasing/buying a prop
 
 ```
 src/components/inputs/buy/
-├── AssetAppreciationRate.tsx
 ├── AssetAppreciationRate.test.tsx
-├── ClosingCostsAmount.tsx
+├── AssetAppreciationRate.tsx
 ├── ClosingCostsAmount.test.tsx
-├── ClosingCostsPercentage.tsx
+├── ClosingCostsAmount.tsx
 ├── ClosingCostsPercentage.test.tsx
-├── DownPaymentAmount.tsx
+├── ClosingCostsPercentage.tsx
 ├── DownPaymentAmount.test.tsx
-├── DownPaymentPercentage.tsx
+├── DownPaymentAmount.tsx
 ├── DownPaymentPercentage.test.tsx
-├── MaintenanceAmount.tsx
+├── DownPaymentPercentage.tsx
 ├── MaintenanceAmount.test.tsx
-├── MaintenancePercentage.tsx
+├── MaintenanceAmount.tsx
 ├── MaintenancePercentage.test.tsx
-├── MortgageLength.tsx
+├── MaintenancePercentage.tsx
 ├── MortgageLength.test.tsx
-├── MortgageRate.tsx
+├── MortgageLength.tsx
 ├── MortgageRate.test.tsx
-├── PropertyTaxAmount.tsx
+├── MortgageRate.tsx
 ├── PropertyTaxAmount.test.tsx
-├── PropertyTaxPercentage.tsx
+├── PropertyTaxAmount.tsx
 ├── PropertyTaxPercentage.test.tsx
+├── PropertyTaxPercentage.tsx
+├── PurchasePrice.test.tsx
 ├── PurchasePrice.tsx
-└── PurchasePrice.test.tsx
+└── README.md
 ```
 
 ## Input Components
