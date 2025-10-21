@@ -1,0 +1,51 @@
+Title:
+<short action> — <area/component>
+
+Context:
+<Current behavior/problem (1–2 lines).>
+<Desired behavior in one line.>
+
+Read before acting:
+- Inspect or update these files: (No need to provide full paths)
+  - <File>.tsx
+  - src/pages/<Page>.tsx
+  - src/components/<Component>.tsx
+
+Acceptance Criteria:
+- <AC1: measurable behavior or result>
+- <AC2: responsive design expectation (mobile-first)>
+- <AC3: accessibility/usability goal>
+- `npm run test`, `npm run lint`, and `npm run build` complete without errors.
+- Related README.md files are updated if necessary. 
+- Update Project Structure section of root README.md if new files/folders are added (or removed).
+
+Constraints & Hints:
+- <Constraint 1>
+- <Constraint 2>
+- <Hint 1>
+- <Hint 2>
+
+---
+### 🧩 Example
+
+Title:
+Fix theme toggle visibility — FlexibleNavbar component
+
+Context:
+ThemeToggle button disappears on mobile screens due to responsive classes. The toggle should be visible across all breakpoints for consistent theme switching.
+
+Read before acting:
+- src/components/navbar/FlexibleNavbar.tsx
+- src/components/theme/ThemeToggle.tsx
+
+Acceptance Criteria:
+- ThemeToggle visible when enabled across all breakpoints (mobile-first).
+- No overlap with other navbar elements on small screens.
+- `npm run test`, `npm run lint`, and `npm run build` complete without errors.
+- Component README.md is updated if necessary.
+- Update Project Structure section of root README.md if new files/folders are added (or removed).
+
+Constraints & Hints:
+- Likely hidden by responsive classes (`hidden sm:block`, etc.) in FlexibleNavbar.
+- Keep changes localized—avoid refactoring unrelated components.
+- Follow existing mobile-first Tailwind patterns in the project.

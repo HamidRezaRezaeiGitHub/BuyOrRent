@@ -102,13 +102,13 @@ This will:
 
 ### Available Scripts
 
-| Script | Description | Usage |
-|--------|-------------|-------|
-| `npm run dev` | Start development server | Local development |
-| `npm run build` | Build for production | Creates optimized `dist/` folder |
-| `npm run lint` | Run ESLint code analysis | Code quality checks |
-| `npm run format` | Format code with Prettier | Auto-format and sort Tailwind classes |
-| `npm run preview` | Preview production build | Test built application locally |
+| Script            | Description               | Usage                                 |
+| ----------------- | ------------------------- | ------------------------------------- |
+| `npm run dev`     | Start development server  | Local development                     |
+| `npm run build`   | Build for production      | Creates optimized `dist/` folder      |
+| `npm run lint`    | Run ESLint code analysis  | Code quality checks                   |
+| `npm run format`  | Format code with Prettier | Auto-format and sort Tailwind classes |
+| `npm run preview` | Preview production build  | Test built application locally        |
 
 ### Local Development Workflow
 
@@ -141,10 +141,6 @@ This will:
 
 ```
 .
-├── docs/
-│   ├── CONFIG_IMPLEMENTATION.md
-│   ├── GLOBAL_STEP_CURSOR.md
-│   └── README.md
 ├── public/
 │   ├── README.md
 │   └── vite.svg

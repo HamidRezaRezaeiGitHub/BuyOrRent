@@ -1,0 +1,50 @@
+[TASK] <short, imperative title>
+
+Objective:
+<Describe what should be implemented or fixed, in one sentence.>
+
+Read before acting:
+- Inspect or update these files: (No need to provide full paths)
+  - <File>.tsx
+  - src/pages/<Page>.tsx
+  - src/components/<Component>.tsx
+
+Acceptance Criteria:
+- <AC1: measurable behavior or result>
+- <AC2: responsive design expectation (mobile-first)>
+- <AC3: accessibility or usability goal>
+- `npm run test`, `npm run lint`, and `npm run build` complete without errors.
+- Related README.md files are updated if necessary. 
+- Update Project Structure section of root README.md if new files/folders are added (or removed).
+
+Constraints & Hints:
+- <Constraint 1>
+- <Constraint 2>
+- <Hint 1>
+- <Hint 2>
+
+---
+
+### 🧩 Example
+
+[TASK] Fix theme toggle visibility on mobile screens
+
+Objective:
+Ensure ThemeToggle appears in FlexibleNavbar on all screen sizes for consistent theme switching.
+
+Read before acting:
+- src/components/navbar/FlexibleNavbar.tsx
+- src/components/theme/ThemeToggle.tsx
+
+Acceptance Criteria:
+- ThemeToggle displays on all screen widths (mobile-first approach).
+- Layout remains functional on small devices without overlap.
+- New tests added for ThemeToggle visibility logic.
+- `npm run test`, `npm run lint`, and `npm run build` complete without errors.
+- Related README.md files are updated if necessary. 
+- Update Project Structure section of root README.md if new files/folders are added (or removed).
+
+Constraints & Hints:
+- Check Tailwind responsive utilities (`hidden sm:block` etc.) in FlexibleNavbar.
+- No UI regressions to existing navbar components.
+- Follow mobile-first design principles used throughout the project.
