@@ -10,6 +10,10 @@ This directory contains components that display mortgage amortization calculatio
 
 ```
 src/components/outputs/mortgage/
+├── CompactMortgageAmortizationGraph.test.tsx
+├── CompactMortgageAmortizationGraph.tsx
+├── CompactMortgageAmortizationTable.test.tsx
+├── CompactMortgageAmortizationTable.tsx
 ├── MortgageAmortizationGraph.test.tsx
 ├── MortgageAmortizationGraph.tsx
 ├── MortgageAmortizationTable.test.tsx
@@ -39,7 +43,26 @@ src/components/outputs/mortgage/
 - Cumulative Principal
 - Cumulative Interest
 
-**Use Case**: Detailed analysis view showing complete amortization schedule over the loan term.
+**Use Case**: Detailed analysis view showing complete amortization schedule over the loan term in full-screen dialogs.
+
+### CompactMortgageAmortizationTable
+
+**Purpose**: Condensed version of mortgage amortization table for carousel/summary views.
+
+**Features**:
+- Compressed year groupings when data exceeds maxRows
+- Essential columns only (Year, Payment, Principal, Interest, Balance)
+- Smaller footprint optimized for mobile
+- Configurable maxRows parameter (default: 5)
+
+**Columns**:
+- Year(s) - Shows individual years or ranges (e.g., "1-5")
+- Payment (total for period)
+- Principal (total for period)
+- Interest (total for period)
+- Balance (end of period)
+
+**Use Case**: Summary view in carousel displays, space-constrained mobile layouts.
 
 ### MortgageAmortizationGraph
 
@@ -61,9 +84,39 @@ src/components/outputs/mortgage/
 - Interest paid accumulation
 - Balance reduction over time
 
-**Use Case**: Visual understanding of how mortgage payments are split between principal and interest, and how the balance decreases over time.
+**Use Case**: Visual understanding of how mortgage payments are split between principal and interest, and how the balance decreases over time in full-screen dialogs.
+
+### CompactMortgageAmortizationGraph
+
+**Purpose**: Condensed version of mortgage amortization graph for carousel/summary views.
+
+**Features**:
+- Smaller size (180px-220px height)
+- Three-line chart (principal, interest, balance)
+- Compact axes with smaller fonts (8px)
+- Simplified layout for mobile
+- Interactive tooltips
+
+**Chart Type**: Multi-line chart (using Recharts)
+
+**Use Case**: Dashboard widgets, carousel displays, mobile-optimized views.
 
 ## Component Patterns
+
+### Full vs Compact Variants
+
+**Full Components** (MortgageAmortizationTable, MortgageAmortizationGraph):
+- Detailed data display
+- All years shown individually
+- Larger size optimized for full-screen dialogs
+- Comprehensive information
+
+**Compact Components** (CompactMortgageAmortizationTable, CompactMortgageAmortizationGraph):
+- Summary data only
+- Compressed year groupings when needed
+- Smaller footprint (180-220px height for graphs)
+- Mobile-friendly with smaller fonts
+- Used in carousel layouts
 
 ### Data Visualization
 
@@ -85,7 +138,9 @@ Graph component leverages Recharts:
 
 ## Testing
 
-Comprehensive test coverage:
+Comprehensive test coverage (52 tests total):
+
+**Full Components** (36 tests):
 - Rendering tests (null/empty/valid data states)
 - Data formatting tests (currency, commas, no decimals)
 - Calculation accuracy tests (decreasing balance, increasing cumulatives)
@@ -93,14 +148,23 @@ Comprehensive test coverage:
 - Theme integration tests
 - Edge cases (zero interest, small/large values, short/long amortization)
 
+**Compact Components** (27 tests):
+- Basic rendering and null state handling
+- Data compression algorithm validation
+- Row count limits (maxRows parameter)
+- Year range formatting
+- Currency formatting
+- Graph component rendering with multiple lines
+
 ## Usage
 
 These components are used in:
-- Buy analysis section (Situation 1)
+- Buy analysis section (Situation 1) - carousel displays use compact versions
+- Full-screen dialogs use full-size versions
 - Comparison views
 - Mortgage analysis panels
 
-Example:
+### Full Components Example:
 ```typescript
 import { 
   MortgageAmortizationTable, 
@@ -114,7 +178,24 @@ const mortgageData = calculateMortgageAmortization(
   25       // amortization years
 );
 
+// Used in full-screen dialogs
 <MortgageAmortizationTable data={mortgageData} />
+<MortgageAmortizationGraph data={mortgageData} />
+```
+
+### Compact Components Example:
+```typescript
+import {
+  CompactMortgageAmortizationTable,
+  CompactMortgageAmortizationGraph
+} from '@/components/outputs/mortgage';
+
+// Used in carousel displays (BuyAnalysis component)
+<CompactMortgageAmortizationTable 
+  data={mortgageData}
+  maxRows={5}  // Optional, defaults to 5
+/>
+<CompactMortgageAmortizationGraph data={mortgageData} />
 <MortgageAmortizationGraph data={mortgageData} />
 ```
 

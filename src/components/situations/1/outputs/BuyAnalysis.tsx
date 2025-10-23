@@ -1,5 +1,5 @@
-import { MortgageAmortizationGraph } from '@/components/outputs/mortgage/MortgageAmortizationGraph'
-import { MortgageAmortizationTable } from '@/components/outputs/mortgage/MortgageAmortizationTable'
+import { CompactMortgageAmortizationGraph } from '@/components/outputs/mortgage/CompactMortgageAmortizationGraph'
+import { CompactMortgageAmortizationTable } from '@/components/outputs/mortgage/CompactMortgageAmortizationTable'
 import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import { MortgageAmortizationData } from '@/services/MortgageAmortizationCalculator'
@@ -36,7 +36,10 @@ export const BuyAnalysis: React.FC<BuyAnalysisProps> = ({
                     <CarouselContent>
                         <CarouselItem className="basis-full">
                             <div className="w-full overflow-x-auto">
-                                <MortgageAmortizationTable data={mortgageData} />
+                                <CompactMortgageAmortizationTable
+                                    data={mortgageData}
+                                    maxRows={5}
+                                />
                             </div>
                         </CarouselItem>
                         <CarouselItem className="basis-full">
@@ -72,7 +75,7 @@ export const BuyAnalysis: React.FC<BuyAnalysisProps> = ({
                     <CarouselContent>
                         <CarouselItem className="basis-full">
                             <div className="w-full overflow-x-auto">
-                                <MortgageAmortizationGraph data={mortgageData} />
+                                <CompactMortgageAmortizationGraph data={mortgageData} />
                             </div>
                         </CarouselItem>
                         <CarouselItem className="basis-full">
