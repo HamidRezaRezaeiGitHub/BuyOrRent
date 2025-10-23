@@ -10,6 +10,12 @@ This directory contains components that display calculation results, projections
 
 ```
 src/components/outputs/
+├── mortgage/
+│   ├── MortgageAmortizationGraph.test.tsx
+│   ├── MortgageAmortizationGraph.tsx
+│   ├── MortgageAmortizationTable.test.tsx
+│   ├── MortgageAmortizationTable.tsx
+│   └── README.md
 ├── rent/
 │   ├── CompactMonthlyRentGraph.tsx
 │   ├── CompactMonthlyRentTable.test.tsx
@@ -44,10 +50,26 @@ src/components/outputs/
 - Interactive charts
 - Responsive layouts
 
+### Mortgage Outputs
+
+**Location**: [`mortgage/`](./mortgage/README.md)
+
+**Components** (2):
+- `MortgageAmortizationTable` - Detailed year-by-year mortgage amortization schedule
+- `MortgageAmortizationGraph` - Visual representation of principal, interest, and balance over time
+
+**Purpose**: Display mortgage amortization calculations and payment breakdown
+
+**Features**:
+- Year-by-year payment breakdown (principal, interest, balance)
+- Cumulative totals for principal and interest paid
+- Multi-line interactive charts showing principal, interest, and remaining balance
+- Responsive layouts
+- Theme-aware colors (`--chart-1`, `--chart-2`, `--chart-3`)
+
 ### Future Output Categories
 
 Planned additions:
-- **Buy Outputs**: Mortgage amortization, equity accumulation
 - **Investment Outputs**: Portfolio growth projections
 - **Comparison Outputs**: Side-by-side rent vs buy analysis
 

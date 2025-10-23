@@ -1,9 +1,12 @@
 import { calculateMonthlyRentData, MonthlyRentData } from '@/services/MonthlyRentCalculator'
+import { calculateMortgageAmortization, MortgageAmortizationData } from '@/services/MortgageAmortizationCalculator'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { YearsField } from '../common/Years'
 import { FlexibleNavbar } from '../navbar'
+import { MortgageAmortizationGraph } from '../outputs/mortgage/MortgageAmortizationGraph'
+import { MortgageAmortizationTable } from '../outputs/mortgage/MortgageAmortizationTable'
 import { MonthlyRentGraph } from '../outputs/rent/MonthlyRentGraph'
 import { MonthlyRentTable } from '../outputs/rent/MonthlyRentTable'
 import { CompactThemeToggle } from '../theme'
@@ -126,8 +129,11 @@ export const Situation1: React.FC = () => {
     const [closingCostsMode, setClosingCostsMode] = useState<'percentage' | 'amount'>('percentage')
 
     const [rentData, setRentData] = useState<MonthlyRentData | null>(null)
-    const [tableDialogOpen, setTableDialogOpen] = useState(false)
-    const [graphDialogOpen, setGraphDialogOpen] = useState(false)
+    const [mortgageData, setMortgageData] = useState<MortgageAmortizationData | null>(null)
+    const [rentTableDialogOpen, setRentTableDialogOpen] = useState(false)
+    const [rentGraphDialogOpen, setRentGraphDialogOpen] = useState(false)
+    const [mortgageTableDialogOpen, setMortgageTableDialogOpen] = useState(false)
+    const [mortgageGraphDialogOpen, setMortgageGraphDialogOpen] = useState(false)
 
     // Calculate rent data whenever inputs change
     useEffect(() => {
@@ -139,11 +145,26 @@ export const Situation1: React.FC = () => {
         setRentData(data);
     }, [monthlyRent, analysisYears, rentIncrease]);
 
+    // Calculate mortgage data whenever inputs change
+    useEffect(() => {
+        const data = calculateMortgageAmortization(
+            typeof purchasePrice === 'number' ? purchasePrice : 0,
+            typeof downPaymentPercentage === 'number' ? downPaymentPercentage : 0,
+            typeof mortgageRate === 'number' ? mortgageRate : 0,
+            typeof mortgageLength === 'number' ? mortgageLength : 0
+        );
+        setMortgageData(data);
+    }, [purchasePrice, downPaymentPercentage, mortgageRate, mortgageLength]);
 
 
-    // Monthly Rent Table Component (for dialog display only)
+
+    // Table Components (for dialog display only)
     const monthlyRentTableComponent = (
         <MonthlyRentTable data={rentData} />
+    )
+
+    const mortgageAmortizationTableComponent = (
+        <MortgageAmortizationTable data={mortgageData} />
     )
 
     // Navigation Component
@@ -308,8 +329,8 @@ export const Situation1: React.FC = () => {
                     <AccordionContent>
                         <RentAnalysis
                             rentData={rentData}
-                            setTableDialogOpen={setTableDialogOpen}
-                            setGraphDialogOpen={setGraphDialogOpen}
+                            setTableDialogOpen={setRentTableDialogOpen}
+                            setGraphDialogOpen={setRentGraphDialogOpen}
                         />
                     </AccordionContent>
                 </AccordionItem>
@@ -318,7 +339,11 @@ export const Situation1: React.FC = () => {
                 <AccordionItem value="buy">
                     <AccordionTrigger>If you buy</AccordionTrigger>
                     <AccordionContent>
-                        <BuyAnalysis />
+                        <BuyAnalysis
+                            mortgageData={mortgageData}
+                            setTableDialogOpen={setMortgageTableDialogOpen}
+                            setGraphDialogOpen={setMortgageGraphDialogOpen}
+                        />
                     </AccordionContent>
                 </AccordionItem>
 
@@ -363,9 +388,9 @@ export const Situation1: React.FC = () => {
         </Card>
     )
 
-    // Table Dialog Component
-    const tableDialog = (
-        <Dialog open={tableDialogOpen} onOpenChange={setTableDialogOpen}>
+    // Rent Table Dialog Component
+    const rentTableDialog = (
+        <Dialog open={rentTableDialogOpen} onOpenChange={setRentTableDialogOpen}>
             <DialogContent className="max-w-[95vw] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl max-h-[90vh] overflow-auto">
                 <DialogHeader>
                     <DialogTitle>Monthly Rent Table - Full View</DialogTitle>
@@ -377,12 +402,37 @@ export const Situation1: React.FC = () => {
         </Dialog>
     )
 
-    // Graph Dialog Component
-    const graphDialog = (
-        <Dialog open={graphDialogOpen} onOpenChange={setGraphDialogOpen}>
+    // Rent Graph Dialog Component
+    const rentGraphDialog = (
+        <Dialog open={rentGraphDialogOpen} onOpenChange={setRentGraphDialogOpen}>
             <DialogContent className="max-w-[95vw] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl max-h-[90vh] overflow-auto">
                 <div className="overflow-x-auto">
                     <MonthlyRentGraph data={rentData} />
+                </div>
+            </DialogContent>
+        </Dialog>
+    )
+
+    // Mortgage Table Dialog Component
+    const mortgageTableDialog = (
+        <Dialog open={mortgageTableDialogOpen} onOpenChange={setMortgageTableDialogOpen}>
+            <DialogContent className="max-w-[95vw] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl max-h-[90vh] overflow-auto">
+                <DialogHeader>
+                    <DialogTitle>Mortgage Amortization Table - Full View</DialogTitle>
+                </DialogHeader>
+                <div className="overflow-x-auto">
+                    {mortgageAmortizationTableComponent}
+                </div>
+            </DialogContent>
+        </Dialog>
+    )
+
+    // Mortgage Graph Dialog Component
+    const mortgageGraphDialog = (
+        <Dialog open={mortgageGraphDialogOpen} onOpenChange={setMortgageGraphDialogOpen}>
+            <DialogContent className="max-w-[95vw] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl max-h-[90vh] overflow-auto">
+                <div className="overflow-x-auto">
+                    <MortgageAmortizationGraph data={mortgageData} />
                 </div>
             </DialogContent>
         </Dialog>
@@ -403,8 +453,10 @@ export const Situation1: React.FC = () => {
             </main>
 
             {/* Dialogs */}
-            {tableDialog}
-            {graphDialog}
+            {rentTableDialog}
+            {rentGraphDialog}
+            {mortgageTableDialog}
+            {mortgageGraphDialog}
         </div>
     )
 }
