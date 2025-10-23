@@ -14,7 +14,7 @@ export interface MortgageAmortizationTableProps {
     data: MortgageAmortizationData | null;
 }
 
-// Re-export types for backward compatibility
+// Re-export types for consumer convenience
 export type { MortgageAmortizationData, AmortizationMonth };
 
 export const MortgageAmortizationTable: FC<MortgageAmortizationTableProps> = ({ data }) => {
