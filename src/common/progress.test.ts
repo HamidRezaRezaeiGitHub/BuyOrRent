@@ -1,8 +1,5 @@
 import '@testing-library/jest-dom';
 
-/**
- * @jest-environment jsdom
- */
 
 import { calculateProgress, computeProgressSegments, getSegmentForComponent } from './progress'
 
