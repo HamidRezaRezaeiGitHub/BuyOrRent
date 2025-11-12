@@ -1,12 +1,14 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { PurchaseQuestions } from './PurchaseQuestions';
 
 // Mock the theme context
-const mockSetTheme = jest.fn();
-const mockToggleTheme = jest.fn();
+const mockSetTheme = vi.fn();
+const mockToggleTheme = vi.fn();
 
-jest.mock('@/contexts/ThemeContext', () => ({
+vi.mock('@/contexts/ThemeContext', () => ({
     useTheme: () => ({
         theme: 'light',
         actualTheme: 'light',
@@ -16,16 +18,19 @@ jest.mock('@/contexts/ThemeContext', () => ({
 }));
 
 // Mock the navigate function
-const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useNavigate: () => mockNavigate,
-    useSearchParams: () => [new URLSearchParams('monthlyRent=2400&rentIncrease=2.5'), jest.fn()],
-}));
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', async () => {
+    const actual = await vi.importActual('react-router-dom');
+    return {
+        ...actual,
+        useNavigate: () => mockNavigate,
+        useSearchParams: () => [new URLSearchParams('monthlyRent=2400&rentIncrease=2.5'), vi.fn()],
+    };
+});
 
 describe('PurchaseQuestions - Use default button behavior', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('PurchaseQuestions_gatewaySlide_shouldShowCorrectButtons', async () => {

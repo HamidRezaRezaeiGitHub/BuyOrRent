@@ -1,9 +1,11 @@
+import '@testing-library/jest-dom';
+
 import { render, screen } from '@testing-library/react';
 import { CompactMortgageAmortizationGraph } from './CompactMortgageAmortizationGraph';
 import { MortgageAmortizationData } from '@/services/MortgageAmortizationCalculator';
 
 // Mock recharts to avoid issues with SVG rendering in tests
-jest.mock('recharts', () => ({
+vi.mock('recharts', () => ({
     ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="responsive-container">{children}</div>
     ),
@@ -19,7 +21,7 @@ jest.mock('recharts', () => ({
 
 describe('CompactMortgageAmortizationGraph', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     const createMockData = (numYears: number): MortgageAmortizationData => {

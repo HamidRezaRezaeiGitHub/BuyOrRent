@@ -1,15 +1,17 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import { PropertyTaxPercentageField } from './PropertyTaxPercentage';
 
 describe('PropertyTaxPercentageField', () => {
     test('PropertyTaxPercentageField_shouldRenderWithDefaultProps', () => {
-        const mockOnChange = jest.fn();
+        const mockOnChange = vi.fn();
         render(<PropertyTaxPercentageField value={0.75} onChange={mockOnChange} />);
         expect(screen.getByText('Property Tax')).toBeInTheDocument();
     });
 
     test('PropertyTaxPercentageField_shouldUpdateValue_whenSliderChanged', () => {
-        const mockOnChange = jest.fn();
+        const mockOnChange = vi.fn();
         render(<PropertyTaxPercentageField value={0.75} onChange={mockOnChange} />);
         const slider = screen.getByRole('slider');
         fireEvent.keyDown(slider, { key: 'ArrowRight' });
@@ -18,8 +20,8 @@ describe('PropertyTaxPercentageField', () => {
     // Label Props Tests
     describe('Label Props', () => {
         test('PropertyTaxPercentageField_shouldCallOnLabelSetWithLabelElement', () => {
-            const mockOnChange = jest.fn();
-            const mockOnLabelSet = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnLabelSet = vi.fn();
 
             render(
                 <PropertyTaxPercentageField
@@ -35,7 +37,7 @@ describe('PropertyTaxPercentageField', () => {
         });
 
         test('PropertyTaxPercentageField_shouldHideLabelWhenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PropertyTaxPercentageField
@@ -51,7 +53,7 @@ describe('PropertyTaxPercentageField', () => {
         });
 
         test('PropertyTaxPercentageField_shouldShowLabelByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PropertyTaxPercentageField
@@ -66,7 +68,7 @@ describe('PropertyTaxPercentageField', () => {
         });
 
         test('PropertyTaxPercentageField_shouldShowLabelWhenShowLabelIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PropertyTaxPercentageField

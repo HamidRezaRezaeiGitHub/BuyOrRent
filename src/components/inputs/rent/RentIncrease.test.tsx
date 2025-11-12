@@ -1,16 +1,18 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RentIncreaseField } from './RentIncrease';
 
 describe('RentIncreaseField', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // Basic Rendering Tests
     describe('Basic Rendering', () => {
         test('RentIncreaseField_shouldRenderWithDefaultProps', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -31,7 +33,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldRenderSliderOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -52,7 +54,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldRenderInputOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -68,7 +70,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldRenderCombinedMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -88,7 +90,7 @@ describe('RentIncreaseField', () => {
     // Value Validation Tests
     describe('Value Validation', () => {
         test('RentIncreaseField_shouldClampInitialValueToMinimum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -104,7 +106,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldClampInitialValueToMaximum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -119,7 +121,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldHandleNaNValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -133,7 +135,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldHandleInfinityValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -148,7 +150,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldHandleNegativeInfinityValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -163,7 +165,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldRoundToTwoDecimalPlaces', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -177,7 +179,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldHandleExtremeDecimalPrecision', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -194,7 +196,7 @@ describe('RentIncreaseField', () => {
     // Slider Interaction Tests
     describe('Slider Interactions', () => {
         test('RentIncreaseField_shouldUpdateValueWhenSliderChanges', async () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -212,7 +214,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldClampSliderValueToRange', async () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -231,7 +233,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldHandleSliderInteraction', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -248,7 +250,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldUseCorrectSliderStep', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -270,7 +272,7 @@ describe('RentIncreaseField', () => {
     describe('Input Interactions', () => {
         test('RentIncreaseField_shouldUpdateValueOnValidInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -289,7 +291,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldShowFormattedValueWhenNotFocused', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -305,7 +307,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldShowUnformattedValueWhenFocused', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -324,7 +326,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldClampValueOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -346,7 +348,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleEmptyInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -366,7 +368,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleInvalidInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -387,7 +389,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldNotCallOnChangeForInvalidInputDuringTyping', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -409,7 +411,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleDecimalInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -428,7 +430,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleNegativeInputCorrectly', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -452,7 +454,7 @@ describe('RentIncreaseField', () => {
     // Accessibility Tests
     describe('Accessibility', () => {
         test('RentIncreaseField_shouldHaveProperAriaLabels', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -474,7 +476,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldHaveProperTooltipAccessibility', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -490,7 +492,7 @@ describe('RentIncreaseField', () => {
             expect(tooltipTrigger).toHaveAttribute('aria-expanded', 'false');
         }); test('RentIncreaseField_shouldToggleTooltip', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -508,7 +510,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldHavePercentSuffix', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -529,7 +531,7 @@ describe('RentIncreaseField', () => {
     // Disabled State Tests
     describe('Disabled State', () => {
         test('RentIncreaseField_shouldDisableAllInputsWhenDisabled', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -549,7 +551,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldNotCallOnChangeWhenDisabled', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -571,7 +573,7 @@ describe('RentIncreaseField', () => {
     // Custom Props Tests
     describe('Custom Props', () => {
         test('RentIncreaseField_shouldRespectCustomMinMaxValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -593,7 +595,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldUseCustomId', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -609,7 +611,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldUseCustomClassNames', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -625,7 +627,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldUseCustomDefaultValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -643,7 +645,7 @@ describe('RentIncreaseField', () => {
     describe('Edge Cases', () => {
         test('RentIncreaseField_shouldHandleRapidValueChanges', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -665,7 +667,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleVeryLongDecimalInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -684,7 +686,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldPreventInfiniteLoops', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             // Render with a value that needs clamping
             const { rerender } = render(
@@ -711,7 +713,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldHandleZeroValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -726,7 +728,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldHandleVerySmallDecimals', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -748,7 +750,7 @@ describe('RentIncreaseField', () => {
     // Integration Tests
     describe('Integration Tests', () => {
         test('RentIncreaseField_shouldSyncSliderAndInputValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -770,7 +772,7 @@ describe('RentIncreaseField', () => {
 
         test('RentIncreaseField_shouldMaintainStateConsistency', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -798,7 +800,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldFormatValueDisplayCorrectly', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -816,7 +818,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldHandleValueDisplayForZero', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -837,7 +839,7 @@ describe('RentIncreaseField', () => {
     // Formatting Tests
     describe('Formatting Tests', () => {
         test('RentIncreaseField_shouldDisplayCorrectPercentageFormat', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -854,7 +856,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldFormatSingleDigitPercentage', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -870,7 +872,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldFormatDecimalPercentage', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -888,8 +890,8 @@ describe('RentIncreaseField', () => {
     // Label Props Tests
     describe('Label Props', () => {
         test('RentIncreaseField_shouldCallOnLabelSetWithLabelElement', () => {
-            const mockOnChange = jest.fn();
-            const mockOnLabelSet = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnLabelSet = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -905,7 +907,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldHideLabelWhenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -921,7 +923,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldShowLabelByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField
@@ -936,7 +938,7 @@ describe('RentIncreaseField', () => {
         });
 
         test('RentIncreaseField_shouldShowLabelWhenShowLabelIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <RentIncreaseField

@@ -1,10 +1,12 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import { DollarSign, Calendar } from 'lucide-react';
 import { FlexibleInputField } from './FlexibleInputField';
 
 describe('FlexibleInputField', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // ============================================================================
@@ -12,7 +14,7 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Normal Input - Basic Rendering', () => {
         test('FlexibleInputField_shouldRenderWithDefaultProps', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -31,7 +33,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldRenderWithNumericValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -46,7 +48,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldApplyCustomClassName', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             const { container } = render(
                 <FlexibleInputField
@@ -62,7 +64,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldUseCustomId', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -83,7 +85,7 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Currency Formatting', () => {
         test('FlexibleInputField_shouldFormatCurrencyValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -99,7 +101,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldShowDollarSignForCurrency', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -115,7 +117,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldShowUnformattedValueOnFocus_currency', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -134,7 +136,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldFormatValueOnBlur_currency', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             const { rerender } = render(
                 <FlexibleInputField
@@ -169,7 +171,7 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Percentage Formatting', () => {
         test('FlexibleInputField_shouldFormatPercentageValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -185,7 +187,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldShowPercentSignForPercentage', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -201,7 +203,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldShowUnformattedValueOnFocus_percentage', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -220,7 +222,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldFormatValueOnBlur_percentage', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             const { rerender } = render(
                 <FlexibleInputField
@@ -255,7 +257,7 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Change Handling', () => {
         test('FlexibleInputField_shouldCallOnChange_whenValueChanges', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -272,7 +274,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldCallOnChangeWithEmptyString_whenCleared', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -289,7 +291,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldParseCurrencyInput', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -312,7 +314,7 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Slider Input', () => {
         test('FlexibleInputField_shouldRenderSlider', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -332,7 +334,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldDisplaySliderValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -348,7 +350,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldDisplaySliderValueWithUnit', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -365,7 +367,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldSetSliderMinMaxStep', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -390,7 +392,7 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Validation', () => {
         test('FlexibleInputField_shouldNotShowErrors_whenValidationDisabled', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -409,7 +411,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldShowRequiredAsterisk_whenRequired', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -426,7 +428,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldNotShowRequiredAsterisk_whenOptional', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -443,7 +445,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldDisplayExternalErrors', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -458,8 +460,8 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldCallOnValidationChange', () => {
-            const mockOnChange = jest.fn();
-            const mockOnValidationChange = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnValidationChange = vi.fn();
 
             // Define validation rules outside to avoid recreation
             const validationRulesConfig = [{
@@ -493,7 +495,7 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Icons', () => {
         test('FlexibleInputField_shouldDisplayLabelIcon', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -509,7 +511,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldDisplayCustomIcon', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -527,7 +529,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldUseDefaultCurrencyIcon', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -544,7 +546,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldUseDefaultPercentageIcon', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -561,7 +563,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldNotShowIcon_whenIconIncludedFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -583,7 +585,7 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Tooltip', () => {
         test('FlexibleInputField_shouldDisplayTooltipButton_whenContentProvided', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -599,7 +601,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldNotDisplayTooltipButton_whenContentNotProvided', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -614,7 +616,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldToggleTooltip_whenButtonClicked', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -638,7 +640,7 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Disabled State', () => {
         test('FlexibleInputField_shouldBeDisabled_normalInput', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -654,7 +656,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldBeDisabled_slider', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -676,7 +678,7 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Custom Formatting', () => {
         test('FlexibleInputField_shouldUseCustomFormatFunction', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             const customFormat = (val: number) => `Custom: ${val}`;
 
             render(
@@ -693,7 +695,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldUseCustomParseFunction', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             const customParse = (val: string) => {
                 const num = parseInt(val.replace('Custom: ', ''), 10);
                 return isNaN(num) ? '' : num;
@@ -720,7 +722,7 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Placeholder', () => {
         test('FlexibleInputField_shouldDisplayPlaceholder', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -741,7 +743,7 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Input Mode', () => {
         test('FlexibleInputField_shouldSetInputMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField
@@ -762,8 +764,8 @@ describe('FlexibleInputField', () => {
     // ============================================================================
     describe('Integration Tests', () => {
         test('FlexibleInputField_shouldWorkWithAllFeaturesCombined_currency', () => {
-            const mockOnChange = jest.fn();
-            const mockOnValidationChange = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnValidationChange = vi.fn();
 
             // Define validation rules outside to avoid recreation
             const validationRulesConfig = [{
@@ -821,7 +823,7 @@ describe('FlexibleInputField', () => {
         });
 
         test('FlexibleInputField_shouldWorkWithAllFeaturesCombined_slider', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <FlexibleInputField

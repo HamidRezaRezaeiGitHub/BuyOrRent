@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom';
+
 import { 
     calculateMonthlyRentForYear, 
     calculateMonthlyRentData,
@@ -7,7 +9,7 @@ import {
 
 describe('MonthlyRentCalculator Service', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // Helper function to create mock data for compression tests

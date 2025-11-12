@@ -1,16 +1,18 @@
+import '@testing-library/jest-dom';
+
 import { render, fireEvent, screen } from '@testing-library/react';
 import { ClosingCostsPercentageField } from './ClosingCostsPercentage';
 
 describe('ClosingCostsPercentageField', () => {
     test('ClosingCostsPercentageField_shouldRenderWithDefaultProps', () => {
-        const mockOnChange = jest.fn();
+        const mockOnChange = vi.fn();
         render(<ClosingCostsPercentageField value={1.5} onChange={mockOnChange} />);
 
         expect(screen.getByText('Closing Costs')).toBeInTheDocument();
     });
 
     test('ClosingCostsPercentageField_shouldUpdateValue_whenSliderChanged', () => {
-        const mockOnChange = jest.fn();
+        const mockOnChange = vi.fn();
         render(<ClosingCostsPercentageField value={1.5} onChange={mockOnChange} />);
         
         const slider = screen.getByRole('slider');
@@ -21,8 +23,8 @@ describe('ClosingCostsPercentageField', () => {
     // Label Props Tests
     describe('Label Props', () => {
         test('ClosingCostsPercentageField_shouldCallOnLabelSetWithLabelElement', () => {
-            const mockOnChange = jest.fn();
-            const mockOnLabelSet = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnLabelSet = vi.fn();
 
             render(
                 <ClosingCostsPercentageField
@@ -38,7 +40,7 @@ describe('ClosingCostsPercentageField', () => {
         });
 
         test('ClosingCostsPercentageField_shouldHideLabelWhenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <ClosingCostsPercentageField
@@ -54,7 +56,7 @@ describe('ClosingCostsPercentageField', () => {
         });
 
         test('ClosingCostsPercentageField_shouldShowLabelByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <ClosingCostsPercentageField
@@ -69,7 +71,7 @@ describe('ClosingCostsPercentageField', () => {
         });
 
         test('ClosingCostsPercentageField_shouldShowLabelWhenShowLabelIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <ClosingCostsPercentageField

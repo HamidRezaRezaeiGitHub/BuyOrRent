@@ -1,10 +1,12 @@
+import '@testing-library/jest-dom';
+
 import { render, screen } from '@testing-library/react';
 import { MonthlyRentTable } from './MonthlyRentTable';
 import { MonthlyRentData, calculateMonthlyRentData } from '@/services/MonthlyRentCalculator';
 
 describe('MonthlyRentTable', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // Component rendering tests

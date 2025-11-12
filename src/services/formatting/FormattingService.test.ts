@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom';
+
 import { formatCurrency, formatShortCurrency } from './FormattingService';
 
 describe('FormattingService', () => {

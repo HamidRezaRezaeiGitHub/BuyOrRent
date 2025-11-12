@@ -8,19 +8,7 @@ global.ResizeObserver = class ResizeObserver {
 };
 
 // Add TextEncoder/TextDecoder polyfill for Node.js environment (required by react-router-dom)
-const { TextEncoder, TextDecoder } = require('util');
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
-
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeInTheDocument(): R;
-      toHaveValue(value: string | number | string[]): R;
-      toHaveAttribute(attr: string, value?: string): R;
-      toHaveClass(...classNames: string[]): R;
-      toBeDisabled(): R;
-    }
-  }
-}
+import { TextEncoder, TextDecoder } from 'util';
+global.TextEncoder = TextEncoder as typeof global.TextEncoder;
+global.TextDecoder = TextDecoder as typeof global.TextDecoder;
 

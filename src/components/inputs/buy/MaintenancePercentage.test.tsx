@@ -1,16 +1,18 @@
+import '@testing-library/jest-dom';
+
 import { render, fireEvent, screen } from '@testing-library/react';
 import { MaintenancePercentageField } from './MaintenancePercentage';
 
 describe('MaintenancePercentageField', () => {
     test('MaintenancePercentageField_shouldRenderWithDefaultProps', () => {
-        const mockOnChange = jest.fn();
+        const mockOnChange = vi.fn();
         render(<MaintenancePercentageField value={1.0} onChange={mockOnChange} />);
 
         expect(screen.getByText('Maintenance')).toBeInTheDocument();
     });
 
     test('MaintenancePercentageField_shouldUpdateValue_whenSliderChanged', () => {
-        const mockOnChange = jest.fn();
+        const mockOnChange = vi.fn();
         render(<MaintenancePercentageField value={1.0} onChange={mockOnChange} />);
         
         const slider = screen.getByRole('slider');
@@ -20,8 +22,8 @@ describe('MaintenancePercentageField', () => {
     // Label Props Tests
     describe('Label Props', () => {
         test('MaintenancePercentageField_shouldCallOnLabelSetWithLabelElement', () => {
-            const mockOnChange = jest.fn();
-            const mockOnLabelSet = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnLabelSet = vi.fn();
 
             render(
                 <MaintenancePercentageField
@@ -37,7 +39,7 @@ describe('MaintenancePercentageField', () => {
         });
 
         test('MaintenancePercentageField_shouldHideLabelWhenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MaintenancePercentageField
@@ -53,7 +55,7 @@ describe('MaintenancePercentageField', () => {
         });
 
         test('MaintenancePercentageField_shouldShowLabelByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MaintenancePercentageField
@@ -68,7 +70,7 @@ describe('MaintenancePercentageField', () => {
         });
 
         test('MaintenancePercentageField_shouldShowLabelWhenShowLabelIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MaintenancePercentageField

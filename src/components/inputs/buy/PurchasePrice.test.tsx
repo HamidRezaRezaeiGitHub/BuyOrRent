@@ -1,15 +1,17 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import { PurchasePriceField } from './PurchasePrice';
 
 describe('PurchasePriceField', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // Basic Rendering Tests
     describe('Basic Rendering', () => {
         test('PurchasePriceField_shouldRenderWithDefaultProps', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -30,7 +32,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldRenderSliderOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -49,7 +51,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldRenderInputOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -65,7 +67,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldRenderCombinedMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -85,7 +87,7 @@ describe('PurchasePriceField', () => {
     // Value Validation Tests
     describe('Value Validation', () => {
         test('PurchasePriceField_shouldClampToMinValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -100,7 +102,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldClampToMaxValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -115,7 +117,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldUseDefaultValue_whenValueIsNaN', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -129,7 +131,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldUseDefaultValue_whenValueIsInfinity', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -146,7 +148,7 @@ describe('PurchasePriceField', () => {
     // Slider Interaction Tests
     describe('Slider Interaction', () => {
         test('PurchasePriceField_shouldUpdateValue_whenSliderChanged', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -169,7 +171,7 @@ describe('PurchasePriceField', () => {
     // Input Interaction Tests
     describe('Input Interaction', () => {
         test('PurchasePriceField_shouldUpdateValue_whenInputChanged', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -186,7 +188,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldShowUnformattedValue_whenFocused', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -202,7 +204,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldFormatValue_whenBlurred', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -221,7 +223,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldUseDefaultValue_whenBlurredWithEmptyInput', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -240,7 +242,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldClampValue_whenBlurredWithOutOfRangeValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -260,7 +262,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldHandleFormattedInput_whenBlurred', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -282,7 +284,7 @@ describe('PurchasePriceField', () => {
     // Disabled State Tests
     describe('Disabled State', () => {
         test('PurchasePriceField_shouldDisableSlider_whenDisabledPropIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -298,7 +300,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldDisableInput_whenDisabledPropIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -316,7 +318,7 @@ describe('PurchasePriceField', () => {
     // Custom Props Tests
     describe('Custom Props', () => {
         test('PurchasePriceField_shouldRenderWithCustomId', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -331,7 +333,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldRenderWithCustomClassName', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             const { container } = render(
                 <PurchasePriceField
@@ -345,7 +347,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldRenderWithCustomRange', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -365,7 +367,7 @@ describe('PurchasePriceField', () => {
     // Tooltip Tests
     describe('Tooltip', () => {
         test('PurchasePriceField_shouldHaveProperTooltipAccessibility', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -382,7 +384,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldToggleTooltip', async () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -404,7 +406,7 @@ describe('PurchasePriceField', () => {
     // Edge Cases Tests
     describe('Edge Cases', () => {
         test('PurchasePriceField_shouldHandleVeryLargeNumbers', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -422,7 +424,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldRoundToNearestInteger', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -437,8 +439,8 @@ describe('PurchasePriceField', () => {
     // Label Props Tests
     describe('Label Props', () => {
         test('PurchasePriceField_shouldCallOnLabelSetWithLabelElement', () => {
-            const mockOnChange = jest.fn();
-            const mockOnLabelSet = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnLabelSet = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -454,7 +456,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldHideLabelWhenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -470,7 +472,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldShowLabelByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField
@@ -485,7 +487,7 @@ describe('PurchasePriceField', () => {
         });
 
         test('PurchasePriceField_shouldShowLabelWhenShowLabelIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <PurchasePriceField

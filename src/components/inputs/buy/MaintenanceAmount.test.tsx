@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom';
+
 import { render, fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MaintenanceAmountField } from './MaintenanceAmount';
@@ -6,7 +8,7 @@ describe('MaintenanceAmountField', () => {
     // Rendering Tests
     describe('Rendering', () => {
         test('MaintenanceAmountField_shouldRenderWithDefaultProps', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} />);
 
             expect(screen.getByText('Maintenance')).toBeInTheDocument();
@@ -16,7 +18,7 @@ describe('MaintenanceAmountField', () => {
         });
 
         test('MaintenanceAmountField_shouldRenderSliderOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} displayMode="slider" />);
             expect(screen.getByRole('slider')).toBeInTheDocument();
             expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
@@ -24,14 +26,14 @@ describe('MaintenanceAmountField', () => {
         });
 
         test('MaintenanceAmountField_shouldRenderInputOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} displayMode="input" />);
             expect(screen.queryByRole('slider')).not.toBeInTheDocument();
             expect(screen.getByRole('textbox')).toBeInTheDocument();
         });
 
         test('MaintenanceAmountField_shouldRenderCombinedMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} displayMode="combined" />);
             expect(screen.getByRole('slider')).toBeInTheDocument();
             expect(screen.getByRole('textbox')).toBeInTheDocument();
@@ -41,31 +43,31 @@ describe('MaintenanceAmountField', () => {
     // Value Validation Tests
     describe('Value Validation', () => {
         test('MaintenanceAmountField_shouldClampInitialValueToMinimum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={-1000} onChange={mockOnChange} minValue={0} />);
             expect(mockOnChange).toHaveBeenCalledWith(0);
         });
 
         test('MaintenanceAmountField_shouldClampInitialValueToMaximum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={200000} onChange={mockOnChange} maxValue={100000} />);
             expect(mockOnChange).toHaveBeenCalledWith(100000);
         });
 
         test('MaintenanceAmountField_shouldHandleNaNValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={NaN} onChange={mockOnChange} defaultValue={7000} />);
             expect(mockOnChange).toHaveBeenCalledWith(7000);
         });
 
         test('MaintenanceAmountField_shouldHandleInfinityValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={Infinity} onChange={mockOnChange} defaultValue={7000} />);
             expect(mockOnChange).toHaveBeenCalledWith(7000);
         });
 
         test('MaintenanceAmountField_shouldRoundDecimalValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6500.75} onChange={mockOnChange} />);
             expect(mockOnChange).toHaveBeenCalledWith(6501);
         });
@@ -74,7 +76,7 @@ describe('MaintenanceAmountField', () => {
     // Slider Interaction Tests
     describe('Slider Interactions', () => {
         test('MaintenanceAmountField_shouldUpdateValue_whenSliderChanged', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} />);
             
             const slider = screen.getByRole('slider');
@@ -83,7 +85,7 @@ describe('MaintenanceAmountField', () => {
         });
 
         test('MaintenanceAmountField_shouldHandleSliderInteraction', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} />);
             const slider = screen.getByRole('slider');
             
@@ -93,7 +95,7 @@ describe('MaintenanceAmountField', () => {
         });
 
         test('MaintenanceAmountField_shouldUseCorrectSliderStep', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} />);
             const slider = screen.getByRole('slider');
             // Verify slider has correct value
@@ -105,7 +107,7 @@ describe('MaintenanceAmountField', () => {
     describe('Input Interactions', () => {
         test('MaintenanceAmountField_shouldUpdateValueOnValidInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} />);
             
             const input = screen.getByRole('textbox');
@@ -116,7 +118,7 @@ describe('MaintenanceAmountField', () => {
         });
 
         test('MaintenanceAmountField_shouldShowFormattedValueWhenNotFocused', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} />);
             const input = screen.getByRole('textbox') as HTMLInputElement;
             expect(input.value).toBe('6,000');
@@ -124,7 +126,7 @@ describe('MaintenanceAmountField', () => {
 
         test('MaintenanceAmountField_shouldShowUnformattedValueWhenFocused', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} />);
             
             const input = screen.getByRole('textbox') as HTMLInputElement;
@@ -135,7 +137,7 @@ describe('MaintenanceAmountField', () => {
 
         test('MaintenanceAmountField_shouldClampValueOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} maxValue={50000} />);
             
             const input = screen.getByRole('textbox');
@@ -148,7 +150,7 @@ describe('MaintenanceAmountField', () => {
 
         test('MaintenanceAmountField_shouldHandleEmptyInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} defaultValue={7000} />);
             
             const input = screen.getByRole('textbox');
@@ -160,7 +162,7 @@ describe('MaintenanceAmountField', () => {
 
         test('MaintenanceAmountField_shouldHandleInvalidInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} defaultValue={7000} />);
             
             const input = screen.getByRole('textbox');
@@ -175,7 +177,7 @@ describe('MaintenanceAmountField', () => {
     // Accessibility Tests
     describe('Accessibility', () => {
         test('MaintenanceAmountField_shouldHaveProperAriaLabels', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} id="test-maintenance" />);
             
             const input = screen.getByRole('textbox');
@@ -184,7 +186,7 @@ describe('MaintenanceAmountField', () => {
         });
 
         test('MaintenanceAmountField_shouldHaveProperTooltipAccessibility', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} id="test-maintenance" />);
             
             const tooltipTrigger = screen.getByRole('button', { name: /more information about maintenance amount/i });
@@ -194,7 +196,7 @@ describe('MaintenanceAmountField', () => {
 
         test('MaintenanceAmountField_shouldToggleTooltip', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} />);
             
             const tooltipTrigger = screen.getByRole('button', { name: /more information about maintenance amount/i });
@@ -205,7 +207,7 @@ describe('MaintenanceAmountField', () => {
         });
 
         test('MaintenanceAmountField_shouldHaveDollarPrefix', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} />);
             
             const dollarSign = screen.getByText('$');
@@ -216,7 +218,7 @@ describe('MaintenanceAmountField', () => {
     // Disabled State Tests
     describe('Disabled State', () => {
         test('MaintenanceAmountField_shouldDisableAllInputsWhenDisabled', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} disabled={true} />);
             
             const slider = screen.getByRole('slider');
@@ -228,7 +230,7 @@ describe('MaintenanceAmountField', () => {
 
         test('MaintenanceAmountField_shouldNotCallOnChangeWhenDisabled', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} disabled={true} />);
             
             const input = screen.getByRole('textbox');
@@ -241,7 +243,7 @@ describe('MaintenanceAmountField', () => {
     // Customization Tests
     describe('Customization', () => {
         test('MaintenanceAmountField_shouldRespectCustomMinMaxValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={15000} onChange={mockOnChange} minValue={1000} maxValue={50000} />);
             
             const slider = screen.getByRole('slider');
@@ -254,7 +256,7 @@ describe('MaintenanceAmountField', () => {
         });
 
         test('MaintenanceAmountField_shouldUseCustomId', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} id="custom-maintenance" />);
             
             // Check that elements exist with custom IDs - slider might not have ID attribute set in combined mode
@@ -269,7 +271,7 @@ describe('MaintenanceAmountField', () => {
         });
 
         test('MaintenanceAmountField_shouldUseCustomClassName', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             const { container } = render(
                 <MaintenanceAmountField value={6000} onChange={mockOnChange} className="custom-class" />
             );
@@ -278,7 +280,7 @@ describe('MaintenanceAmountField', () => {
         });
 
         test('MaintenanceAmountField_shouldUseCustomDefaultValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={NaN} onChange={mockOnChange} defaultValue={8000} />);
             
             expect(mockOnChange).toHaveBeenCalledWith(8000);
@@ -289,7 +291,7 @@ describe('MaintenanceAmountField', () => {
     describe('Edge Cases', () => {
         test('MaintenanceAmountField_shouldHandleVeryLargeNumbers', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} maxValue={100000} />);
             
             const input = screen.getByRole('textbox');
@@ -302,7 +304,7 @@ describe('MaintenanceAmountField', () => {
 
         test('MaintenanceAmountField_shouldHandleNegativeValues', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} minValue={0} />);
             
             const input = screen.getByRole('textbox');
@@ -315,7 +317,7 @@ describe('MaintenanceAmountField', () => {
 
         test('MaintenanceAmountField_shouldHandleDecimalInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} />);
             
             const input = screen.getByRole('textbox');
@@ -331,7 +333,7 @@ describe('MaintenanceAmountField', () => {
 
         test('MaintenanceAmountField_shouldHandleZeroValue', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={6000} onChange={mockOnChange} minValue={0} />);
             
             const input = screen.getByRole('textbox');
@@ -342,7 +344,7 @@ describe('MaintenanceAmountField', () => {
         });
 
         test('MaintenanceAmountField_shouldFormatCurrencyDisplay', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MaintenanceAmountField value={12345} onChange={mockOnChange} displayMode="slider" />);
             
             expect(screen.getByText('$12,345')).toBeInTheDocument();

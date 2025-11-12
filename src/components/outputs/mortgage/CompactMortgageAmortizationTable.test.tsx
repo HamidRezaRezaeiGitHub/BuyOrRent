@@ -1,10 +1,12 @@
+import '@testing-library/jest-dom';
+
 import { render, screen } from '@testing-library/react';
 import { CompactMortgageAmortizationTable } from './CompactMortgageAmortizationTable';
 import { MortgageAmortizationData } from '@/services/MortgageAmortizationCalculator';
 
 describe('CompactMortgageAmortizationTable', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // Helper function to create mock data

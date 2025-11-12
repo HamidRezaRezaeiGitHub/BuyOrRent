@@ -1,9 +1,11 @@
+import '@testing-library/jest-dom';
+
 import { render, screen } from '@testing-library/react';
 import { MonthlyRentGraph } from './MonthlyRentGraph';
 import { MonthlyRentData } from '@/services/MonthlyRentCalculator';
 
 // Mock recharts to avoid issues with SVG rendering in tests
-jest.mock('recharts', () => ({
+vi.mock('recharts', () => ({
     ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="responsive-container">{children}</div>
     ),
@@ -19,7 +21,7 @@ jest.mock('recharts', () => ({
 
 describe('MonthlyRentGraph', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     const mockData: MonthlyRentData = {

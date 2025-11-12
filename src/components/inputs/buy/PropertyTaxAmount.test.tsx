@@ -1,15 +1,17 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import { PropertyTaxAmountField } from './PropertyTaxAmount';
 
 describe('PropertyTaxAmountField', () => {
     test('PropertyTaxAmountField_shouldRenderWithDefaultProps', () => {
-        const mockOnChange = jest.fn();
+        const mockOnChange = vi.fn();
         render(<PropertyTaxAmountField value={4500} onChange={mockOnChange} />);
         expect(screen.getByText('Property Tax')).toBeInTheDocument();
     });
 
     test('PropertyTaxAmountField_shouldUpdateValue_whenSliderChanged', () => {
-        const mockOnChange = jest.fn();
+        const mockOnChange = vi.fn();
         render(<PropertyTaxAmountField value={4500} onChange={mockOnChange} />);
         const slider = screen.getByRole('slider');
 

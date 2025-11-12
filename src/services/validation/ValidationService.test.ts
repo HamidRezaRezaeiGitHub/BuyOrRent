@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom';
+
 import { ValidationService } from './ValidationService';
 import { FieldValidationConfig, ValidationRule } from './types';
 

@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MortgageLengthField } from './MortgageLength';
@@ -6,7 +8,7 @@ describe('MortgageLengthField', () => {
     // Rendering Tests
     describe('Rendering', () => {
         test('MortgageLengthField_shouldRenderWithDefaultProps', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} />);
             expect(screen.getByText('Mortgage Length')).toBeInTheDocument();
             expect(screen.getByRole('slider')).toBeInTheDocument();
@@ -14,7 +16,7 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldRenderSliderOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} displayMode="slider" />);
             expect(screen.getByRole('slider')).toBeInTheDocument();
             expect(screen.queryByRole('spinbutton')).not.toBeInTheDocument();
@@ -22,14 +24,14 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldRenderInputOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} displayMode="input" />);
             expect(screen.queryByRole('slider')).not.toBeInTheDocument();
             expect(screen.getByRole('spinbutton')).toBeInTheDocument();
         });
 
         test('MortgageLengthField_shouldRenderCombinedMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} displayMode="combined" />);
             expect(screen.getByRole('slider')).toBeInTheDocument();
             expect(screen.getByRole('spinbutton')).toBeInTheDocument();
@@ -39,31 +41,31 @@ describe('MortgageLengthField', () => {
     // Value Validation Tests
     describe('Value Validation', () => {
         test('MortgageLengthField_shouldClampInitialValueToMinimum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={-5} onChange={mockOnChange} minValue={1} />);
             expect(mockOnChange).toHaveBeenCalledWith(1);
         });
 
         test('MortgageLengthField_shouldClampInitialValueToMaximum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={50} onChange={mockOnChange} maxValue={40} />);
             expect(mockOnChange).toHaveBeenCalledWith(40);
         });
 
         test('MortgageLengthField_shouldHandleNaNValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={NaN} onChange={mockOnChange} defaultValue={30} />);
             expect(mockOnChange).toHaveBeenCalledWith(30);
         });
 
         test('MortgageLengthField_shouldHandleInfinityValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={Infinity} onChange={mockOnChange} defaultValue={30} />);
             expect(mockOnChange).toHaveBeenCalledWith(30);
         });
 
         test('MortgageLengthField_shouldRoundDecimalValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25.7} onChange={mockOnChange} />);
             // 25.7 rounded to nearest 2.5 step increment should be 25.0
             expect(mockOnChange).toHaveBeenCalledWith(25);
@@ -73,7 +75,7 @@ describe('MortgageLengthField', () => {
     // Slider Interaction Tests
     describe('Slider Interactions', () => {
         test('MortgageLengthField_shouldUpdateValue_whenSliderChanged', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} />);
             const slider = screen.getByRole('slider');
             fireEvent.keyDown(slider, { key: 'ArrowRight' });
@@ -81,7 +83,7 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldHandleSliderInteraction', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} />);
             const slider = screen.getByRole('slider');
 
@@ -91,7 +93,7 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldUseCorrectSliderStep', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} />);
             const slider = screen.getByRole('slider');
             // The step is 1 year for mortgage length
@@ -103,7 +105,7 @@ describe('MortgageLengthField', () => {
     describe('Input Interactions', () => {
         test('MortgageLengthField_shouldUpdateValueOnValidInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} />);
 
             const input = screen.getByRole('spinbutton');
@@ -114,7 +116,7 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldShowFormattedValueWhenNotFocused', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} />);
             const input = screen.getByRole('spinbutton') as HTMLInputElement;
             expect(input.value).toBe('25');
@@ -122,7 +124,7 @@ describe('MortgageLengthField', () => {
 
         test('MortgageLengthField_shouldShowUnformattedValueWhenFocused', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} />);
 
             const input = screen.getByRole('spinbutton') as HTMLInputElement;
@@ -133,7 +135,7 @@ describe('MortgageLengthField', () => {
 
         test('MortgageLengthField_shouldClampValueOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} maxValue={35} />);
 
             const input = screen.getByRole('spinbutton');
@@ -146,7 +148,7 @@ describe('MortgageLengthField', () => {
 
         test('MortgageLengthField_shouldHandleEmptyInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} defaultValue={30} />);
 
             const input = screen.getByRole('spinbutton');
@@ -158,7 +160,7 @@ describe('MortgageLengthField', () => {
 
         test('MortgageLengthField_shouldHandleInvalidInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} defaultValue={30} />);
 
             const input = screen.getByRole('spinbutton');
@@ -173,7 +175,7 @@ describe('MortgageLengthField', () => {
     // Accessibility Tests
     describe('Accessibility', () => {
         test('MortgageLengthField_shouldHaveProperAriaLabels', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} id="test-length" />);
 
             const input = screen.getByRole('spinbutton');
@@ -183,7 +185,7 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldHaveProperTooltipAccessibility', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} id="test-length" />);
 
             const tooltipTrigger = screen.getByRole('button', { name: /more information about mortgage length/i });
@@ -193,7 +195,7 @@ describe('MortgageLengthField', () => {
 
         test('MortgageLengthField_shouldToggleTooltip', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} />);
 
             const tooltipTrigger = screen.getByRole('button', { name: /more information about mortgage length/i });
@@ -204,7 +206,7 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldHaveYearsSuffix', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} id="test-length" />);
 
             const suffix = screen.getByText('yrs');
@@ -216,7 +218,7 @@ describe('MortgageLengthField', () => {
     // Disabled State Tests
     describe('Disabled State', () => {
         test('MortgageLengthField_shouldDisableAllInputsWhenDisabled', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} disabled={true} />);
 
             const slider = screen.getByRole('slider');
@@ -228,7 +230,7 @@ describe('MortgageLengthField', () => {
 
         test('MortgageLengthField_shouldNotCallOnChangeWhenDisabled', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} disabled={true} />);
 
             const input = screen.getByRole('spinbutton');
@@ -241,7 +243,7 @@ describe('MortgageLengthField', () => {
     // Customization Tests
     describe('Customization', () => {
         test('MortgageLengthField_shouldRespectCustomMinMaxValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={20} onChange={mockOnChange} minValue={5} maxValue={35} />);
 
             const slider = screen.getByRole('slider');
@@ -254,7 +256,7 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldUseCustomId', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} id="custom-length" />);
 
             const label = screen.getByText('Mortgage Length');
@@ -262,7 +264,7 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldUseCustomClassName', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             const { container } = render(
                 <MortgageLengthField value={25} onChange={mockOnChange} className="custom-class" />
             );
@@ -271,7 +273,7 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldUseCustomDefaultValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={NaN} onChange={mockOnChange} defaultValue={20} />);
 
             expect(mockOnChange).toHaveBeenCalledWith(20);
@@ -282,7 +284,7 @@ describe('MortgageLengthField', () => {
     describe('Edge Cases', () => {
         test('MortgageLengthField_shouldHandleVeryLargeNumbers', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} maxValue={40} />);
 
             const input = screen.getByRole('spinbutton');
@@ -295,7 +297,7 @@ describe('MortgageLengthField', () => {
 
         test('MortgageLengthField_shouldHandleNegativeValues', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} minValue={1} />);
 
             const input = screen.getByRole('spinbutton');
@@ -308,7 +310,7 @@ describe('MortgageLengthField', () => {
 
         test('MortgageLengthField_shouldHandleDecimalInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} />);
 
             const input = screen.getByRole('spinbutton');
@@ -325,7 +327,7 @@ describe('MortgageLengthField', () => {
 
         test('MortgageLengthField_shouldHandleZeroValue', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageLengthField value={25} onChange={mockOnChange} minValue={1} />);
 
             const input = screen.getByRole('spinbutton');
@@ -339,8 +341,8 @@ describe('MortgageLengthField', () => {
     // Label Props Tests
     describe('Label Props', () => {
         test('MortgageLengthField_shouldCallOnLabelSetWithLabelElement', () => {
-            const mockOnChange = jest.fn();
-            const mockOnLabelSet = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnLabelSet = vi.fn();
 
             render(
                 <MortgageLengthField
@@ -356,7 +358,7 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldHideLabelWhenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MortgageLengthField
@@ -372,7 +374,7 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldShowLabelByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MortgageLengthField
@@ -387,7 +389,7 @@ describe('MortgageLengthField', () => {
         });
 
         test('MortgageLengthField_shouldShowLabelWhenShowLabelIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MortgageLengthField

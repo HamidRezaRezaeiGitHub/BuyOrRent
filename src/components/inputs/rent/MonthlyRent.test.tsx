@@ -1,16 +1,18 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MonthlyRentField } from './MonthlyRent';
 
 describe('MonthlyRentField', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // Basic Rendering Tests
     describe('Basic Rendering', () => {
         test('MonthlyRentField_shouldRenderWithDefaultProps', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -31,7 +33,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldRenderSliderOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -52,7 +54,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldRenderInputOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -68,7 +70,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldRenderCombinedMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -88,7 +90,7 @@ describe('MonthlyRentField', () => {
     // Value Validation Tests
     describe('Value Validation', () => {
         test('MonthlyRentField_shouldClampInitialValueToMinimum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -104,7 +106,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldClampInitialValueToMaximum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -119,7 +121,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldHandleNaNValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -133,7 +135,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldHandleInfinityValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -148,7 +150,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldHandleNegativeInfinityValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -163,7 +165,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldRoundDecimalValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -179,7 +181,7 @@ describe('MonthlyRentField', () => {
     // Slider Interaction Tests
     describe('Slider Interactions', () => {
         test('MonthlyRentField_shouldUpdateValueWhenSliderChanges', async () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -197,7 +199,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldClampSliderValueToRange', async () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -216,7 +218,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldHandleSliderInteraction', async () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -234,7 +236,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldUseCorrectSliderStep', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -256,7 +258,7 @@ describe('MonthlyRentField', () => {
     describe('Input Interactions', () => {
         test('MonthlyRentField_shouldUpdateValueOnValidInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -278,7 +280,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldShowFormattedValueWhenNotFocused', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -295,7 +297,7 @@ describe('MonthlyRentField', () => {
 
         test('MonthlyRentField_shouldShowUnformattedValueWhenFocused', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -314,7 +316,7 @@ describe('MonthlyRentField', () => {
 
         test('MonthlyRentField_shouldClampValueOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -336,7 +338,7 @@ describe('MonthlyRentField', () => {
 
         test('MonthlyRentField_shouldHandleEmptyInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -356,7 +358,7 @@ describe('MonthlyRentField', () => {
 
         test('MonthlyRentField_shouldHandleInvalidInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -377,7 +379,7 @@ describe('MonthlyRentField', () => {
 
         test('MonthlyRentField_shouldNotCallOnChangeForInvalidInputDuringTyping', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -400,7 +402,7 @@ describe('MonthlyRentField', () => {
 
         test('MonthlyRentField_shouldHandleDecimalInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -422,7 +424,7 @@ describe('MonthlyRentField', () => {
 
         test('MonthlyRentField_shouldHandleNegativeInputCorrectly', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -446,7 +448,7 @@ describe('MonthlyRentField', () => {
     // Accessibility Tests
     describe('Accessibility', () => {
         test('MonthlyRentField_shouldHaveProperAriaLabels', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -465,7 +467,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldHaveProperTooltipAccessibility', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -483,7 +485,7 @@ describe('MonthlyRentField', () => {
 
         test('MonthlyRentField_shouldToggleTooltip', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -503,7 +505,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldHaveDollarSignPrefix', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -518,7 +520,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldHaveMonthSuffix', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -536,7 +538,7 @@ describe('MonthlyRentField', () => {
     // Disabled State Tests
     describe('Disabled State', () => {
         test('MonthlyRentField_shouldDisableAllInputsWhenDisabled', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -555,7 +557,7 @@ describe('MonthlyRentField', () => {
 
         test('MonthlyRentField_shouldNotCallOnChangeWhenDisabled', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -580,7 +582,7 @@ describe('MonthlyRentField', () => {
     // Custom Props Tests
     describe('Custom Props', () => {
         test('MonthlyRentField_shouldRespectCustomMinMaxValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -598,7 +600,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldUseCustomId', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -617,7 +619,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldUseCustomClassNames', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -632,7 +634,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldUseCustomDefaultValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -650,7 +652,7 @@ describe('MonthlyRentField', () => {
     describe('Edge Cases', () => {
         test('MonthlyRentField_shouldHandleRapidValueChanges', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -675,7 +677,7 @@ describe('MonthlyRentField', () => {
 
         test('MonthlyRentField_shouldHandleVeryLongDecimalInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -694,7 +696,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldPreventInfiniteLoops', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             // This should not cause infinite re-renders
             render(
@@ -709,7 +711,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldHandleZeroValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -724,7 +726,7 @@ describe('MonthlyRentField', () => {
 
         test('MonthlyRentField_shouldHandleVerySmallDecimals', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -745,7 +747,7 @@ describe('MonthlyRentField', () => {
     // Integration Tests
     describe('Integration Tests', () => {
         test('MonthlyRentField_shouldSyncSliderAndInputValues', async () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -764,7 +766,7 @@ describe('MonthlyRentField', () => {
 
         test('MonthlyRentField_shouldMaintainStateConsistency', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -792,7 +794,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldFormatValueDisplayCorrectly', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -810,7 +812,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldHandleValueDisplayForZero', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -831,7 +833,7 @@ describe('MonthlyRentField', () => {
     // Currency Formatting Tests
     describe('Currency Formatting Tests', () => {
         test('MonthlyRentField_shouldDisplayCorrectCurrencyFormat', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -848,7 +850,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldFormatLargeCurrencyAmount', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -864,7 +866,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldFormatSmallCurrencyAmount', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -883,8 +885,8 @@ describe('MonthlyRentField', () => {
     // Label Props Tests
     describe('Label Props', () => {
         test('MonthlyRentField_shouldCallOnLabelSetWithLabelElement', () => {
-            const mockOnChange = jest.fn();
-            const mockOnLabelSet = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnLabelSet = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -900,7 +902,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldHideLabelWhenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -916,7 +918,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldShowLabelByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
@@ -931,7 +933,7 @@ describe('MonthlyRentField', () => {
         });
 
         test('MonthlyRentField_shouldShowLabelWhenShowLabelIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MonthlyRentField
