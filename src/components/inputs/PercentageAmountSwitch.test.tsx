@@ -1,18 +1,20 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useEffect, useMemo } from 'react';
 import { PercentageAmountSwitch } from './PercentageAmountSwitch';
 
 describe('PercentageAmountSwitch', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // Basic Rendering Tests
     describe('Basic Rendering', () => {
         test('PercentageAmountSwitch_shouldRenderWithDefaultProps', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -39,9 +41,9 @@ describe('PercentageAmountSwitch', () => {
         });
 
         test('PercentageAmountSwitch_shouldRenderPercentageMode', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -66,9 +68,9 @@ describe('PercentageAmountSwitch', () => {
         });
 
         test('PercentageAmountSwitch_shouldRenderAmountMode', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -96,9 +98,9 @@ describe('PercentageAmountSwitch', () => {
     // Mode Switching Tests
     describe('Mode Switching', () => {
         test('PercentageAmountSwitch_shouldSwitchToAmountMode_whenAmountRadioSelected', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -125,9 +127,9 @@ describe('PercentageAmountSwitch', () => {
         });
 
         test('PercentageAmountSwitch_shouldSwitchToPercentageMode_whenPercentageRadioSelected', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -157,9 +159,9 @@ describe('PercentageAmountSwitch', () => {
     // Value Calculation Tests
     describe('Value Calculation', () => {
         test('PercentageAmountSwitch_shouldCalculateAmount_whenSwitchingToAmountMode', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -187,9 +189,9 @@ describe('PercentageAmountSwitch', () => {
         });
 
         test('PercentageAmountSwitch_shouldCalculatePercentage_whenSwitchingToPercentageMode', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -217,10 +219,10 @@ describe('PercentageAmountSwitch', () => {
         });
 
         test('PercentageAmountSwitch_shouldHandleTotalAmountAsCallback', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
-            const mockGetTotalAmount = jest.fn(() => 300000);
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
+            const mockGetTotalAmount = vi.fn(() => 300000);
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -249,9 +251,9 @@ describe('PercentageAmountSwitch', () => {
         });
 
         test('PercentageAmountSwitch_shouldNotCalculate_whenTotalAmountIsZero', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -279,9 +281,9 @@ describe('PercentageAmountSwitch', () => {
         });
 
         test('PercentageAmountSwitch_shouldNotCalculate_whenTotalAmountIsUndefined', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -311,9 +313,9 @@ describe('PercentageAmountSwitch', () => {
     // Disabled State Tests
     describe('Disabled State', () => {
         test('PercentageAmountSwitch_shouldNotSwitch_whenDisabled', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -344,9 +346,9 @@ describe('PercentageAmountSwitch', () => {
     // Props Update Tests
     describe('Props Update', () => {
         test('PercentageAmountSwitch_shouldUpdateMode_whenModePropChanges', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -390,9 +392,9 @@ describe('PercentageAmountSwitch', () => {
     // Custom Props Tests
     describe('Custom Props', () => {
         test('PercentageAmountSwitch_shouldRenderWithCustomId', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -418,9 +420,9 @@ describe('PercentageAmountSwitch', () => {
         });
 
         test('PercentageAmountSwitch_shouldRenderWithCustomClassName', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             const percentageComponent = <div>Percentage Component</div>;
             const amountComponent = <div>Amount Component</div>;
@@ -448,9 +450,9 @@ describe('PercentageAmountSwitch', () => {
     // Label Integration Tests
     describe('Label Integration', () => {
         test('PercentageAmountSwitch_shouldCaptureAndDisplayLabelFromPercentageComponent', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             // Create components with onLabelSet support
             const PercentageComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
@@ -492,9 +494,9 @@ describe('PercentageAmountSwitch', () => {
         });
 
         test('PercentageAmountSwitch_shouldSwitchLabelsWhenModeChanges', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
 
             // Create components with onLabelSet support
             const PercentageComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {
@@ -555,11 +557,11 @@ describe('PercentageAmountSwitch', () => {
         });
 
         test('PercentageAmountSwitch_shouldPassShowLabelFalseToChildComponents', () => {
-            const mockOnModeChange = jest.fn();
-            const mockOnPercentageChange = jest.fn();
-            const mockOnAmountChange = jest.fn();
-            const percentageLabelSetCalled = jest.fn();
-            const amountLabelSetCalled = jest.fn();
+            const mockOnModeChange = vi.fn();
+            const mockOnPercentageChange = vi.fn();
+            const mockOnAmountChange = vi.fn();
+            const percentageLabelSetCalled = vi.fn();
+            const amountLabelSetCalled = vi.fn();
 
             // Create components that track if showLabel prop is false
             const PercentageComp = ({ onLabelSet, showLabel }: { onLabelSet?: (label: React.ReactElement) => void, showLabel?: boolean }) => {

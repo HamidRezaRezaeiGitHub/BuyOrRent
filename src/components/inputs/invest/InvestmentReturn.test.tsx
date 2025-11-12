@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom';
+
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -5,13 +7,13 @@ import { InvestmentReturnField } from './InvestmentReturn';
 
 describe('InvestmentReturnField', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // Basic Rendering Tests
     describe('Basic Rendering', () => {
         test('InvestmentReturnField_shouldRenderWithDefaultProps', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -32,7 +34,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldRenderSliderOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -53,7 +55,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldRenderInputOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -69,7 +71,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldRenderCombinedMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -86,7 +88,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldRenderWithHelperWhenEnabled', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -101,7 +103,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldNotRenderHelperWhenDisabled', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -119,7 +121,7 @@ describe('InvestmentReturnField', () => {
     // Value Validation Tests
     describe('Value Validation', () => {
         test('InvestmentReturnField_shouldClampInitialValueToMinimum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -135,7 +137,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldClampInitialValueToMaximum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -150,7 +152,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHandleNaNValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -164,7 +166,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHandleInfinityValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -179,7 +181,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHandleNegativeInfinityValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -194,7 +196,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldRoundToTwoDecimalPlaces', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -208,7 +210,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHandleExtremeDecimalPrecision', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -222,7 +224,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHandleNegativeValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -241,7 +243,7 @@ describe('InvestmentReturnField', () => {
     // Slider Interaction Tests
     describe('Slider Interactions', () => {
         test('InvestmentReturnField_shouldUpdateValueWhenSliderChanges', async () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -259,7 +261,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldClampSliderValueToRange', async () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -278,7 +280,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHandleSliderInteraction', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -295,7 +297,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldUseCorrectSliderStep', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -313,7 +315,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHandleNegativeSliderValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -338,7 +340,7 @@ describe('InvestmentReturnField', () => {
     describe('Input Interactions', () => {
         test('InvestmentReturnField_shouldUpdateValueOnValidInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -357,7 +359,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldShowFormattedValueWhenNotFocused', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -373,7 +375,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldShowUnformattedValueWhenFocused', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -392,7 +394,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldClampValueOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -414,7 +416,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldHandleEmptyInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -434,7 +436,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldHandleInvalidInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -455,7 +457,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldNotCallOnChangeForInvalidInputDuringTyping', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -477,7 +479,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldHandleDecimalInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -496,7 +498,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldHandleNegativeInputCorrectly', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -517,7 +519,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldClampNegativeInputBelowMinimum', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -541,7 +543,7 @@ describe('InvestmentReturnField', () => {
     // Accessibility Tests
     describe('Accessibility', () => {
         test('InvestmentReturnField_shouldHaveProperAriaLabels', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -563,7 +565,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHaveProperTooltipAccessibility', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -581,7 +583,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldToggleTooltip', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -599,7 +601,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHavePercentSuffix', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -617,7 +619,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHaveProperValueDisplayAccessibility', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -636,7 +638,7 @@ describe('InvestmentReturnField', () => {
     // Disabled State Tests
     describe('Disabled State', () => {
         test('InvestmentReturnField_shouldDisableAllInputsWhenDisabled', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -656,7 +658,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldNotCallOnChangeWhenDisabled', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -675,7 +677,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldDisableHelperWhenDisabled', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -695,7 +697,7 @@ describe('InvestmentReturnField', () => {
     // Custom Props Tests
     describe('Custom Props', () => {
         test('InvestmentReturnField_shouldRespectCustomMinMaxValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -717,7 +719,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldUseCustomId', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -733,7 +735,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldUseCustomClassNames', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             const { container } = render(
                 <InvestmentReturnField
@@ -748,7 +750,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldUseCustomDefaultValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -767,7 +769,7 @@ describe('InvestmentReturnField', () => {
     describe('Helper Drawer Tests', () => {
         test('InvestmentReturnField_shouldOpenHelperDrawerWhenClicked', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -787,7 +789,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldBlurHelperLinkOnClick', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -814,7 +816,7 @@ describe('InvestmentReturnField', () => {
     describe('Edge Cases', () => {
         test('InvestmentReturnField_shouldHandleRapidValueChanges', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -837,7 +839,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldHandleVeryLongDecimalInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -857,7 +859,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldPreventInfiniteLoops', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             const TestWrapper = () => {
                 const [value, setValue] = React.useState(7.5);
@@ -880,7 +882,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHandleZeroValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -895,7 +897,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldHandleVerySmallDecimals', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -916,7 +918,7 @@ describe('InvestmentReturnField', () => {
     // Integration Tests
     describe('Integration Tests', () => {
         test('InvestmentReturnField_shouldSyncSliderAndInputValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -936,7 +938,7 @@ describe('InvestmentReturnField', () => {
 
         test('InvestmentReturnField_shouldMaintainStateConsistency', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             const TestComponent = () => {
                 const [value, setValue] = React.useState(7.5);
@@ -965,7 +967,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldFormatValueDisplayCorrectly', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -984,7 +986,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHandleValueDisplayForZero', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -999,7 +1001,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHandleValueDisplayForNegative', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -1018,7 +1020,7 @@ describe('InvestmentReturnField', () => {
     // Formatting Tests
     describe('Formatting Tests', () => {
         test('InvestmentReturnField_shouldDisplayCorrectPercentageFormat', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -1037,7 +1039,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldFormatSingleDigitPercentage', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -1052,7 +1054,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldFormatDecimalPercentage', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -1067,7 +1069,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldShowCorrectPlaceholder', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             
             render(
                 <InvestmentReturnField
@@ -1083,8 +1085,8 @@ describe('InvestmentReturnField', () => {
     // Label Props Tests
     describe('Label Props', () => {
         test('InvestmentReturnField_shouldCallOnLabelSetWithLabelElement', () => {
-            const mockOnChange = jest.fn();
-            const mockOnLabelSet = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnLabelSet = vi.fn();
 
             render(
                 <InvestmentReturnField
@@ -1100,7 +1102,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldHideLabelWhenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <InvestmentReturnField
@@ -1116,7 +1118,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldShowLabelByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <InvestmentReturnField
@@ -1131,7 +1133,7 @@ describe('InvestmentReturnField', () => {
         });
 
         test('InvestmentReturnField_shouldShowLabelWhenShowLabelIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <InvestmentReturnField

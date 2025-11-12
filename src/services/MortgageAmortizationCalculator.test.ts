@@ -1,10 +1,12 @@
+import '@testing-library/jest-dom';
+
 import {
     calculateMortgageAmortization,
 } from './MortgageAmortizationCalculator';
 
 describe('MortgageAmortizationCalculator Service', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     describe('Input Validation', () => {

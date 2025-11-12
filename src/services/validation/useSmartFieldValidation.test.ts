@@ -1,11 +1,13 @@
+import '@testing-library/jest-dom';
+
 import { act, renderHook } from '@testing-library/react';
 import { ValidationResult } from './types';
 import { SmartFieldConfig, useSmartFieldValidation } from './useSmartFieldValidation';
 
 // Mock the ValidationService
-jest.mock('./ValidationService', () => ({
+vi.mock('./ValidationService', () => ({
     validationService: {
-        validateField: jest.fn().mockReturnValue({
+        validateField: vi.fn().mockReturnValue({
             isValid: true,
             errors: []
         })
@@ -14,18 +16,18 @@ jest.mock('./ValidationService', () => ({
 
 import { validationService } from './ValidationService';
 
-const mockValidationService = validationService as jest.Mocked<typeof validationService>;
+const mockValidationService = validationService as vi.Mocked<typeof validationService>;
 
 describe('useSmartFieldValidation', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
-        jest.clearAllTimers();
-        jest.useFakeTimers();
+        vi.clearAllMocks();
+        vi.clearAllTimers();
+        vi.useFakeTimers();
     });
 
     afterEach(() => {
-        jest.runOnlyPendingTimers();
-        jest.useRealTimers();
+        vi.runOnlyPendingTimers();
+        vi.useRealTimers();
     });
 
     const createEmailConfig = (): SmartFieldConfig => ({
@@ -100,7 +102,7 @@ describe('useSmartFieldValidation', () => {
         });
 
         test('useSmartFieldValidation_shouldCallOnValidationChange_withInitialValidationResult', () => {
-            const mockOnValidationChange = jest.fn();
+            const mockOnValidationChange = vi.fn();
             const mockResult: ValidationResult = { isValid: false, errors: ['Email is required'] };
             mockValidationService.validateField.mockReturnValue(mockResult);
 
@@ -228,7 +230,7 @@ describe('useSmartFieldValidation', () => {
         });
 
         test('useSmartFieldValidation_shouldMaintainCorrectValidationState_forFormSubmissionLogic', () => {
-            const mockOnValidationChange = jest.fn();
+            const mockOnValidationChange = vi.fn();
             
             // Test the specific scenario that causes button to be incorrectly enabled
             const mockResult: ValidationResult = { isValid: false, errors: ['Email is required'] };
@@ -304,7 +306,7 @@ describe('useSmartFieldValidation', () => {
         });
 
         test('useSmartFieldValidation_shouldCallOnValidationChange_whenValidationResultChanges', () => {
-            const mockOnValidationChange = jest.fn();
+            const mockOnValidationChange = vi.fn();
             const mockResult: ValidationResult = { isValid: false, errors: ['Email is required'] };
             mockValidationService.validateField.mockReturnValue(mockResult);
 
@@ -447,7 +449,7 @@ describe('useSmartFieldValidation', () => {
 
             // Fast-forward timer
             act(() => {
-                jest.advanceTimersByTime(1500);
+                vi.advanceTimersByTime(1500);
             });
 
             expect(result.current.state.hasBeenTouched).toBe(true);
@@ -483,12 +485,12 @@ describe('useSmartFieldValidation', () => {
 
             // Should use custom delay
             act(() => {
-                jest.advanceTimersByTime(1500);
+                vi.advanceTimersByTime(1500);
             });
             expect(result.current.state.hasBeenTouched).toBe(false);
 
             act(() => {
-                jest.advanceTimersByTime(500); // Total 2000ms
+                vi.advanceTimersByTime(500); // Total 2000ms
             });
             expect(result.current.state.hasBeenTouched).toBe(true);
         });

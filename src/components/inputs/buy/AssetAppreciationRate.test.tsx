@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AssetAppreciationRateField } from './AssetAppreciationRate';
@@ -6,7 +8,7 @@ describe('AssetAppreciationRateField', () => {
     // Rendering Tests
     describe('Rendering', () => {
         test('AssetAppreciationRateField_shouldRenderWithDefaultProps', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             expect(screen.getByText('Property Appreciation')).toBeInTheDocument();
             expect(screen.getByRole('slider')).toBeInTheDocument();
@@ -14,7 +16,7 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldRenderSliderOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} displayMode="slider" />);
             expect(screen.getByRole('slider')).toBeInTheDocument();
             expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
@@ -22,27 +24,27 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldRenderInputOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} displayMode="input" />);
             expect(screen.queryByRole('slider')).not.toBeInTheDocument();
             expect(screen.getByRole('textbox')).toBeInTheDocument();
         });
 
         test('AssetAppreciationRateField_shouldRenderCombinedMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} displayMode="combined" />);
             expect(screen.getByRole('slider')).toBeInTheDocument();
             expect(screen.getByRole('textbox')).toBeInTheDocument();
         });
 
         test('AssetAppreciationRateField_shouldHideLabel_whenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} showLabel={false} />);
             expect(screen.queryByText('Property Appreciation')).not.toBeInTheDocument();
         });
 
         test('AssetAppreciationRateField_shouldHideDescription_whenShowDescriptionIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} showDescription={false} />);
             expect(screen.queryByText('Annual property value appreciation rate')).not.toBeInTheDocument();
         });
@@ -52,31 +54,31 @@ describe('AssetAppreciationRateField', () => {
     // Value Validation Tests
     describe('Value Validation', () => {
         test('AssetAppreciationRateField_shouldClampInitialValueToMinimum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={-10} onChange={mockOnChange} minValue={-5} />);
             expect(mockOnChange).toHaveBeenCalledWith(-5);
         });
 
         test('AssetAppreciationRateField_shouldClampInitialValueToMaximum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={25} onChange={mockOnChange} maxValue={20} />);
             expect(mockOnChange).toHaveBeenCalledWith(20);
         });
 
         test('AssetAppreciationRateField_shouldHandleNaNValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={NaN} onChange={mockOnChange} defaultValue={4} />);
             expect(mockOnChange).toHaveBeenCalledWith(4);
         });
 
         test('AssetAppreciationRateField_shouldHandleInfinityValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={Infinity} onChange={mockOnChange} defaultValue={4} />);
             expect(mockOnChange).toHaveBeenCalledWith(4);
         });
 
         test('AssetAppreciationRateField_shouldRoundToTwoDecimalPlaces', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.555} onChange={mockOnChange} />);
             expect(mockOnChange).toHaveBeenCalledWith(3.56);
         });
@@ -86,7 +88,7 @@ describe('AssetAppreciationRateField', () => {
     // Slider Interaction Tests
     describe('Slider Interactions', () => {
         test('AssetAppreciationRateField_shouldUpdateValue_whenSliderChanged', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             const slider = screen.getByRole('slider');
             fireEvent.keyDown(slider, { key: 'ArrowRight' });
@@ -94,7 +96,7 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldHandleSliderInteraction', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             const slider = screen.getByRole('slider');
             
@@ -104,7 +106,7 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldUseCorrectSliderStep', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             const slider = screen.getByRole('slider');
             // The step attribute is on the parent Slider component, not the thumb element
@@ -117,7 +119,7 @@ describe('AssetAppreciationRateField', () => {
     describe('Input Interactions', () => {
         test('AssetAppreciationRateField_shouldUpdateValueOnValidInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             
             const input = screen.getByRole('textbox');
@@ -128,7 +130,7 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldShowFormattedValueWhenNotFocused', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             const input = screen.getByRole('textbox') as HTMLInputElement;
             expect(input.value).toBe('3.00');
@@ -136,7 +138,7 @@ describe('AssetAppreciationRateField', () => {
 
         test('AssetAppreciationRateField_shouldShowUnformattedValueWhenFocused', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             
             const input = screen.getByRole('textbox') as HTMLInputElement;
@@ -147,7 +149,7 @@ describe('AssetAppreciationRateField', () => {
 
         test('AssetAppreciationRateField_shouldClampValueOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} maxValue={15} />);
             
             const input = screen.getByRole('textbox');
@@ -160,7 +162,7 @@ describe('AssetAppreciationRateField', () => {
 
         test('AssetAppreciationRateField_shouldHandleEmptyInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} defaultValue={4} />);
             
             const input = screen.getByRole('textbox');
@@ -172,7 +174,7 @@ describe('AssetAppreciationRateField', () => {
 
         test('AssetAppreciationRateField_shouldHandleInvalidInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} defaultValue={4} />);
             
             const input = screen.getByRole('textbox');
@@ -188,7 +190,7 @@ describe('AssetAppreciationRateField', () => {
     // Disabled State Tests
     describe('Disabled State', () => {
         test('AssetAppreciationRateField_shouldDisableAllInputsWhenDisabled', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} disabled={true} />);
             
             const slider = screen.getByRole('slider');
@@ -200,7 +202,7 @@ describe('AssetAppreciationRateField', () => {
 
         test('AssetAppreciationRateField_shouldNotCallOnChangeWhenDisabled', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} disabled={true} />);
             
             const input = screen.getByRole('textbox');
@@ -214,7 +216,7 @@ describe('AssetAppreciationRateField', () => {
     // Accessibility Tests
     describe('Accessibility', () => {
         test('AssetAppreciationRateField_shouldHaveProperAriaLabels', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} id="test-rate" />);
             
             const input = screen.getByRole('textbox');
@@ -224,7 +226,7 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldHaveProperTooltipAccessibility', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} id="test-rate" />);
             
             const tooltipTrigger = screen.getByRole('button', { name: /more information about property appreciation rate/i });
@@ -234,7 +236,7 @@ describe('AssetAppreciationRateField', () => {
 
         test('AssetAppreciationRateField_shouldToggleTooltip', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             
             const tooltipTrigger = screen.getByRole('button', { name: /more information about property appreciation rate/i });
@@ -245,7 +247,7 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldHavePercentSuffix', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} id="test-rate" />);
             
             const suffix = screen.getByText('%');
@@ -258,7 +260,7 @@ describe('AssetAppreciationRateField', () => {
     // Customization Tests
     describe('Customization', () => {
         test('AssetAppreciationRateField_shouldRespectCustomMinMaxValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={5} onChange={mockOnChange} minValue={0} maxValue={10} />);
             
             const slider = screen.getByRole('slider');
@@ -271,7 +273,7 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldUseCustomId', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} id="custom-rate" displayMode="input" />);
             
             // With input mode, the input gets the custom ID directly
@@ -280,7 +282,7 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldUseCustomClassName', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             const { container } = render(
                 <AssetAppreciationRateField value={3.0} onChange={mockOnChange} className="custom-class" />
             );
@@ -289,7 +291,7 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldUseCustomDefaultValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={NaN} onChange={mockOnChange} defaultValue={5.0} />);
             
             expect(mockOnChange).toHaveBeenCalledWith(5.0);
@@ -301,7 +303,7 @@ describe('AssetAppreciationRateField', () => {
     describe('Edge Cases', () => {
         test('AssetAppreciationRateField_shouldHandleVeryLargeNumbers', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} maxValue={20} />);
             
             const input = screen.getByRole('textbox');
@@ -314,7 +316,7 @@ describe('AssetAppreciationRateField', () => {
 
         test('AssetAppreciationRateField_shouldHandleNegativeValues', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} minValue={-5} />);
             
             const input = screen.getByRole('textbox');
@@ -327,7 +329,7 @@ describe('AssetAppreciationRateField', () => {
 
         test('AssetAppreciationRateField_shouldHandleDecimalInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<AssetAppreciationRateField value={3.0} onChange={mockOnChange} />);
             
             const input = screen.getByRole('textbox');
@@ -340,8 +342,8 @@ describe('AssetAppreciationRateField', () => {
     // Label Props Tests
     describe('Label Props', () => {
         test('AssetAppreciationRateField_shouldCallOnLabelSetWithLabelElement', () => {
-            const mockOnChange = jest.fn();
-            const mockOnLabelSet = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnLabelSet = vi.fn();
 
             render(
                 <AssetAppreciationRateField
@@ -357,7 +359,7 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldHideLabelWhenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <AssetAppreciationRateField
@@ -373,7 +375,7 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldShowLabelByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <AssetAppreciationRateField
@@ -388,7 +390,7 @@ describe('AssetAppreciationRateField', () => {
         });
 
         test('AssetAppreciationRateField_shouldShowLabelWhenShowLabelIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <AssetAppreciationRateField

@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom';
+
 import { ConfigProvider } from './ConfigProvider';
 
 describe('ConfigProvider', () => {

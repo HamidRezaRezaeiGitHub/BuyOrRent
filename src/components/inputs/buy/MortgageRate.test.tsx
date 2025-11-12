@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MortgageRateField } from './MortgageRate';
@@ -6,7 +8,7 @@ describe('MortgageRateField', () => {
     // Rendering Tests
     describe('Rendering', () => {
         test('MortgageRateField_shouldRenderWithDefaultProps', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             expect(screen.getByText('Mortgage Rate')).toBeInTheDocument();
             expect(screen.getByRole('slider')).toBeInTheDocument();
@@ -14,7 +16,7 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldRenderSliderOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} displayMode="slider" />);
             expect(screen.getByRole('slider')).toBeInTheDocument();
             expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
@@ -22,14 +24,14 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldRenderInputOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} displayMode="input" />);
             expect(screen.queryByRole('slider')).not.toBeInTheDocument();
             expect(screen.getByRole('textbox')).toBeInTheDocument();
         });
 
         test('MortgageRateField_shouldRenderCombinedMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} displayMode="combined" />);
             expect(screen.getByRole('slider')).toBeInTheDocument();
             expect(screen.getByRole('textbox')).toBeInTheDocument();
@@ -39,31 +41,31 @@ describe('MortgageRateField', () => {
     // Value Validation Tests
     describe('Value Validation', () => {
         test('MortgageRateField_shouldClampInitialValueToMinimum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={-5} onChange={mockOnChange} minValue={0} />);
             expect(mockOnChange).toHaveBeenCalledWith(0);
         });
 
         test('MortgageRateField_shouldClampInitialValueToMaximum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={25} onChange={mockOnChange} maxValue={15} />);
             expect(mockOnChange).toHaveBeenCalledWith(15);
         });
 
         test('MortgageRateField_shouldHandleNaNValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={NaN} onChange={mockOnChange} defaultValue={6} />);
             expect(mockOnChange).toHaveBeenCalledWith(6);
         });
 
         test('MortgageRateField_shouldHandleInfinityValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={Infinity} onChange={mockOnChange} defaultValue={6} />);
             expect(mockOnChange).toHaveBeenCalledWith(6);
         });
 
         test('MortgageRateField_shouldRoundToTwoDecimalPlaces', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.555} onChange={mockOnChange} />);
             expect(mockOnChange).toHaveBeenCalledWith(5.56);
         });
@@ -72,7 +74,7 @@ describe('MortgageRateField', () => {
     // Slider Interaction Tests
     describe('Slider Interactions', () => {
         test('MortgageRateField_shouldUpdateValue_whenSliderChanged', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             const slider = screen.getByRole('slider');
             fireEvent.keyDown(slider, { key: 'ArrowRight' });
@@ -80,7 +82,7 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldHandleSliderInteraction', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             const slider = screen.getByRole('slider');
             
@@ -90,7 +92,7 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldUseCorrectSliderStep', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             const slider = screen.getByRole('slider');
             // The step attribute is on the parent Slider component, not the thumb element
@@ -102,7 +104,7 @@ describe('MortgageRateField', () => {
     describe('Input Interactions', () => {
         test('MortgageRateField_shouldCallOnChange_whenInputChanges', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             
             const input = screen.getByRole('textbox');
@@ -113,7 +115,7 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldShowFormattedValueWhenNotFocused', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             const input = screen.getByRole('textbox') as HTMLInputElement;
             expect(input.value).toBe('5.50');
@@ -121,7 +123,7 @@ describe('MortgageRateField', () => {
 
         test('MortgageRateField_shouldShowUnformattedValueWhenFocused', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             
             const input = screen.getByRole('textbox') as HTMLInputElement;
@@ -132,7 +134,7 @@ describe('MortgageRateField', () => {
 
         test('MortgageRateField_shouldClampValueOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} maxValue={10} />);
             
             const input = screen.getByRole('textbox');
@@ -145,7 +147,7 @@ describe('MortgageRateField', () => {
 
         test('MortgageRateField_shouldHandleEmptyInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} defaultValue={6} />);
             
             const input = screen.getByRole('textbox');
@@ -157,7 +159,7 @@ describe('MortgageRateField', () => {
 
         test('MortgageRateField_shouldHandleInvalidInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} defaultValue={6} />);
             
             const input = screen.getByRole('textbox');
@@ -172,7 +174,7 @@ describe('MortgageRateField', () => {
     // Accessibility Tests
     describe('Accessibility', () => {
         test('MortgageRateField_shouldHaveProperAriaLabels', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} id="test-rate" />);
             
             const input = screen.getByRole('textbox');
@@ -182,7 +184,7 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldHaveProperTooltipAccessibility', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} id="test-rate" />);
             
             const tooltipTrigger = screen.getByRole('button', { name: /more information about mortgage rate/i });
@@ -192,7 +194,7 @@ describe('MortgageRateField', () => {
 
         test('MortgageRateField_shouldToggleTooltip', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             
             const tooltipTrigger = screen.getByRole('button', { name: /more information about mortgage rate/i });
@@ -203,7 +205,7 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldHavePercentSuffix', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} id="test-rate" />);
             
             const suffix = screen.getByText('%');
@@ -214,7 +216,7 @@ describe('MortgageRateField', () => {
     // Disabled State Tests
     describe('Disabled State', () => {
         test('MortgageRateField_shouldDisableAllInputsWhenDisabled', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} disabled={true} />);
             
             const slider = screen.getByRole('slider');
@@ -226,7 +228,7 @@ describe('MortgageRateField', () => {
 
         test('MortgageRateField_shouldNotCallOnChangeWhenDisabled', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} disabled={true} />);
             
             const input = screen.getByRole('textbox');
@@ -239,7 +241,7 @@ describe('MortgageRateField', () => {
     // Customization Tests
     describe('Customization', () => {
         test('MortgageRateField_shouldRespectCustomMinMaxValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={8} onChange={mockOnChange} minValue={2} maxValue={12} />);
             
             const slider = screen.getByRole('slider');
@@ -252,7 +254,7 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldUseCustomId', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} id="custom-rate" />);
             
             const label = screen.getByText('Mortgage Rate');
@@ -261,7 +263,7 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldUseCustomClassName', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             const { container } = render(
                 <MortgageRateField value={5.5} onChange={mockOnChange} className="custom-class" />
             );
@@ -270,7 +272,7 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldUseCustomDefaultValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={NaN} onChange={mockOnChange} defaultValue={7.5} />);
             
             expect(mockOnChange).toHaveBeenCalledWith(7.5);
@@ -281,7 +283,7 @@ describe('MortgageRateField', () => {
     describe('Edge Cases', () => {
         test('MortgageRateField_shouldHandleVeryLargeNumbers', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} maxValue={15} />);
             
             const input = screen.getByRole('textbox');
@@ -294,7 +296,7 @@ describe('MortgageRateField', () => {
 
         test('MortgageRateField_shouldHandleNegativeValues', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} minValue={0} />);
             
             const input = screen.getByRole('textbox');
@@ -307,7 +309,7 @@ describe('MortgageRateField', () => {
 
         test('MortgageRateField_shouldHandleDecimalInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
             render(<MortgageRateField value={5.5} onChange={mockOnChange} />);
             
             const input = screen.getByRole('textbox');
@@ -320,8 +322,8 @@ describe('MortgageRateField', () => {
     // Label Props Tests
     describe('Label Props', () => {
         test('MortgageRateField_shouldCallOnLabelSetWithLabelElement', () => {
-            const mockOnChange = jest.fn();
-            const mockOnLabelSet = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnLabelSet = vi.fn();
 
             render(
                 <MortgageRateField
@@ -337,7 +339,7 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldHideLabelWhenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MortgageRateField
@@ -353,7 +355,7 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldShowLabelByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MortgageRateField
@@ -368,7 +370,7 @@ describe('MortgageRateField', () => {
         });
 
         test('MortgageRateField_shouldShowLabelWhenShowLabelIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <MortgageRateField

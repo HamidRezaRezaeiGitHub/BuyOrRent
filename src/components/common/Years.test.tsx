@@ -1,16 +1,18 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { YearsField } from './Years';
 
 describe('YearsField', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // Basic Rendering Tests
     describe('Basic Rendering', () => {
         test('YearsField_shouldRenderWithDefaultProps', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -31,7 +33,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldRenderSliderOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -49,7 +51,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldRenderInputOnlyMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -65,7 +67,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldRenderCombinedMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -85,7 +87,7 @@ describe('YearsField', () => {
     // Value Validation Tests
     describe('Value Validation', () => {
         test('YearsField_shouldClampInitialValueToMinimum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -101,7 +103,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldClampInitialValueToMaximum', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -116,7 +118,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldHandleNaNValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -130,7 +132,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldHandleInfinityValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -145,7 +147,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldHandleNegativeInfinityValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -160,7 +162,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldRoundDecimalValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -176,7 +178,7 @@ describe('YearsField', () => {
     // Slider Interaction Tests
     describe('Slider Interactions', () => {
         test('YearsField_shouldUpdateValueWhenSliderChanges', async () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -194,7 +196,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldClampSliderValueToRange', async () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -213,7 +215,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldHandleSliderInteraction', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -234,7 +236,7 @@ describe('YearsField', () => {
     describe('Input Interactions', () => {
         test('YearsField_shouldUpdateValueOnValidInput', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -253,7 +255,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldShowFormattedValueWhenNotFocused', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -268,7 +270,7 @@ describe('YearsField', () => {
 
         test('YearsField_shouldShowUnformattedValueWhenFocused', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -287,7 +289,7 @@ describe('YearsField', () => {
 
         test('YearsField_shouldClampValueOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -309,7 +311,7 @@ describe('YearsField', () => {
 
         test('YearsField_shouldHandleEmptyInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -329,7 +331,7 @@ describe('YearsField', () => {
 
         test('YearsField_shouldHandleInvalidInputOnBlur', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -350,7 +352,7 @@ describe('YearsField', () => {
 
         test('YearsField_shouldNotCallOnChangeForInvalidInputDuringTyping', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -374,7 +376,7 @@ describe('YearsField', () => {
     // Accessibility Tests
     describe('Accessibility', () => {
         test('YearsField_shouldHaveProperAriaLabels', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -396,7 +398,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldHaveProperTooltipAccessibility', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -414,7 +416,7 @@ describe('YearsField', () => {
 
         test('YearsField_shouldToggleTooltip', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -435,7 +437,7 @@ describe('YearsField', () => {
     // Disabled State Tests
     describe('Disabled State', () => {
         test('YearsField_shouldDisableAllInputsWhenDisabled', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -455,7 +457,7 @@ describe('YearsField', () => {
 
         test('YearsField_shouldNotCallOnChangeWhenDisabled', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -477,7 +479,7 @@ describe('YearsField', () => {
     // Custom Props Tests
     describe('Custom Props', () => {
         test('YearsField_shouldRespectCustomMinMaxValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -499,7 +501,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldUseCustomId', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -515,7 +517,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldUseCustomClassNames', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -535,7 +537,7 @@ describe('YearsField', () => {
     describe('Edge Cases', () => {
         test('YearsField_shouldHandleRapidValueChanges', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -557,7 +559,7 @@ describe('YearsField', () => {
 
         test('YearsField_shouldHandleDecimalInputs', async () => {
             const user = userEvent.setup();
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -576,7 +578,7 @@ describe('YearsField', () => {
         });
 
         test('YearsField_shouldPreventInfiniteLoops', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             // Render with a value that needs clamping
             const { rerender } = render(
@@ -606,7 +608,7 @@ describe('YearsField', () => {
     // Integration Tests
     describe('Integration Tests', () => {
         test('YearsField_shouldSyncSliderAndInputValues', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <YearsField
@@ -629,7 +631,7 @@ describe('YearsField', () => {
         test('YearsField_shouldMaintainStateConsistency', async () => {
             const user = userEvent.setup();
             let currentValue = 25;
-            const mockOnChange = jest.fn((newValue) => {
+            const mockOnChange = vi.fn((newValue) => {
                 currentValue = newValue; // Simulate parent updating value
             });
 

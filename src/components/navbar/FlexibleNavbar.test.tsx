@@ -1,12 +1,14 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import { FlexibleNavbar } from './FlexibleNavbar';
 import { NavbarUser } from './types';
 
 // Mock the theme context
-const mockSetTheme = jest.fn();
-const mockToggleTheme = jest.fn();
+const mockSetTheme = vi.fn();
+const mockToggleTheme = vi.fn();
 
-jest.mock('@/contexts/ThemeContext', () => ({
+vi.mock('@/contexts/ThemeContext', () => ({
   useTheme: () => ({
     theme: 'light',
     actualTheme: 'light',
@@ -26,7 +28,7 @@ const mockUser: NavbarUser = {
 
 describe('FlexibleNavbar', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test('FlexibleNavbar_shouldRenderWithDefaultProps', () => {
@@ -61,9 +63,9 @@ describe('FlexibleNavbar', () => {
 
   test('FlexibleNavbar_shouldRenderNavigationItems', () => {
     const navItems = [
-      { label: 'Home', onClick: jest.fn() },
-      { label: 'About', onClick: jest.fn() },
-      { label: 'Contact', onClick: jest.fn() }
+      { label: 'Home', onClick: vi.fn() },
+      { label: 'About', onClick: vi.fn() },
+      { label: 'Contact', onClick: vi.fn() }
     ];
 
     render(<FlexibleNavbar navItems={navItems} />);
@@ -74,7 +76,7 @@ describe('FlexibleNavbar', () => {
   });
 
   test('FlexibleNavbar_shouldCallNavItemOnClick_whenNavItemClicked', () => {
-    const mockOnClick = jest.fn();
+    const mockOnClick = vi.fn();
     const navItems = [
       { label: 'Home', onClick: mockOnClick }
     ];
@@ -86,8 +88,8 @@ describe('FlexibleNavbar', () => {
   });
 
   test('FlexibleNavbar_shouldCallAuthCallbacks_whenAuthButtonsClicked', () => {
-    const mockOnLoginClick = jest.fn();
-    const mockOnSignUpClick = jest.fn();
+    const mockOnLoginClick = vi.fn();
+    const mockOnSignUpClick = vi.fn();
 
     render(
       <FlexibleNavbar 
@@ -104,7 +106,7 @@ describe('FlexibleNavbar', () => {
   });
 
   test('FlexibleNavbar_shouldCallAvatarCallback_whenAvatarClicked', () => {
-    const mockOnAvatarClick = jest.fn();
+    const mockOnAvatarClick = vi.fn();
 
     render(
       <FlexibleNavbar 
@@ -159,8 +161,8 @@ describe('FlexibleNavbar', () => {
 
   test('FlexibleNavbar_shouldShowMobileMenu_whenMobileMenuButtonClicked', () => {
     const navItems = [
-      { label: 'Home', onClick: jest.fn() },
-      { label: 'About', onClick: jest.fn() }
+      { label: 'Home', onClick: vi.fn() },
+      { label: 'About', onClick: vi.fn() }
     ];
 
     render(<FlexibleNavbar navItems={navItems} />);

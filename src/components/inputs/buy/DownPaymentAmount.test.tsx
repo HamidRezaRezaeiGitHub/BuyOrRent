@@ -1,14 +1,16 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import { DownPaymentAmountField } from './DownPaymentAmount';
 
 describe('DownPaymentAmountField', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     describe('Basic Rendering', () => {
         test('DownPaymentAmountField_shouldRenderWithDefaultProps', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentAmountField
@@ -27,7 +29,7 @@ describe('DownPaymentAmountField', () => {
         });
 
         test('DownPaymentAmountField_shouldRenderCombinedMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentAmountField
@@ -46,7 +48,7 @@ describe('DownPaymentAmountField', () => {
 
     describe('Value Validation', () => {
         test('DownPaymentAmountField_shouldClampToMinValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentAmountField
@@ -61,7 +63,7 @@ describe('DownPaymentAmountField', () => {
         });
 
         test('DownPaymentAmountField_shouldClampToMaxValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentAmountField
@@ -76,7 +78,7 @@ describe('DownPaymentAmountField', () => {
         });
 
         test('DownPaymentAmountField_shouldUseDefaultValue_whenValueIsNaN', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentAmountField
@@ -92,7 +94,7 @@ describe('DownPaymentAmountField', () => {
 
     describe('Slider Interaction', () => {
         test('DownPaymentAmountField_shouldUpdateValue_whenSliderChanged', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentAmountField
@@ -112,7 +114,7 @@ describe('DownPaymentAmountField', () => {
 
     describe('Input Interaction', () => {
         test('DownPaymentAmountField_shouldUpdateValue_whenInputChanged', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentAmountField
@@ -129,7 +131,7 @@ describe('DownPaymentAmountField', () => {
         });
 
         test('DownPaymentAmountField_shouldUpdateValue_whenBlurred', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentAmountField
@@ -149,7 +151,7 @@ describe('DownPaymentAmountField', () => {
 
     describe('Disabled State', () => {
         test('DownPaymentAmountField_shouldDisableSlider_whenDisabledPropIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentAmountField

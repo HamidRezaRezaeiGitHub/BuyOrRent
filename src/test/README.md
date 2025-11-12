@@ -1,121 +1,97 @@
 # test
 
-Test utilities, setup, and mock modules for Jest testing environment.
+Test utilities and type declarations for the Vitest testing environment.
 
 ## Purpose
 
-This directory contains test configuration, setup files, and mock modules that support the Jest testing infrastructure for the entire application.
+This directory contains test-related utilities and type declarations used across the test suite.
 
 ## Files Structure
 
 ```
 src/test/
-├── __mocks__/
-│   └── README.md               # Mock modules documentation
-├── assets.d.ts                 # TypeScript declarations for asset imports
-└── setupTests.ts               # Jest setup and global test configuration
+├── assets.d.ts     # Type declarations for static asset imports
+└── README.md       # This file
 ```
 
-## Test Configuration Files
-
-### setupTests.ts
-
-**Purpose**: Global test setup and configuration for Jest.
-
-**Contains**:
-- Jest DOM extensions import
-- Global test utilities
-- Mock configurations
-- Test environment setup
-
-**Key Imports**:
-```typescript
-import '@testing-library/jest-dom';
-```
-
-This provides custom Jest matchers like:
-- `toBeInTheDocument()`
-- `toHaveClass()`
-- `toHaveStyle()`
-- `toBeVisible()`
-- And many more...
+## Files
 
 ### assets.d.ts
 
-**Purpose**: TypeScript type declarations for static asset imports in tests.
+Provides TypeScript type declarations for static asset imports (images, SVGs, etc.). This ensures TypeScript understands how to handle these imports in test files.
 
-**Declares**:
-- Image file types (.png, .jpg, .svg, etc.)
-- Asset module types
-- Ensures TypeScript doesn't error on asset imports
+**Supported extensions:** `.svg`, `.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`
 
-**Example**:
-```typescript
-declare module '*.svg' {
-  const content: string;
-  export default content;
-}
+## Test Configuration
 
-declare module '*.png' {
-  const content: string;
-  export default content;
-}
+The main test configuration is in:
+- `vite.config.ts` - Vitest configuration (test environment, coverage, etc.)
+- `src/setupTests.ts` - Global test setup (runs before all tests)
+
+## Testing Stack
+
+### Vitest
+
+Test framework and assertion library:
+- Fast test execution
+- Jest-compatible API
+- Native ESM support
+- TypeScript support
+
+**Version**: 3.0.6+
+
+### React Testing Library
+
+Primary testing library for React components:
+- Component rendering
+- User interaction simulation
+- Accessibility-focused queries
+- DOM assertions
+
+**Version**: 16.3.0
+
+### jest-dom
+
+Custom matchers for DOM assertions:
+- `toBeInTheDocument()`
+- `toHaveClass()`
+- `toBeVisible()`
+- And more...
+
+**Version**: 6.8.0
+
+## Running Tests
+
+### Commands
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with UI
+npm run test:ui
+
+# Run tests with coverage
+npm run coverage
+
+# Run specific test file
+npm test -- MyComponent.test
+
+# Run tests matching pattern
+npm test -- --grep "should render"
 ```
 
-## Subdirectories
+### Test Coverage
 
-### __mocks__/
+Coverage reports are generated using V8 provider:
+- HTML report: `coverage/index.html`
+- Summary in console
+- Excluded: test files, type definitions, entry files
 
-Contains mock implementations for non-JavaScript modules.
-
-See: [__mocks__/README.md](./__mocks__/README.md)
-
-**Contents**:
-- File mocks for static assets
-- Module mocks for external dependencies
-- Test data mocks
-
-## Jest Configuration
-
-The main Jest configuration is in `/jest.config.js` at the project root.
-
-### Key Configuration
-
-```javascript
-// jest.config.js
-export default {
-  setupFilesAfterEnv: ['<rootDir>/src/test/setupTests.ts'],
-  moduleNameMapper: {
-    '\\.(jpg|jpeg|png|gif|svg)$': '<rootDir>/src/test/__mocks__/fileMock.js',
-    '@/(.*)': '<rootDir>/src/$1',
-  },
-  testEnvironment: 'jsdom',
-};
-```
-
-## Test Utilities
-
-### Common Test Patterns
-
-```typescript
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
-
-describe('Component', () => {
-  it('should render correctly', () => {
-    render(<Component />);
-    expect(screen.getByText('Expected Text')).toBeInTheDocument();
-  });
-  
-  it('should handle user interaction', () => {
-    render(<Component />);
-    fireEvent.click(screen.getByRole('button'));
-    expect(screen.getByText('Result')).toBeVisible();
-  });
-});
-```
-
-### Test File Locations
+## Test File Locations
 
 Test files are colocated with their source files:
 
@@ -129,73 +105,6 @@ src/services/
 └── MyService.test.ts
 ```
 
-## Testing Libraries
-
-### React Testing Library
-
-Primary testing library for React components:
-- Component rendering
-- User interaction simulation
-- Accessibility-focused queries
-- DOM assertions
-
-**Version**: 16.3.0
-
-### Jest
-
-Test framework and assertion library:
-- Test runner
-- Assertion matchers
-- Mocking utilities
-- Coverage reporting
-
-**Version**: 30.1.3
-
-### jest-dom
-
-Custom matchers for DOM assertions:
-- `toBeInTheDocument()`
-- `toHaveClass()`
-- `toBeVisible()`
-- And more...
-
-### ts-jest
-
-TypeScript support for Jest:
-- TypeScript compilation in tests
-- Type checking during tests
-- Source map support
-
-**Version**: 29.4.4
-
-## Running Tests
-
-### Commands
-
-```bash
-# Run all tests
-npm test
-
-# Run tests in watch mode
-npm test -- --watch
-
-# Run specific test file
-npm test -- MyComponent.test
-
-# Run tests with coverage
-npm test -- --coverage
-
-# Run tests for changed files
-npm test -- --onlyChanged
-```
-
-### Test Coverage
-
-Coverage reports are generated in `/coverage/` directory:
-- HTML report: `coverage/lcov-report/index.html`
-- Summary in console
-- Excluded: `node_modules/`, `dist/`, test files
-
 ## Test Environment
 
 ### jsdom
@@ -208,9 +117,9 @@ Tests run in jsdom environment:
 
 ### Global Setup
 
-`setupTests.ts` runs before each test file:
+`src/setupTests.ts` runs before all tests:
 - Imports jest-dom matchers
-- Sets up global mocks
+- Sets up global mocks (ResizeObserver, TextEncoder/TextDecoder)
 - Configures test environment
 
 ## Writing Tests
@@ -221,6 +130,16 @@ Follow the pattern:
 - Component tests: `ComponentName.test.tsx`
 - Service tests: `ServiceName.test.ts`
 - Hook tests: `useHookName.test.ts`
+
+### Required Imports
+
+Each test file must include:
+
+```typescript
+import '@testing-library/jest-dom';
+```
+
+This import is required for custom matchers to work properly.
 
 ### Test Structure
 
@@ -264,7 +183,7 @@ describe('ComponentName', () => {
 ### Mock Functions
 
 ```typescript
-const mockFn = jest.fn();
+const mockFn = vi.fn();
 mockFn.mockReturnValue('value');
 mockFn.mockResolvedValue('async value');
 ```
@@ -272,15 +191,27 @@ mockFn.mockResolvedValue('async value');
 ### Mock Modules
 
 ```typescript
-jest.mock('@/services/myService', () => ({
-  myFunction: jest.fn().mockReturnValue('mocked'),
+vi.mock('@/services/myService', () => ({
+  myFunction: vi.fn().mockReturnValue('mocked'),
 }));
+```
+
+### Partial Mocks with importActual
+
+```typescript
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 ```
 
 ### Mock Components
 
 ```typescript
-jest.mock('@/components/MyComponent', () => ({
+vi.mock('@/components/MyComponent', () => ({
   MyComponent: () => <div>Mocked Component</div>,
 }));
 ```
@@ -339,38 +270,22 @@ screen.debug(element); // Prints specific element
 ### Verbose Mode
 
 ```bash
-npm test -- --verbose
-```
-
-### Inspect Failed Tests
-
-```bash
-npm test -- --no-coverage --verbose
+npm test -- --reporter=verbose
 ```
 
 ## Related Files
 
-- [`/jest.config.js`](../../jest.config.js) - Main Jest configuration
-- [`/src/setupTests.ts`](../setupTests.ts) - Additional setup (if exists)
+- [`/vite.config.ts`](../../vite.config.ts) - Vitest configuration
+- [`/src/setupTests.ts`](../setupTests.ts) - Global test setup
 - Component test files - Colocated with components
 - Service test files - Colocated with services
 
 ## Related Documentation
 
-- [Jest Documentation](https://jestjs.io/)
+- [Vitest Documentation](https://vitest.dev/)
 - [React Testing Library](https://testing-library.com/react)
 - [jest-dom matchers](https://github.com/testing-library/jest-dom)
-
-## Future Enhancements
-
-Potential improvements:
-- E2E tests with Playwright
-- Visual regression testing
-- Performance testing
-- Accessibility testing automation
-- Integration test helpers
-- Custom test utilities
-- Shared test fixtures
+- [Vitest Migration from Jest](https://vitest.dev/guide/migration)
 
 ## Notes
 
@@ -382,3 +297,5 @@ Potential improvements:
 - Keep tests simple and readable
 - Aim for high coverage but focus on critical paths
 - Run tests before committing code
+- Each test file must import '@testing-library/jest-dom'
+

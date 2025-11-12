@@ -1,16 +1,18 @@
+import '@testing-library/jest-dom';
+
 import { render, fireEvent, screen } from '@testing-library/react';
 import { ClosingCostsAmountField } from './ClosingCostsAmount';
 
 describe('ClosingCostsAmountField', () => {
     test('ClosingCostsAmountField_shouldRenderWithDefaultProps', () => {
-        const mockOnChange = jest.fn();
+        const mockOnChange = vi.fn();
         render(<ClosingCostsAmountField value={12000} onChange={mockOnChange} />);
 
         expect(screen.getByText('Closing Costs')).toBeInTheDocument();
     });
 
     test('ClosingCostsAmountField_shouldUpdateValue_whenSliderChanged', () => {
-        const mockOnChange = jest.fn();
+        const mockOnChange = vi.fn();
         render(<ClosingCostsAmountField value={12000} onChange={mockOnChange} />);
         
         const slider = screen.getByRole('slider');
@@ -21,8 +23,8 @@ describe('ClosingCostsAmountField', () => {
     // Label Props Tests
     describe('Label Props', () => {
         test('ClosingCostsAmountField_shouldCallOnLabelSetWithLabelElement', () => {
-            const mockOnChange = jest.fn();
-            const mockOnLabelSet = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnLabelSet = vi.fn();
 
             render(
                 <ClosingCostsAmountField
@@ -38,7 +40,7 @@ describe('ClosingCostsAmountField', () => {
         });
 
         test('ClosingCostsAmountField_shouldHideLabelWhenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <ClosingCostsAmountField
@@ -54,7 +56,7 @@ describe('ClosingCostsAmountField', () => {
         });
 
         test('ClosingCostsAmountField_shouldShowLabelByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <ClosingCostsAmountField
@@ -69,7 +71,7 @@ describe('ClosingCostsAmountField', () => {
         });
 
         test('ClosingCostsAmountField_shouldShowLabelWhenShowLabelIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <ClosingCostsAmountField

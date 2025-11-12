@@ -1,10 +1,12 @@
+import '@testing-library/jest-dom';
+
 import { render, screen } from '@testing-library/react';
 import { MortgageAmortizationTable } from './MortgageAmortizationTable';
 import { MortgageAmortizationData, calculateMortgageAmortization } from '@/services/MortgageAmortizationCalculator';
 
 describe('MortgageAmortizationTable', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // Basic rendering tests

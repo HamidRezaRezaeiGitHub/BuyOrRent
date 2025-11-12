@@ -1,14 +1,16 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import { DownPaymentPercentageField } from './DownPaymentPercentage';
 
 describe('DownPaymentPercentageField', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     describe('Basic Rendering', () => {
         test('DownPaymentPercentageField_shouldRenderWithDefaultProps', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -27,7 +29,7 @@ describe('DownPaymentPercentageField', () => {
         });
 
         test('DownPaymentPercentageField_shouldRenderCombinedMode', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -46,7 +48,7 @@ describe('DownPaymentPercentageField', () => {
 
     describe('Value Validation', () => {
         test('DownPaymentPercentageField_shouldClampToMinValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -61,7 +63,7 @@ describe('DownPaymentPercentageField', () => {
         });
 
         test('DownPaymentPercentageField_shouldClampToMaxValue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -76,7 +78,7 @@ describe('DownPaymentPercentageField', () => {
         });
 
         test('DownPaymentPercentageField_shouldUseDefaultValue_whenValueIsNaN', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -92,7 +94,7 @@ describe('DownPaymentPercentageField', () => {
 
     describe('Slider Interaction', () => {
         test('DownPaymentPercentageField_shouldUpdateValue_whenSliderChanged', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -110,7 +112,7 @@ describe('DownPaymentPercentageField', () => {
 
     describe('Input Interaction', () => {
         test('DownPaymentPercentageField_shouldUpdateValue_whenInputChanged', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -127,7 +129,7 @@ describe('DownPaymentPercentageField', () => {
         });
 
         test('DownPaymentPercentageField_shouldCallOnChange_whenValidInputBlurred', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -147,7 +149,7 @@ describe('DownPaymentPercentageField', () => {
 
     describe('Disabled State', () => {
         test('DownPaymentPercentageField_shouldDisableSlider_whenDisabledPropIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -164,8 +166,8 @@ describe('DownPaymentPercentageField', () => {
     // Label Props Tests
     describe('Label Props', () => {
         test('DownPaymentPercentageField_shouldCallOnLabelSetWithLabelElement', () => {
-            const mockOnChange = jest.fn();
-            const mockOnLabelSet = jest.fn();
+            const mockOnChange = vi.fn();
+            const mockOnLabelSet = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -181,7 +183,7 @@ describe('DownPaymentPercentageField', () => {
         });
 
         test('DownPaymentPercentageField_shouldHideLabelWhenShowLabelIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -197,7 +199,7 @@ describe('DownPaymentPercentageField', () => {
         });
 
         test('DownPaymentPercentageField_shouldShowLabelByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -212,7 +214,7 @@ describe('DownPaymentPercentageField', () => {
         });
 
         test('DownPaymentPercentageField_shouldShowLabelWhenShowLabelIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -228,7 +230,7 @@ describe('DownPaymentPercentageField', () => {
         });
 
         test('DownPaymentPercentageField_shouldShowDescriptionByDefault', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -243,7 +245,7 @@ describe('DownPaymentPercentageField', () => {
         });
 
         test('DownPaymentPercentageField_shouldHideDescriptionWhenShowDescriptionIsFalse', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField
@@ -259,7 +261,7 @@ describe('DownPaymentPercentageField', () => {
         });
 
         test('DownPaymentPercentageField_shouldShowDescriptionWhenShowDescriptionIsTrue', () => {
-            const mockOnChange = jest.fn();
+            const mockOnChange = vi.fn();
 
             render(
                 <DownPaymentPercentageField

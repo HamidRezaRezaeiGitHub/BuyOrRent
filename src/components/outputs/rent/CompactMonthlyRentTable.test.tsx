@@ -1,10 +1,12 @@
+import '@testing-library/jest-dom';
+
 import { render, screen } from '@testing-library/react';
 import { CompactMonthlyRentTable } from './CompactMonthlyRentTable';
 import { MonthlyRentData } from '@/services/MonthlyRentCalculator';
 
 describe('CompactMonthlyRentTable', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // Helper function to create mock data
